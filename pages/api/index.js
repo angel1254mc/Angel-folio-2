@@ -6,7 +6,7 @@ import {Projects} from '../../content/content'
 import { Octokit } from "octokit";
 const POSTS_PATH = path.join(process.cwd(), "content/posts");
 const octokit = new Octokit({
-    auth: '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'
+    auth: process.env.GITHUB_AUTH
 })
 
 export const getSlugs = () => {
