@@ -1,0 +1,42 @@
+.TLDR_container {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 18px;
+    justify-content: center;
+    row-gap: 0.2rem;
+    column-gap: 0.2rem;
+    margin-top: 20px;
+}
+.fadeIn {
+    animation-name: fadeIn;
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+}
+.link {
+    color: aliceblue;
+    opacity: 0;
+    font-weight: 700;
+    text-decoration: underline;
+}
+.emphasis {
+    color: palevioletred;
+    opacity: 0;
+    font-weight: 700;
+}
+.word {
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0%);
+    }
+}

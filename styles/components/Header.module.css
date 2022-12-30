@@ -1,0 +1,17 @@
+.gradient {
+    font-weight: 700;
+    background-color: transparent;
+    font-size: 5rem;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    transition: 3s color;
+    color: white;
+    cursor: pointer;
+}
+
+@media (max-width: 750px) {
+    .gradient {
+        font-size: 1.8rem !important;
+        padding: 10px;
+    }
+}

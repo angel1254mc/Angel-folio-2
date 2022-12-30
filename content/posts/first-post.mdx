@@ -1,0 +1,107 @@
+---
+title: First Blog Post on my new Portfolio site!
+tags:
+  - rant
+  - MDX
+  - NextJS
+  - react-spring
+date: 2022-12-28
+project: portfolio-new
+emoji: '🥳'
+imageURI: https://images.unsplash.com/photo-1671955101182-eecaa90cc4c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80
+excerpt: Wake up Honey, new Angel1254 blog post just dropped
+---
+
+<div>I have to admit, younger me would've never thought I'd be writing a blog. I'm definitely more of a 'take notes for myself' kind of guy. I love taking notes when I'm learning new languages or frameworks, as well as when I discover new techniques in technologies I'm already familiar with. As the great **Raiden** would say, <Utils>'War Has Changed'</Utils>, but swap 'war' with my name and then swap 'changed' with 'blogged'. <Utils>Yeah</Utils></div>
+
+<br/>
+# Why Blog? 
+<br/>
+I realized that there's value in me sharing these notes. Most of my friends that are also studying software development or computer science find themselves facing the same problems as me. This problem is exacerbated for my friends back in Puerto Rico, whether it be due to unavailable/disengaged professors, lack of good Spanish programming resources, or even due to their assignment content being too Niche. I want to be able to provide the resources I would've wanted to have when I was facing these challenges myself. I also think that by writing about the things I've learned, I can reinforce and enrich my own understanding of the concepts I write about.
+
+# Portfolio or Blog - Why not both?, and Inspirations
+<br/>
+
+A little bit before the end of the Fall Semester, I took a cold hard look at my [**old portfolio site**] and felt the need to restructure/redo it. Early on after first making the site, I was very proud of my landing page, which displayed my basic info and my projects. With my accomplishment goggles on, all I could see was "I did it 🥳" but once I took them off, I realized that the bland look of the site, half-baked landing page animation, and incredibly vague **about me** page did little to represent my web development experience (or even who I am as a person) at the time. I felt that the site needed a sizeable change, a complete rewrite.
+
+<div className="w-full text-center text-sm" >Here's a sample of my (barely functional) coveted Project Slider Component 🥵</div>
+<br/>
+
+<components.ProjectCard/>
+
+<br/>
+
+
+I knew that, in order to convey my experience as a developer, I needed to show projects I've worked on. In fact, the only design aspect that I really put some thought behind was the `<ProjectSlider> `element, but the information this little blob of JSX displayed gave little insight as to:
+<ul style={{paddingLeft: 15}}>
+  <li>My role in the project</li>
+  <li>What I learned by working on the project</li>
+  <li>How I plan to improve the project</li>
+</ul>
+<br/>
+That's when I realized that my blog and portfolio could go hand-in-hand. Why not create blog posts for things that I'm working on, modify the post's metadata to reflect this, and have them automatically list under the page of the project that they correspond to? I remembered that another UF Student, [**Cindy Ngo**](https://ngo-cindy4.wixsite.com/portfolio "Cindy Ngo's Portfolio"), had a similar mechanism on [**her portfolio site**](https://ngo-cindy4.wixsite.com/portfolio "Cindy Ngo's Portfolio"), where each project page acts as a blog post where she goes into intricate detail about the project. Her site was a massive inspiration behind this idea and I 100% endorse her for her incredible design skills!
+
+
+
+A while back, I was feeling a bit insecure about starting a blog, but then I started reading some of the content that other UF students write on their own blogs! Super talented people like [**Chris Miller**](https://chrismiller.xyz/ "Chris's Blog and Portfolio") (who I think graduated already), [**Eric Navar**](https://ericnavar.com/blog "Eric's Blog and Portfolio") and [**Blake Anderson**](https://blog.willbanders.dev/ "Blake's Blog and Portfolio") have made some incredible portfolio websites and blogs that I find myself checking up on now and then. I think that if I really put my mind to it, I could write content that other people could find value in as well. 
+
+So I went ahead and redesigned my site, and here we are! Also, make sure to check out [**Sreetam Das**](https://sreetamdas.com/, "Sreetam's Site"), who's website was a MASSIVE inspiration in my visual design decisions. I love his website, and his content is super good so be sure to sign up for his [**newsletter**](https://sreetamdas.com/newsletter 'Sreetam Das Newsletter')!
+
+# Tech Stack and what's next
+
+I've separated the development of this website into stages. At the time of writing this post, I'm finishing up the first stage. These might change, but for now they are as follows:
+
+### Stage 1: Getting the basic requirements
+#### Tech Stack
+<ul style={{paddingLeft: 15}}>
+  <li><Utils>NextJS</Utils> SSG</li>
+  <li>Locally stored <Utils>MDX</Utils> for Blog Posts</li>
+  <li>A simple local JSON for storing Project data</li>
+  <li><Utils>Modular CSS</Utils> for hardcoded components, <Utils>TailwindCSS</Utils> Utils for JSX Rapid Prototyping in Blog Posts</li>
+</ul>
+#### Some additional fun features I want to add
+<ul style={{paddingLeft: 15}}>
+  <li>Spotify API to display the song I'm currently listening to</li>
+  <li>Youtube Video Section</li>
+  <li>Light Theme 🤢</li>
+</ul>
+<br/>
+---
+<br/>
+### Stage 2: Optimization
+#### Tech Stack now looks like . . .
+<ul style={{paddingLeft: 15}}>
+  <li><Utils>NextJS</Utils> ISR</li>
+  <li>Post metadata, post content, and project data stored in <Utils>PostgreSQL</Utils> Database</li>
+  <li><Utils>Prisma</Utils> ORM to interface with DB</li>
+  <li>Dynamic Component Imports for blog posts (using <Utils>next/dynamic</Utils>)</li>
+  <li><Utils>AWS S3</Utils> for image storage (?)</li>
+</ul>
+#### Some additional fun features I want to add
+<ul style={{paddingLeft: 15}}>
+  <li>Analytics with <Utils>Vercel</Utils></li>
+  <li>Likes and Comment for posts</li>
+</ul>
+<br/>
+---
+<br/>
+### Stage 3: SillyMaxxing (far future)
+
+Nothing like overengineering your website right?
+#### Changes to the Tech Stack
+<ul style={{paddingLeft: 15}}>
+  <li>SLAP on <Utils>ESLint</Utils></li>
+  <li>SLAP on <Utils>Github Actions</Utils> workflow w/ Vercel</li>
+  <li>Swich to the experimental <Utils>/app</Utils> directory</li>
+  <li>Gamify the site (maybe add interactive polls)</li>
+  <li><Utils>Supabase</Utils>, using Prisma Migrate to move DB over</li>
+</ul>
+<br/>
+
+# That's it!
+
+And that's all I have planned for the website as of right now! Thanks for taking the time to read this blog post. I expect to be posting new content weekly at the very least- educational, opinion pieces, notes, cool things I find, you name it! I'll see y'all on the other side 😎.
+
+
+
+
