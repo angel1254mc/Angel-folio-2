@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, { useState } from 'react'
 import { useTrail, useSpring, animated, useGesture } from 'react-spring';
 import styles from '../styles/components/HomeProjectsList.module.css';
@@ -11,25 +12,27 @@ export const ProjectCard = ({height, opacity, x, index, project }) => {
     });
 
     return (
-    <animated.div style={{
-        opacity: opacity,
-        x: x,
-        boxShadow: boxShadow,
-        transform: transform,
-    }} 
-    onMouseEnter={() => setIsHover(true)}
-    onMouseLeave={() => setIsHover(false)}
-    className={styles.project_element}>
-        
-        <div className={styles.project_name}>
-            <p>{project.name}</p>
-        </div>
-        <div className={styles.project_desc}>
-            {project.desc}
-        </div>
-        <div className={styles.project_date}>
-            {project.date}
-        </div>
-    </animated.div>
+        <Link href={`/projects/${project.slug}`}>
+        <animated.div style={{
+            opacity: opacity,
+            x: x,
+            boxShadow: boxShadow,
+            transform: transform,
+        }} 
+        onMouseEnter={() => setIsHover(true)}
+        onMouseLeave={() => setIsHover(false)}
+        className={styles.project_element}>
+
+            <div className={styles.project_name}>
+                <p>{project.name}</p>
+            </div>
+            <div className={styles.project_desc}>
+                {project.desc}
+            </div>
+            <div className={styles.project_date}>
+                {project.date}
+            </div>
+        </animated.div>
+    </Link>
   )
 }
