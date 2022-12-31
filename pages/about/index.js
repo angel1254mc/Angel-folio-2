@@ -1,10 +1,19 @@
 import Head from 'next/head';
+import path from "path";
+import fs from "fs";
+import matter from 'gray-matter';
+import Footer from '../../components/Footer.js'
 import React from 'react'
+import AboutHero from '../../components/AboutHero';
 import Header from '../../components/Header';
 import Navbar from '../../components/Navbar';
 import styles from '../../styles/Home.module.css';
+import {serialize} from 'next-mdx-remote/serialize';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypePrism from 'rehype-prism';
 
-const index = () => {
+const index = ({source}) => {
     return (
         <>
         <Head>
@@ -16,10 +25,34 @@ const index = () => {
         <main className={styles.main + ' main-body'}>
           <Navbar/>
           <Header title={"About"}/>
-          <div className='mt-20 text-xl flex justify-center'>Coming Soon!</div>
+          <AboutHero content={source}/>
+          <Footer/>
         </main>
         </>
     )
+}
+
+export async function getStaticProps() {
+  const ABOUT_PATH = path.join(process.cwd(), "content/about.mdx");
+  const source = fs.readFileSync(ABOUT_PATH);
+  const {content, data} = matter(source);
+  console.log(content);
+  const mdxSource = await serialize(content, {
+    mdxOptions: {
+      rehypePlugins: [
+        rehypeSlug,
+        [rehypeAutolinkHeadings, {behavior: 'wrap'}],
+        rehypePrism
+      ]
+    }
+  });
+  console.log(mdxSource);
+
+  return {
+    props: {
+      source: mdxSource
+    }
+  }
 }
 
 export default index;

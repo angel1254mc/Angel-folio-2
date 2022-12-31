@@ -11,7 +11,7 @@ const Projects = [
             url: 'https://github.com/angel1254mc/et-crm-firebase-draft',
             urls: [{title: "Main Repo", url: 'https://github.com/angel1254mc/et-crm-firebase-draft'}],
         },
-        accomplishments: ["Served as the Technical Lead for a team of 7 developers, providing support and mentorship with Infrastructure Provisioning, CI/CD Integration, Frontend Development, Backend Development, and System Architecture", "Leveraged React-Beautiful-DND and Firebase Snapshot Listeners to implement real-time CRUD collaboration", "Helped build contract search system for centralized access leveraging SAM.gov and GSA Ebuy APis to provide centralized access to upwards of 92,000 active contracts at any given time.", "Designed and Implemented Firestore Architecture and Security Rules, collaborating closely with the Frontend, Backend, and Cybersecurity teams to assess, analyze, and implement points of improvement."],
+        accomplishments: ["Served as the Technical Lead for a team of 7 developers, providing support and mentorship with Infrastructure Provisioning, CI/CD Integration, Frontend Development, Backend Development, and System Architecture", "Leveraged React-Beautiful-DND and Firebase Snapshot Listeners to implement real-time CRUD-compatible Pipeline collaboration", "Helped build contract search system for centralized access leveraging SAM.gov and GSA Ebuy APis to provide centralized access to upwards of 92,000 active contracts at any given time.", "Designed and Implemented Firestore Architecture and Security Rules, collaborating closely with the Frontend, Backend, and Cybersecurity teams to assess, analyze, and implement points of improvement."],
         lessons: ['Dividing tasks among a team by strengths and mutual independence between tasks is a powerful way to increase throughput', 'clever use of sub-collections can help keep bandwidth low in otherwise intrinsically high-bandwidth apps.'],
         authors: [
             {
@@ -292,7 +292,10 @@ const Projects = [
 
 const tldr = [{type: "text", content: "I am"},
  {type: "emphasis", content: " Angel Lopez,"},
- {type: "text", content: "a results-driven Web and Software Developer. My past work experience consists mostly of"},
+ {type: "text", content: " a 3rd Year "},
+ {type: "emphasis", content: "CISE Major "},
+ {type: 'text', content: " at UF. "},
+ {type: "text", content: "I'm a results-driven Web and Software Developer. My past work experience consists mostly of"},
  {type: "emphasis", content: "Website Development, "},
  {type: "emphasis", content: "Systems Engineering, "},
  {type: "emphasis", content: "and UI/UX Design"},
