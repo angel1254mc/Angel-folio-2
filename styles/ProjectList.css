@@ -13,7 +13,6 @@
     border-radius: 5px; 
     background-color: #101010;
     row-gap: 10px;
-    cursor: pointer;
 }
 .project-top-group {
     display: flex;

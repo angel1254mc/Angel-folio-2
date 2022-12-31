@@ -156,6 +156,27 @@ a {
   padding-left: 20px;
   padding-right: 20px;
 }
+p > a {
+  color: lightseagreen;
+}
+
+.gradient-link {
+  position: relative;
+}
+.gradient-link:hover:after {
+  outline: 1px solid rgba(70,229,230,1);
+  width: 100%;
+}
+.gradient-link:after {
+  content: '';
+  position: absolute;
+  background-clip: text;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  outline: 0px solid transparent;
+  transition: width 150ms ease;
+}
 .blog-header {
   max-width: 700px;
 }
@@ -257,6 +278,7 @@ a {
   display: flex;
   flex-direction: row;
   width: 75vw;
+  max-width: 800px;
   min-width: 300px;
   margin-top: 30px;
 }
@@ -297,7 +319,7 @@ a {
 }
 #projectCard:hover .projectCardPicture {
   border-radius: 25px 25px 25px 25px;
-  transform: translateX(-30vw);
+  transform: translateX(max(-30vw, -350px));
 }
 #projectCard:hover .projectCardBody {
   opacity: 1;

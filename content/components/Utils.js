@@ -5,6 +5,7 @@ const Utils = ({ children, href=null, fontSize = '1rem' }) => {
   if (href)
     return (
       <Link
+        className="gradient-link"
         href={href}
         style={{
           textDecoration: "underline",

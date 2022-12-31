@@ -54,7 +54,7 @@ const BlogItem = ({post, empty}) => {
                     {title}
                 </div>
                 <div className={styles.post_date}>
-                    {(new Date(date)).toDateString()}
+                    {(new Date(date)).toLocaleDateString()}
                 </div>
             </div>
             <div className={styles.post_excerpt}>{excerpt}</div>
