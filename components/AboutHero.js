@@ -4,7 +4,7 @@ import styles from '../styles/About.module.css'
 import Image from 'next/image'
 import { MDXRemote } from 'next-mdx-remote'
 import Utils from '../content/components/Utils'
-import profile from '../public/profile_picture.jpg';
+import profile from '../public/me_picture.webp';
 const AboutHero = ({content}) => {
 
 
