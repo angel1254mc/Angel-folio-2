@@ -17,7 +17,7 @@ const Utils = ({ children, href=null, fontSize = '1rem' }) => {
           WebkitBackgroundClip:'text',
           fontSize: fontSize,
           fontWeight: 'bold',
-          display: 'inline-block',
+          display: 'inline',
         }}
       >
         {children}
@@ -34,7 +34,7 @@ const Utils = ({ children, href=null, fontSize = '1rem' }) => {
           WebkitBackgroundClip:'text',
           fontSize: fontSize,
           fontWeight: 'bold',
-          display: 'inline-block',
+          display: 'inline',
         }}
       >
         {children}
