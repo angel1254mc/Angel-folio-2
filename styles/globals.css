@@ -219,11 +219,13 @@ p > a {
   opacity: 0;
   font-weight: 700;
   text-decoration: underline;
+  display: inline;
 }
 .emphasis {
   color: palevioletred;
   opacity: 0;
   font-weight: 700;
+  display: inline;
 }
 
 .image-window {

@@ -28,6 +28,7 @@
 }
 .word {
     opacity: 0;
+    display: inline;
 }
 
 @keyframes fadeIn {
