@@ -24,7 +24,7 @@ export const ShmoveImages = ({openTrigger}) => {
     <div className="image-window">
         <Image
         className="shmove-image"
-        src={'https://i.imgur.com/dFQD33J.jpg'}
+        src={'https://i.imgur.com/F63ixRe.jpg'}
         alt="Picture of Angel"
         fill={true}
         priority

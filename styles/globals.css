@@ -242,6 +242,7 @@ p > a {
   opacity: 0;
   transition: 1s all;
   border-radius: 100%;
+  object-fit: cover;
 }
 .spinIn {
   animation: spinIn;
