@@ -39,7 +39,7 @@ export default function Home({posts, projects}) {
         <title>AngelFolio | Home</title>
         <meta name="description" content="Angel's portfolio site and blog. Come check it out!" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="image" content='https://www.angel1254.com/link-image.png'/>
+        <meta name="og:image" content='https://www.angel1254.com/link-image.png'/>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main + ' main-body'}>
