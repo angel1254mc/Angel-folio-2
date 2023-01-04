@@ -21,6 +21,10 @@ const PostPage = ({post}) => {
     <>
     <Head>
       <title>{post.meta.title}</title>
+      <meta name="description" content={post.excerpt}/>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <meta name="image" content='https://www.angel1254.com/link-image.png'/>
+      <link rel="icon" href="/favicon.ico" />
     </Head>
     <main className={styles.main + ' blog-body'}>
       <Navbar/>
