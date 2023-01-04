@@ -13,20 +13,13 @@ import Link from 'next/link'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
 import BlogList from '../../components/Blog/BlogList'
 import Footer from '../../components/Footer'
+import HeadersCustom from '../../components/HeadersCustom'
 
 const index = ({project, projectPosts}) => {
   project = JSON.parse(project);
   return (
    <>
-    <Head>
-      <title>{`Angel - ${project.name}`}</title>
-      <meta name="description" content="Angel's Portfolio and Blog about tech, development, and more!" />
-      <meta name="image" content='https://www.angel1254.com/link-image.png'/>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta property="og:image" content='https://www.angel1254.com/link-image.png'/>
-      <meta name="twitter:card" content="summary_large_image"></meta>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+   <HeadersCustom title={`AngelFolio | ${project.name}`}/>
     <main className={styles.main + ' main-body'}>
       <Navbar/>
       <Header title={`Projects/${project.slug}`} size={'3rem'}/>

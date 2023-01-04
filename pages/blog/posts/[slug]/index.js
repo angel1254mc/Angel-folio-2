@@ -15,19 +15,12 @@ import dynamic from 'next/dynamic';
 import * as components from '../../../../content/components/ProjectCard.js'
 import Utils from '../../../../content/components/Utils.js'
 import Footer from '../../../../components/Footer';
+import HeadersCustom from '../../../../components/HeadersCustom';
 const PostPage = ({post}) => {
   
   return (
     <>
-    <Head>
-      <title>{post.meta.title}</title>
-      <meta name="description" content={post.excerpt}/>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="image" content='https://www.angel1254.com/link-image.png'/>
-      <meta property="og:image" content='https://www.angel1254.com/link-image.png'/>
-      <meta name="twitter:card" content="summary_large_image"></meta>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+    <HeadersCustom title={post.meta.title} description={post.meta.excerpt}/>
     <main className={styles.main + ' blog-body'}>
       <Navbar/>
       <div style={{marginTop: '20px', width: '100%', height: '90px', backgroundPosition: 'cover', position: 'relative'}} className="">

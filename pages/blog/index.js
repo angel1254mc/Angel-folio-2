@@ -7,19 +7,12 @@ import styles from '../../styles/Home.module.css';
 import Image from 'next/image';
 import { getAllPosts, getSlugs } from '../api';
 import Footer from '../../components/Footer';
+import HeadersCustom from '../../components/HeadersCustom';
 
 const index = ({ posts }) => {
     return (
         <>
-        <Head>
-          <title>AngelFolio | About</title>
-          <meta name="description" content="Angel's Portfolio and Blog about tech, development, and more!" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta name="image" content='https://www.angel1254.com/link-image.png'/>
-          <meta property="og:image" content='https://www.angel1254.com/link-image.png'/>
-          <meta name="twitter:card" content="summary_large_image"></meta>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+       <HeadersCustom title={'Posts by Tag'}/>
         <main className={styles.main + ' main-body'}>
           <Navbar/>
           <Header title={"Blog"}/>

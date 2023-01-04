@@ -17,6 +17,7 @@ import { getAllPosts, getAllProjects } from './api'
 import SpotifyBubble from '../components/SpotifyBubble'
 import Footer from '../components/Footer';
 import LinkImage from '../public/link-image.png'
+import HeadersCustom from '../components/HeadersCustom'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts, projects}) {
@@ -35,15 +36,7 @@ export default function Home({posts, projects}) {
   }, [dataRef])
   return (
     <div className="w-full flex flex-col items-center">
-      <Head>
-        <title>AngelFolio | Home</title>
-        <meta name="description" content="Angel's portfolio site and blog. Come check it out!" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="image" content='https://www.angel1254.com/link-image.png'/>
-        <meta property="og:image" content='https://www.angel1254.com/link-image.png'/>
-        <meta name="twitter:card" content="summary_large_image"></meta>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <HeadersCustom/>
       <main className={styles.main + ' main-body'}>
         <Navbar/>
         <div className={styles.animate_hero}>
