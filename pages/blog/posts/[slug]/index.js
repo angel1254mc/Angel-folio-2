@@ -52,7 +52,6 @@ export const getStaticProps = async ({params}) => {
     mdxOptions: {
       rehypePlugins: [
         rehypeSlug,
-        [rehypeAutolinkHeadings, {behavior: 'wrap'}],
         rehypePrism
       ]
     }

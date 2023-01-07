@@ -156,8 +156,9 @@ a {
   padding-left: 20px;
   padding-right: 20px;
 }
-p > a {
+.blog-body a {
   color: lightseagreen;
+  text-decoration: underline;
 }
 
 .gradient-link {

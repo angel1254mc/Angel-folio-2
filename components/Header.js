@@ -15,7 +15,8 @@ const random = (min, max) => {
  * @returns
  */
 function Header({ title, size = null , style={}, interval = 3000 }) {
-
+    if (title.length > 25)
+        size = '3rem';
     const ref = useRef();
     useEffect(() => {
         if (size)

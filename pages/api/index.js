@@ -22,6 +22,10 @@ export const getSlugsSupa = async () => {
     // For some reason slugs.map(slugObj => slugObj.slug) was not working? so i did a forEach instead
     return slugStrings;
 }
+/**
+ * @function getProjectSlugsSupa
+ * @returns returns an array of slug strings
+ */
 export const getProjectSlugsSupa = async () => {
     // Get projects from supabase
     const {data: projects} = await supabase.from('projects').select('*');
@@ -98,7 +102,7 @@ export const getAllPostsSupa = async (project = null) => {
 export const getAllProjectsSupa = async () => {
 
     // First, get all projects, then get all image URLS for the users
-    let {data: projects} = await supabase.from('projects').select('*');
+    let {data: projects} = await supabase.from('projects').select('*').order('added', {ascending: false});
 
     let proj = await Promise.all(projects.map(async (project) => {
         // Get github image url for each author

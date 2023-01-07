@@ -1,5 +1,5 @@
 ---
-title: AngelFolio Supabase?! Coding With Leon?! STAR Research?! and more
+title: Finally Integrated Supabase with the Site!
 tags:
   - Rant
   - Supabase
@@ -9,7 +9,96 @@ date: 2022-12-28
 project: angelfolio
 emoji: '😎📃'
 imageURI: https://images.unsplash.com/photo-1671955101182-eecaa90cc4c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80
-excerpt: This metadata is not used, but keeping it here anyways!
+excerpt: AngelFolio Supabase?! Ramp Ghosted Me?! What do you mean there's no likes and comments yet ☹️ and more.
 ---
 
-It took a couple of youtube videos, 3 hours browsing the Supabase Documentation, and an image gallery side-project, but I finally integrated Supabase into my website! Instead of having my posts be nabbed from
+It took a couple of youtube videos, many hours browsing the Supabase Documentation, and an image gallery side-project, but I finally integrated Supabase into my website! Instead of having my posts nabbed locally and served alongside the website, I can now call grab posts from Supabase! Super neat for a couple of reasons:
+
+- I can now use Supabase as an RPC that revalidates my content on-demand, rather than at build-time (Just like [Sreetam Das](https://sreetamdas.com/about) does for his website!)
+- I can centralize post content and metadata. No funny 'mixing static metadata with dynamic metadata' stuff for when I implement likes and comments
+- I can make an admin dashboard 😍
+
+<br/>
+
+This is my first time using Supabase for a project in general, so I initially thought I was gonna have a pretty hard time. However, the platform is really well-documented and the community is very active, so I didn't have any trouble at all moving from Firebase. I'm still a bit rusty when it comes to SQL databases, so I have to work on that area before adopting Supabase for projects of a larger scale. [Definitely would recommend checking it out if you haven't already!](https://supabase.com/)
+
+### How I ended up doing it
+
+After setting up my Supabase project, Row-level security for all my tables, and installing the supabase SDK for NextJS, I went ahead and started refactoring the Blog Post and Project APIs. Before functions like `getPostSlugs` and `getProjectSlugs` would get their data by reading local files and/or the elements in the site directory.
+```js
+/**
+ * @function getProjectSlugs
+ * @deprecated used back when projects were parsed from static files
+ * @returns a list of project slug strings
+ */
+export const getProjectSlugs = async () => {
+    const proj = Projects;
+    return proj.map(project => project.slug);
+}
+```
+For Functions like these, the transition was pretty easy. Just a simple call of the Supabase Admin SDK on the server-side and boom! You got your slugs
+```js
+/**
+ * @function getProjectSlugsSupa
+ * @returns returns an array of slug strings
+ */
+export const getProjectSlugsSupa = async () => {
+    // Get projects from supabase, destructure response object
+    const {data: projects} = await supabase.from('projects').select('*');
+    // Map these projects to their slugs and return the slugs
+    return projects.map(project => project.slug);
+}
+```
+For slightly more complex functions, like getting pages by tags and generating pages that sort by tags, I had to get a little creative with my table structure. Since there's just one website user, and I don't really have all that many posts, I could've gotten away with storing tags as an array of strings under each post, and pooling tags together over all existing posts, but I felt that would end up in a lot of avoidable intermediary code. 
+<br/>
+<div>I ended up making a table for <Utils>Tags</Utils>, and another table for <Utils>PostTags</Utils>. The tags table is like the actual "TagName" and description of the tag, while the PostTags table relates the **post** foreign key and the **tag** foreign key to create that "One-to-Many" relationship between posts and tags. Manually adding tags and linking them to posts is a bit cumbersome because of this, but once I build out a dashboard I'll abstract it all away 😎.</div>
+<br/>
+### The Dashboard
+
+I've been planning on adding an admin dashboard for a while now. I already have a small admin portal (that does nothing but redirect you to a non-functional dashboard page when you login). The Supabase Team actually provides some really useful packages that you can install and import into your NextJS project to create an overarching context that keeps track of your Auth state on both the client-side and the server-side. How cool is that?
+
+Before I work any more on the dashboard, I want to get a good design going. Right now this is what I've got on Figma!
+
+<div>After I get that design done though, I really want to add <Utils>Likes</Utils> and possibly <Utils>Comments</Utils> to posts. A friend of mine has been requesting I add them for some time now, so I'm going to read up on how to differentiate non-authenticated users on a website. My current idea is storing a uid in their Session/Local Storage and sending that with each like/comment request to my NextJS backend, and going from there.</div>
+
+
+<br/>
+
+[Delba Oliveira](https://delba.dev/), **Development Experience Engineeer** at Vercel, has open-sourced her own portfolio/professional site, so I might take some notes off her book on this as well! 
+
+## Ramp Is Ghosting Me (gone wild)
+<br/>
+<div style={{display: 'flex', justifyContent: 'center'}}>
+
+</div>
+<br/>
+real-talk, Ramp is not ghosting me. I've been meaning to publish a post about the really cool CodeSandbox Challenge they've cooked up for the Software Engineering Internship Application this year, but I wasn't sure who to contact so I cold-messaged a talent-acquisition specialist at Ramp on LinkedIn (truly not my greatest idea). I've been waiting for a reply back for a while now, so I'll probably post the content some time soon 😊.
+
+P.S. I forgot to comment my code. Hopefully they don't toss out my application because of that 😭
+
+## Angel on 100Devs WHAT
+<br/>
+I love the idea of 100Devs. Not only that, I've connected with a few of the members and actively follow their githubs. Its not until recently that I applied to the program! Regardless of whether or not I earn a spot, I'll still keep up with the lessons regardless since they're all public and on Discord/Github! 
+
+## Breadgetter CRM Developments
+
+I've been working on a specific page of the Breadgetter CRM for the past couple of days at work, and I think this next stage of the project is going to be when stuff gets more complicated in terms of frontend, backend, and database. We're approaching a point where our current database schema might not work.
+
+- Bandwidth is a pretty huge factor, as soon we're going to be storing sizeable amounts of data for every contract object.
+- The Collaborative feature is another factor. Right now, we have listeners set up that react to changes on the entire pipeline - **including changes on contracts that don't really involve the pipeline page at all**. Changing the database schema to allow for more effective use of document listeners might help make the collaboration feature more lightweight.
+- We don't have any concrete sources of data to use for features like evaluating potential teaming partners and competitors. FPDS and SAM.gov do provide some information when it comes to Entities and what contracts they may possess, but there's little room in the API to query for specifics, like for example filtering through Entities by Award Types pursued or Company Type.
+
+<br/>
+<div>I've done some research, as well as looked at some of the resources my teammate <Utils>Eric</Utils> gathered. I've come up with a few possible ideas</div>
+<br/>
+
+- Separating Contracts into subcollections, but also denormalizing contract data between "shallow" and "deep" copies. shallow copies only include "labels" and their "values", where most of these are things that can be optionally shown on the contract card in Pipeline View. Deep copies have more complex logic, like notes associated with cards, capture decks, GovWin data, etc.
+- (As an alternative to my first bullet) denormalizing "deep" contract data. All Contract documents are "shallow" key-value pairs of simple data. Teams, CaptureDeck, and GovWin root collections have documents that store "deep" data, and link themselves to contracts by keeping a contract document Reference or the contract and pipeline ID they are associated with.
+- For Teaming Partners, Competitors, and Historical Contract Data, opt into a GovWin subscription and leverage their API
+- The harder route will be to use a combination of SAM.gov, FPDS, and USASpending.org APIs to build our own engine.
+
+<br/>
+
+
+
+

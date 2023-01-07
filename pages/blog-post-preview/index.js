@@ -49,7 +49,6 @@ export async function getStaticProps() {
       mdxOptions: {
         rehypePlugins: [
           rehypeSlug,
-          [rehypeAutolinkHeadings, {behavior: 'wrap'}],
           rehypePrism
         ]
       }
