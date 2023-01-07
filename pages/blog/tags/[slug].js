@@ -5,7 +5,7 @@ import Footer from '../../../components/Footer'
 import Header from '../../../components/Header'
 import Navbar from '../../../components/Navbar'
 import mainStyles from '../../../styles/Home.module.css'
-import { getAllPosts } from '../../api'
+import { getAllPostsSupa } from '../../api'
 const PostPage = ({ slug, posts}) => {
   return (
     <>
@@ -24,27 +24,28 @@ const PostPage = ({ slug, posts}) => {
     </>
   )
 }
-export const getStaticProps = ({params}) => {
+export const getStaticProps = async ({params}) => {
   const {slug} = params;
-  const posts = getAllPosts().filter(post => post.meta.tags.includes(slug));
+  const posts = (await getAllPostsSupa()).filter(post => post.meta.tags.includes(slug));
 
   return {
     props: {
       slug,
       posts: posts.map((post) => post.meta)
-    }
+    },
+    revalidate: 10, // Revalidate pagee every 10 seconds
   }
 }
 
 export const getStaticPaths = async () => {
-  const posts = getAllPosts();
+  const posts = await getAllPostsSupa();
   // At this point if we map tags, we should have an array of arrays. Lets try and
   // flatten these arrays into a set
   const tags = new Set(posts.map((post) => post.meta.tags).flat());
   const paths = Array.from(tags).map((tag) => ({params: {slug: tag}}));
   return {
     paths,
-    fallback: false,
+    fallback: 'blocking',
   }
 }
 export default PostPage

@@ -5,7 +5,7 @@ import Header from '../../components/Header';
 import Navbar from '../../components/Navbar';
 import styles from '../../styles/Home.module.css';
 import Image from 'next/image';
-import { getAllPosts, getSlugs } from '../api';
+import { getAllPostsSupa } from '../api';
 import Footer from '../../components/Footer';
 import HeadersCustom from '../../components/HeadersCustom';
 
@@ -24,10 +24,11 @@ const index = ({ posts }) => {
 }
 export async function getStaticProps() {
   
-  const posts = getAllPosts().map(post => post.meta);
+  const posts = (await getAllPostsSupa()).map(post => post.meta);
   // Now we can pass our information to the component
   return {
-    props: {posts}
+    props: {posts},
+    revalidate: 10
   }
 }
 

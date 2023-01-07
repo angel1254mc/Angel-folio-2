@@ -6,7 +6,7 @@ import HeadersCustom from '../../components/HeadersCustom';
 import Navbar from '../../components/Navbar';
 import ProjectList from '../../components/Projects/ProjectList';
 import styles from '../../styles/Home.module.css';
-import { getAllPosts, getAllProjects } from '../api';
+import { getAllProjectsSupa } from '../api';
 
 const index = ({ projects }) => {
     return (
@@ -23,9 +23,10 @@ const index = ({ projects }) => {
 }
 
 export async function getStaticProps() {
-  const projects = await getAllProjects();
+  const projects = await getAllProjectsSupa();
   return {
-    props: {projects}
+    props: {projects},
+    revalidate: 10, // Revalidate pagee every 10 seconds
   }
 }
 

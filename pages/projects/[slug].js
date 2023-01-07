@@ -2,7 +2,7 @@ import Head from 'next/head'
 import React, { useState, useRef } from 'react'
 import Header from '../../components/Header'
 import Navbar from '../../components/Navbar'
-import { getAllPosts, getProjectFromSlug, getProjectSlugs } from '../api'
+import { getAllPostsSupa, getProjectFromSlugSupa, getProjectSlugsSupa } from '../api'
 import styles from '../../styles/Home.module.css';
 import projectStyles from '../../styles/Project.module.css'
 import { animated, useSpring, useChain, useTrail, config } from 'react-spring'
@@ -43,24 +43,26 @@ export default index
 
 export const getStaticProps = async ({params}) => {
     const {slug} = params;
-    const project = JSON.stringify(await getProjectFromSlug(slug));
+    const unformattedProj = await getProjectFromSlugSupa(slug);
+    const project = JSON.stringify(unformattedProj);
     // Above function returns the project object, metadata for any related blog posts, and {tentatively} a 'content' var
     // that basically has a mini blog post description of the project
-    const projectPosts = getAllPosts('et-crm-for-et').map(post => post.meta);
+    const projectPosts = (await getAllPostsSupa(slug)).map(post => post.meta);
     return {
       props: {
         project,
         projectPosts,
-      }
+      },
+      revalidate: 10, // Revalidate pagee every 10 seconds
     }
   }
   
   export const getStaticPaths = async () => {
-    const paths = (getProjectSlugs()).map(slug => ({params: {slug}}));
+    const paths = (await getProjectSlugsSupa()).map(slug => ({params: {slug}}));
     return (
       {
         paths,
-        fallback: false
+        fallback: 'blocking'
       }
     )
   }

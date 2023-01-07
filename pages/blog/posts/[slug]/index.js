@@ -1,9 +1,7 @@
 import React from 'react'
-import { getPostFromSlug } from '../../../api';
 import { MDXRemoteSerializeResult, MDXRemote } from 'next-mdx-remote';
 import {serialize} from 'next-mdx-remote/serialize';
-import { getSlugs } from '../../../api';
-import Head from 'next/head';
+import { getPostFromSlugSupa, getSlugsSupa } from '../../../api';
 import rehypePrism from 'rehype-prism-plus';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
@@ -48,7 +46,7 @@ const PostPage = ({post}) => {
 
 export const getStaticProps = async ({params}) => {
   const {slug} = params;
-  const {content, meta} = getPostFromSlug(slug);
+  const {content, meta} = await getPostFromSlugSupa(slug);
   // Take the content and convert it into html/css/js
   const mdxSource = await serialize(content, {
     mdxOptions: {
@@ -62,17 +60,18 @@ export const getStaticProps = async ({params}) => {
   // mdxSource literally returns epic html version
   return {
     props: {
-      post: {source: mdxSource, meta}
-    }
+      post: {source: mdxSource, meta},
+    },
+    revalidate: 10, // Revalidate pagee every 10 seconds
   }
 }
 
 export const getStaticPaths = async () => {
-  const paths = getSlugs().map(slug => ({params: {slug}}));
+  const paths = (await getSlugsSupa()).map((slug) => ({params: {slug}}));
   return (
     {
       paths,
-      fallback: false
+      fallback: 'blocking'
     }
   )
 }

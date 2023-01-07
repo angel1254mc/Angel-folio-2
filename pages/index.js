@@ -13,7 +13,7 @@ import HomeProjectsList from '../components/HomeProjectsList'
 import useIntersectionObserver from '../components/hooks/useIntersectionObserver'
 import { PageTransitionContext } from '../components/Context/PageTransitionContext'
 import BlogShortList from '../components/BlogShortList'
-import { getAllPosts, getAllProjects } from './api'
+import { getAllPostsSupa, getAllProjectsSupa } from './api'
 import SpotifyBubble from '../components/SpotifyBubble'
 import Footer from '../components/Footer';
 import LinkImage from '../public/link-image.png'
@@ -67,9 +67,10 @@ export default function Home({posts, projects}) {
 }
 
 export async function getStaticProps() {
-  const projects = await getAllProjects();
-  const posts = getAllPosts();
+  const projects = await getAllProjectsSupa();
+  const posts = await getAllPostsSupa();
   return {
-    props: {projects, posts}
+    props: {projects, posts},
+    revalidate: 10, // Revalidate page every 10 seconds
   }
 }
