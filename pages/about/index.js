@@ -55,7 +55,7 @@ export async function getStaticProps() {
     props: {
       source: mdxSource
     },
-    fallback: 'blocking',
+    revalidate: 10
   }
 }
 
