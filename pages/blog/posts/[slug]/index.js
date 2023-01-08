@@ -14,6 +14,7 @@ import * as components from '../../../../content/components/ProjectCard.js'
 import Utils from '../../../../content/components/Utils.js'
 import Footer from '../../../../components/Footer';
 import HeadersCustom from '../../../../components/HeadersCustom';
+import LikeButton from '../../../../components/LikeButton';
 const PostPage = ({post}) => {
   
   return (
@@ -35,6 +36,7 @@ const PostPage = ({post}) => {
       <div className="blog-header">
         <Header title={post.meta.title} size={null}/>
       </div>
+      <div className="blog-body mb-2"><LikeButton slug={post.meta.slug}></LikeButton></div>
       <div className="blog-body">
         <MDXRemote {...post.source} components={{components, Utils}}/>
       </div>
