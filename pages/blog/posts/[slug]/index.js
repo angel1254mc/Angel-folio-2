@@ -37,7 +37,7 @@ const PostPage = ({post}) => {
         <Header title={post.meta.title} size={null}/>
       </div>
       <div className="blog-body mb-2"><LikeButton slug={post.meta.slug}></LikeButton></div>
-      <div className="blog-body">
+      <div className="blog-body prose prose-invert">
         <MDXRemote {...post.source} components={{components, Utils}}/>
       </div>
     </main>
