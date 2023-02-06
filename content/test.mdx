@@ -1,112 +1,299 @@
 ---
-title: Finally Integrated Supabase with the Site!
+title: Ramp Software Dev Challenge 2023
 tags:
-  - Rant
-  - Supabase
   - Tech
-  - MDX
+  - Typescript
 date: 2022-12-28
-project: angelfolio
+project: None
 emoji: '😎📃'
 imageURI: https://images.unsplash.com/photo-1671955101182-eecaa90cc4c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80
 excerpt: AngelFolio Supabase?! Ramp Ghosted Me?! What do you mean there's no likes and comments yet ☹️ and more.
 ---
 
-It took a couple of youtube videos, many hours browsing the Supabase Documentation, and an image gallery side-project, but I finally integrated Supabase into my website! Instead of having my posts nabbed locally and served alongside the website, I can now call grab posts from Supabase! Super neat for a couple of reasons:
+I finally got my decision back for Ramp and unfortunately my application was rejected 🥲 but that's ok because it means I'm allowed to post my solution process for the internship challenge!
 
-- I can now use Supabase as an RPC that revalidates my content on-demand, rather than at build-time (Just like [Sreetam Das](https://sreetamdas.com/about) does for his website!)
-- I can centralize post content and metadata. No funny 'mixing static metadata with dynamic metadata' stuff for when I implement likes and comments
-- I can make an admin dashboard 😍
+I loved the challenge this year (I did the challenge for last year as well, but didn't submit my application) since it felt like an actual FullStack web development challenge, rather than an arbitrary problem for the sake of testing your knowledge of one particular data structure or algorithm
 
-<br/>
+In this post, I'll be describing my thinking throughout solving the challenge, as well as my solutions!
 
-This is my first time using Supabase for a project in general, so I initially thought I was gonna have a pretty hard time. However, the platform is really well-documented and the community is very active, so I didn't have any trouble at all moving from Firebase. I'm still a bit rusty when it comes to SQL databases, so I have to work on that area before adopting Supabase for projects of a larger scale. [Definitely would recommend checking it out if you haven't already!](https://supabase.com/)
+### What the challenge is about
 
-### How I ended up doing it
+The starter code emulates the functionality of a transaction approval system built by Ramp. This system has the ability to filter by employees, or simply show transactions for all employees. It is responsive, has pagination functionality (that doesn't work yet), and a "fake backend" that simulates making requests to a backend
 
-After setting up my Supabase project, Row-level security for all my tables, and installing the supabase SDK for NextJS, I went ahead and started refactoring the Blog Post and Project APIs. Before functions like `getPostSlugs` and `getProjectSlugs` would get their data by reading local files and/or the elements in the site directory.
-```js
-/**
- * @function getProjectSlugs
- * @deprecated used back when projects were parsed from static files
- * @returns a list of project slug strings
- */
-export const getProjectSlugs = async () => {
-    const proj = Projects;
-    return proj.map(project => project.slug);
+However, if you play around with the system for a little bit you'll realize that the pagination is a bit funky, the employee filter system only slightly works, and the dropdown seems to follow you down when you scroll? These are some of the bugs that the challenge has us fix.
+
+### What to do first
+
+Whenever I'm coding in a repo/project that I myself didn't help build, I like to browse the codebase before coding to get a general feel for how the system and its components interact. 
+
+While browsing, I noted that there is a clear separation between UI and HTTP-related things like fetching, SWR, and posting data to the server. This helps us know where to look depending on the nature of the problem. After getting a feel for the codebase, we can jump into solving the first bug.
+
+## Bug 1: Select dropdown doesn't scroll with rest of the page
+
+This issue makes itself apparent on mobile viewports, when the user is able to scroll down on the page. The dropdown element seems to follow the user when you scroll down.
+
+If you’re familiar with CSS, you might already know the cause of this bug. To make sure, let’s look at the Styles on the Chrome Dev Tools to spot whether or not the display of that list component is set to fixed. We can do this by right clicking on the expanded dropdown, and inspecting, then heading to the styles section.
+
+```CSS
+/** In index.css = */
+.RampInputSelect--dropdown-container {
+  display: none;
+  position: fixed; /** Right here! */
+  width: 100%;
+  max-width: 700px;
+  border: 1px solid var(--color-darker-shade);
+  margin-top: 0.5rem;
+  max-height: 16rem;
+  overflow: auto;
+  box-shadow: rgb(0 0 0 / 10%) 0px 0px 1px, rgb(0 0 0 / 13%) 0px 4px 8px;
+}
+
+```
+
+We’ll notice that for some reason, the display property on this div is set to fixed. We can remove this property in the code, test it out, and voila! the dropdown no longer moves with the user. Just to be safe, you might want to test this on different browsers.
+
+## Bug 2: Approve checkbox not working
+
+The next bug we encounter is that the toggle on every list item doesn’t work. Odds are, this has to do with some faulty event listener in the JSX for that list component. Let’s go ahead and give it a look. We’re going to need to take a look at the Transactions and TransactionPane Components under the src/components directory
+
+The transactions component is below
+```jsx
+export const Transactions: TransactionsComponent = ({ transactions }) => {
+  const { fetchWithoutCache, loading } = useCustomFetch()
+
+  const setTransactionApproval = useCallback<SetTransactionApprovalFunction>(
+    async ({ transactionId, newValue }) => {
+      await fetchWithoutCache<void, SetTransactionApprovalParams>("setTransactionApproval", {
+        transactionId,
+        value: newValue,
+      })
+    },
+    [fetchWithoutCache]
+  )
+
+  if (transactions === null) {
+    return <div className="RampLoading--container">Loading...</div>
+  }
+
+  return (
+    <div data-testid="transaction-container">
+      {transactions.map((transaction) => (
+        <TransactionPane
+          key={transaction.id}
+          transaction={transaction}
+          loading={loading}
+          setTransactionApproval={setTransactionApproval}
+        />
+      ))}
+    </div>
+  )
 }
 ```
-For Functions like these, the transition was pretty easy. Just a simple call of the Supabase Admin SDK on the server-side and boom! You got your slugs
-```js
-/**
- * @function getProjectSlugsSupa
- * @returns returns an array of slug strings
- */
-export const getProjectSlugsSupa = async () => {
-    // Get projects from supabase, destructure response object
-    const {data: projects} = await supabase.from('projects').select('*');
-    // Map these projects to their slugs and return the slugs
-    return projects.map(project => project.slug);
+
+And the TransactionsPane component is below as well
+```jsx
+export const TransactionPane: TransactionPaneComponent = ({
+  transaction,
+  loading,
+  setTransactionApproval: consumerSetTransactionApproval,
+}) => {
+  const [approved, setApproved] = useState(transaction.approved)
+
+  return (
+    <div className="RampPane">
+      <div className="RampPane--content">
+        <p className="RampText">{transaction.merchant} </p>
+        <b>{moneyFormatter.format(transaction.amount)}</b>
+        <p className="RampText--hushed RampText--s">
+          {transaction.employee.firstName} {transaction.employee.lastName} - {transaction.date}
+        </p>
+      </div>
+      <InputCheckbox
+        id={transaction.id}
+        checked={approved}
+        disabled={loading}
+        onChange={async (newValue) => {
+          await consumerSetTransactionApproval({
+            transactionId: transaction.id,
+            newValue,
+          })
+
+          setApproved(newValue)
+        }}
+      />
+    </div>
+  )
 }
+
 ```
-For slightly more complex functions, like getting pages by tags and generating pages that sort by tags, I had to get a little creative with my table structure. Since there's just one website user, and I don't really have all that many posts, I could've gotten away with storing tags as an array of strings under each post, and pooling tags together over all existing posts, but I felt that would end up in a lot of avoidable intermediary code. 
-<br/>
-<div>I ended up making a table for <Utils>Tags</Utils>, and another table for <Utils>PostTags</Utils>. The tags table is like the actual "TagName" and description of the tag, while the PostTags table relates the **post** foreign key and the **tag** foreign key to create that "One-to-Many" relationship between posts and tags. Manually adding tags and linking them to posts is a bit cumbersome because of this, but once I build out a dashboard I'll abstract it all away 😎.</div>
-<br/>
-### The Dashboard
 
-I've been planning on adding an admin dashboard for a while now. I already have a small admin portal (that does nothing but redirect you to a non-functional dashboard page when you login). The Supabase Team actually provides some really useful packages that you can install and import into your NextJS project to create an overarching context that keeps track of your Auth state on both the client-side and the server-side. How cool is that?
+We spot the InputCheckbox on the TransactionPane component, and another important-looking function that is passed down between components. We also see that this function is a fetch request. Hmmm… seems like this function that our child “consumes” calls an endpoint meant to update the change. This function sends our “new value” over to the server, and we update our local value after that using the setApproved() function. It doesn’t look like there’s anything wrong here. What’s even weirder, if we put a print to the console from within that onChange function, nothing prints out when we click on the input element. Maybe if we look deeper we might be able to find something else
 
-Before I work any more on the dashboard, I want to get a good design going. Right now this is what I've got on Figma!
+As it turns out, the problem wasn't really in either component! When we look over the InputCheckbox, and inspect the actual input element on the browser, we realize that the input element is set to display: none! I mean, of course we can’t click on it- it literally doesn’t show up on our screen. I don’t want to take off the ‘display none’ property becauses it looks weird, but I also don’t want to totally delete the input element for accessibility purposes. Instead, I’ll port over an onClick event to the label element that is actually shown on screen, that way users can click on it and see their changes. Voila!
 
-<br/>
-<img src="https://i.imgur.com/zQy4vdv.png" width="100%" height="auto"/>
-<br/>
-<br/>
-<div>After I get that design done though, I really want to add <Utils>Likes</Utils> and possibly <Utils>Comments</Utils> to posts. A friend of mine has been requesting I add them for some time now, so I'm going to read up on how to differentiate non-authenticated users on a website. My current idea is storing a uid in their Session/Local Storage and sending that with each like/comment request to my NextJS backend, and going from there.</div>
+## Bug 3: Cannot select *_All Employees_* after selecting an employee
 
+So, we seem to have an error with the filtering component of our app. We can switch over to filtering by person just fine, but when we switch back to “All Employees”, our app crashes. What gives? If we look at the debug console on Chrome Dev Tools, our fake request debugger tells us that we got an error because the Employee ID can’t be empty. From previous inspection, it looks like our Employee SWR functionality happens in `App.tsx`, through the useEmployee hook. Let's try checking over there.
 
-<br/>
+```jsx
+const { data: employees, ...employeeUtils } = useEmployees()
+const { data: paginatedTransactions, ...paginatedTransactionsUtils } = usePaginatedTransactions()
+const { data: transactionsByEmployee, ...transactionsByEmployeeUtils } = useTransactionsByEmployee()
 
-[Delba Oliveira](https://delba.dev/), **Development Experience Engineeer** at Vercel, has open-sourced her own portfolio/professional site, so I might take some notes off her book on this as well! 
+// Both of the functions below may be called as part of the onChange handler for InputSelect!
+//
+//
+ const loadAllTransactions = useCallback(async () => {
+    setIsLoading(true)
+    transactionsByEmployeeUtils.invalidateData()
 
-## Ramp Is Ghosting Me (gone wild)
-<br/>
-<div style={{display: 'flex', justifyContent: 'center'}}>
-  <img src="https://i.imgur.com/Vf4oxZj.png" width="300" height="300"/>
+    await employeeUtils.fetchAll()
+    await paginatedTransactionsUtils.fetchAll()
+
+    setIsLoading(false)
+  }, [employeeUtils, paginatedTransactionsUtils, transactionsByEmployeeUtils])
+
+  const loadTransactionsByEmployee = useCallback(
+    async (employeeId: string) => {
+      paginatedTransactionsUtils.invalidateData()
+      await transactionsByEmployeeUtils.fetchById(employeeId)
+    },
+    [paginatedTransactionsUtils, transactionsByEmployeeUtils]
+  )
+```
+
+If we look at the onChange handler for the InputSelect component, we spot a potential **culprit** It seems that when a “new value” or new filter method is chosen on the dropdown, we get that value’s ID and pass it into `loadTransactionsByEmployee()`. Presumably, we need this .id parameter to return an employee ID all the time. If we look at the function definition, this does indeed seems to be the case. But what about when we want transactions from all employees? We seem to have a function that does this but its never called by the InputSelect component (`loadAllTransactions`).
+
+TypeScript really comes in clutch here, because by hovering over the onChange function for the InputSelect, we see that our input to that function is of type `Employee` , and our list of Employees that we can choose from (`Employee[]` ) is defined at the items prop of InputSelect. Notice, there’s an “EMPTY_EMPLOYEE” constant sticking out like a sore thumb. Odds are, this is our “All Employees Selector”. If we go to Utils, we can confirm this. So because there is no employee ID associated with this option, it’s left empty on purpose to denote that we should actually be looking up transactions for all Employees. Let’s add a conditional that checks for newValue equaling our EMPTY_EMPLOYEE constant. If they do equal each other, load all transactions for all employees. Otherwise, load the values for the given employee.
+
+## Bug 4: Clicking on View More button not showing correct data
+
+When we click the “View More” button, our list of transactions is not appended to. Instead, these new values overwrite the old values. I suspect this is the case due to the code for pagination modifying the transactions state variable incorrectly. This logic isn’t handled on the App.tsx page, rather it is handled under the hood by the usePaginatedTransactions and useTransactionsByEmployee hooks, specifically when either fetchById or fetchAll are called.
+
+```jsx
+  const fetchAll = useCallback(async () => {
+    const response = await fetchWithCache<PaginatedResponse<Transaction[]>, PaginatedRequestParams>(
+      "paginatedTransactions",
+      {
+        page: paginatedTransactions === null ? 0 : paginatedTransactions.nextPage,
+      }
+    )
+
+    setPaginatedTransactions((previousResponse) => {
+      if (response === null || previousResponse === null) {
+        return response
+      }
+
+      return { data: response.data, nextPage: response.nextPage }
+    })
+  }, [fetchWithCache, paginatedTransactions])
+
+  const invalidateData = useCallback(() => {
+    setPaginatedTransactions(null)
+  }, [])
+```
+
+If we look inside the fetchAll function definition, we see this piece of code. First, we have the state variable setter, `setPaginatedTransactions` with a callback function that has the **previous** response object as a parameter. I put a print statement inside this function to get a look at the structure of this object, although I could’ve also just gone to the type definition for `PaginatedResponse<Transaction[]>`. 
+
+I’m pretty sure we should be prepending the old response.data to the new response.data. That way we can actually have both old and new transactions showing up on our page. Let’s try that out using the spread operator.
+
+Our nextPage field should still be response.nextPage, since we should be on the [`previousResponse.page]() + 1` -th page, which corresponds with response.nextPage.
+
+This is what the code looks like now.
+
+```jsx
+setPaginatedTransactions((previousResponse) => {
+      if (response === null || previousResponse === null) {
+        return response
+      }
+      else if (previousResponse && response) {
+        // If there was a previous response, lets prepend it to the new state of our data!
+        return { data: [...previousResponse.data, ...response.data], nextPage: response.nextPage} 
+      }
+
+      return { data: response.data, nextPage: response.nextPage }
+    })
+```
+
+If we try it out now, we’ll see that our view more button works as intended! The red line separates page 1 results and page 2 results.
+
+<div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+    <img src="https://i.imgur.com/ANEYTTq.png" alt="Both Appear Now!" style={{width: '500px', maxWidth: '100%'}}/>
 </div>
 <br/>
-Real talk, [Ramp](https://ramp.com/) is not ghosting me. I've been meaning to publish a post about the really cool CodeSandbox Challenge they've cooked up for the [Software Engineering Internship](https://www.linkedin.com/jobs/view/3403095894) Application this year, but I wasn't sure who to contact to ask whether or not I could publish it. So, I cold-messaged a talent-acquisition person at Ramp on LinkedIn (truly not my greatest idea). I've been waiting for a response back for a while now, so I'll probably post the content sometime soon 😊.
 
-P.S. I forgot to comment my code. Hopefully they don't toss out my application because of that 😭.
+Nice! There’s another weird bug going on with View More and filtering by employee, but lets leave that until after wee figure out the main bugs of the challenge.
 
-## Angel on 100Devs WHAT
+## **Bug 5: Employees filter not available during loading more data**
+
+The problem is two-fold: 
+
+- When we initially load the page, the employee select stays loading even after the request for employee data is fulfilled. This loading state continues until transactions are loaded.
+- When we hit “View More” the employee select stays loading despite no request being sent for the employees.
+
+Based on what we saw earlier, this might be due to there being just one loading variable that manages all of the loading state for the app. It waits for all requests to finalize before changing its value. One thing we could do is use the `EmployeeUtils.loading`property, that is returned as part of the  useEmployees hook, which itself has its loading state managed by useCustomFetch, which sets loading to false once the fetch is completed. Let’s use that intead!
+```jsx
+<InputSelect<Employee>
+  isLoading={employeeUtils.loading} // <= right here!
+  defaultValue={EMPTY_EMPLOYEE}
+  items={employees === null ? [] : [EMPTY_EMPLOYEE, ...employees]}
+  label="Filter by employee"
+  loadingLabel="Loading employees"
+  parseItem={(item) => ({
+    value: item.id,
+    label: `${item.firstName} ${item.lastName}`,
+  })}
+  // There's some more code for this component below
+```
+And BOOM, we’ve fixed both parts of bug 5!
+
+## **Bug 6: View more button not working as expected**
+
+Like earlier, we have two big issues
+
+- View more button shows up even when filtering by user, when it shouldn’t since user transactions can’t be paginated
+- View more button shows up even when you’ve reached the end of the list when viewing transactions over all users. Clicking it crashes the site.
+
+Just from the problems we solved earlier, we know that it might be useful to take advantage of the nextPage field that comes as part of the `paginatedResponse` type. On App.tsx, the button that we need to set a conditional for can be found under the div with className "RampGrid"
+
+```jsx
+<div className="RampGrid">
+  <Transactions transactions={transactions} />
+  {/* The ternary operation below ensures viewmore button is hidden when we're faced with either of the two edge cases */}
+  {paginatedTransactions !== null && paginatedTransactions.nextPage !== null && (
+    <button
+      className="RampButton"
+      disabled={paginatedTransactionsUtils.loading}
+      onClick={async () => {
+        await loadAllTransactions()
+      }}
+    >
+      View More
+    </button>
+  )}
+</div>
+```
+And there you go! it's all fixed.
+
+## Bug 7: Approving a transaction won't persist the new value
+
+This final problem actually threw me in for a loop for a little bit. The problem here is that toggled values don’t persist between switching filters. At first I thought of fixing this problem by modifying the transactions useMemo or doing away with it all together, since I figured this was due to weird caching shenanigans. However, while browsing through the useCustomFetch, I realized that the real culprit was the actual, simulated cache itself that wraps over the entire app.
+
+When we toggle transactions, these changes get sent to the server through a setTransactionApproval callback. However, we don’t invalidate our cache after this callback, resulting in innacurate data on the client side. By taking the following steps, we can fix this.
+
+- In the Transactions Component on line 8, include the ‘clearCacheByEndpoint’ function in the useCustomHook destructuring
+- Then, within setTransactionApproval, after our changes are sent to the server, invalidate our current cache for our transactions using clearCacheByEndpoint
 <br/>
-I love the idea and mission of [100Devs](https://leonnoel.com/100devs/). Not only that, I've connected with a few of the members and actively follow their githubs. Its not until recently that I applied to the program! Regardless of whether or not I earn a spot, I'll still keep up with the lessons regardless since they're all public and on Discord/Github! 
+```jsx
+  clearCacheByEndpoint(['paginatedTransactions', 'transactionsByEmployee']);
+```
 
-## Breadgetter CRM Developments
+We run it, and it works! One thing we should acknowledge though is that we have to regenerate our cache every time that we make a change to a transaction, even if its just one transaction. On the other hand, the loading times are not too bad and it saves us some unneeded complexity on the client-side.
 
-I've been working on a specific page of the Breadgetter CRM for the past couple of days at work, and I think this next stage of the project is going to be when stuff gets more complicated in terms of frontend, backend, and database. We're approaching a point where our current database schema might not work.
-
-- Bandwidth is a pretty huge factor, as soon we're going to be storing sizeable amounts of data for every contract object.
-- The Collaborative feature is another factor. Right now, we have listeners set up that react to changes on the entire pipeline - **including changes on contracts that don't really involve the pipeline page at all**. Changing the database schema to allow for more effective use of document listeners might help make the collaboration feature more lightweight.
-- We don't have any concrete sources of data to use for features like evaluating potential teaming partners and competitors. FPDS and SAM.gov do provide some information when it comes to Entities and what contracts they may possess, but there's little room in the API to query for specifics, like for example filtering through Entities by Award Types pursued or Company Type.
-
-<br/>
-<div>I've done some research, as well as looked at some of the resources my teammate <Utils>Eric</Utils> gathered. I've come up with a few possible ideas</div>
-<br/>
-
-- Separating Contracts into subcollections, but also denormalizing contract data between "shallow" and "deep" copies. shallow copies only include "labels" and their "values", where most of these are things that can be optionally shown on the contract card in Pipeline View. Deep copies have more complex logic, like notes associated with cards, capture decks, GovWin data, etc.
-- (As an alternative to my first bullet) denormalizing "deep" contract data. All Contract documents are "shallow" key-value pairs of simple data. Teams, CaptureDeck, and GovWin root collections have documents that store "deep" data, and link themselves to contracts by keeping a contract document Reference or the contract and pipeline ID they are associated with.
-- For Teaming Partners, Competitors, and Historical Contract Data, opt into a GovWin subscription and leverage their API
-- The harder route will be to use a combination of SAM.gov, FPDS, and USASpending.org APIs to build our own engine.
-
-<br/>
-
-That's Pretty much everything! I'll make another blog post for the ramp thing, and I might touch on some Polytechnic University of Puerto Rico programming homework soon too 😳. See ya! 👋.
+That's everything! If you see this blog post close to the date it was created, I apologize in advance for any spelling mistakes. It is 2:28 AM at the time of writing this and this first week of school has been absolutely crazy! I'll make sure to rant on the blog soon when the time is right 😈. Also, here's a [Github Link](https://github.com/angel1254mc/ramp-fe-challenge) containing all the code I submitted for the application!
 
 ## What I'm BUMPIN Today
 <br/>
-<iframe style={{borderRadius:'12px'}}  src="https://open.spotify.com/embed/track/2pscAWkm3jAxcrpBwOtQmS?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-
+<iframe style={{borderRadius:'12px'}}  src="https://open.spotify.com/embed/track/4RGWHfQeJftd5XrP8JUgFj?utm_source=generator" width="100%" height="152" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<br/>
 
