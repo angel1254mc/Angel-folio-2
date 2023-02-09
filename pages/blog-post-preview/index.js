@@ -33,7 +33,7 @@ const index = ({post}) => {
       <div className="blog-header">
         <Header title={post.meta.title} size={null}/>
       </div>
-      <div className="blog-body">
+      <div className="blog-body prose prose-invert">
         <MDXRemote {...post.source} components={{Utils}}/>
       </div>
     </main>
