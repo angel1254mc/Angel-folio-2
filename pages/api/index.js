@@ -102,7 +102,7 @@ export const getAllPostsSupa = async (project = null) => {
 export const getAllProjectsSupa = async () => {
 
     // First, get all projects, then get all image URLS for the users
-    let {data: projects} = await supabase.from('projects').select('*').order('added', {ascending: false});
+    let {data: projects} = await supabase.from('projects').select('*').order('created_at', {ascending: false});
 
     let proj = await Promise.all(projects.map(async (project) => {
         // Get github image url for each author

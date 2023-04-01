@@ -46,6 +46,7 @@
 .project-collaborators-group {
     display: flex;
     column-gap: 10px;
+    height: 30px;
 }
 .project-collaborators-group > img {
     border-radius: 50%;
