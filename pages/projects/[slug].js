@@ -20,7 +20,7 @@ const index = ({project, projectPosts}) => {
   return (
    <>
    <HeadersCustom title={`AngelFolio | ${project.name}`}/>
-    <main className={styles.main + ' main-body'}>
+    <main className={"flex flex-col pt-2 px-6 max-w-[50rem] align-center m-auto min-h-[600px] w-full"}>
       <Navbar/>
       <Header title={`Projects/${project.slug}`} size={'3rem'}/>
       {project?.accomplishments ? <MainAccomplishments accomplishments={project.accomplishments}/> : <></>}

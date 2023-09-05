@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import styles from '../styles/components/Header.module.css';
+import { animated } from "react-spring";
 
 /**
  * @function random generates a random number between parameters min and max
@@ -14,7 +15,7 @@ const random = (min, max) => {
  * @param {*} param0
  * @returns
  */
-function Header({ title, size = null , style={}, interval = 3000 }) {
+function Header({ title, size = null , animateStyle={}, interval = 3000 }) {
     if (title.length > 25)
         size = '3rem';
     const ref = useRef();
@@ -28,8 +29,7 @@ function Header({ title, size = null , style={}, interval = 3000 }) {
 
     }, [])
 
-
-  return <div ref={ref} style={style} className={styles.gradient}>{title}</div>;
+  return <animated.div ref={ref} style={animateStyle} className={styles.gradient}>{title}</animated.div>;
 }
 
 export default Header;

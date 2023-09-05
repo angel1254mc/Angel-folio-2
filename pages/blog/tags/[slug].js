@@ -15,7 +15,7 @@ const PostPage = ({ slug, posts}) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={mainStyles.main + ' main-body'}>
+      <main className={"flex flex-col pt-2 px-6 max-w-[50rem] align-center m-auto min-h-[600px] w-full"}>
         <Navbar/>
         <Header title={slug ?? 'tag'} />
         <BlogList posts={posts}/>

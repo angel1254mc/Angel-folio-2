@@ -25,7 +25,7 @@ const index = ({source}) => {
           <meta name="twitter:card" content="summary_large_image"></meta>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <main className={styles.main + ' main-body'}>
+        <main className={"flex flex-col pt-2 px-6 max-w-[50rem] align-center m-auto min-h-[600px] w-full"}>
           <Navbar/>
           <Header title={"About"}/>
           <AboutHero content={source}/>

@@ -20,8 +20,11 @@ const PostPage = ({post}) => {
   return (
     <>
     <HeadersCustom title={post.meta.title} description={post.meta.excerpt}/>
-    <main className={styles.main + ' blog-body'}>
-      <Navbar/>
+    <main className={"flex flex-col pt-2 px-6 max-w-[50rem] align-center m-auto min-h-[600px] w-full"}>
+      <div className="w-full flex px-6">
+        <Navbar/>
+      </div>
+      
       <div style={{marginTop: '20px', width: '100%', height: '90px', backgroundPosition: 'cover', position: 'relative'}} className="">
         <div className='' style={
           {
