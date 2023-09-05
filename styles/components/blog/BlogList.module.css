@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     row-gap: 15px;
-    max-width: 700px;
+    max-width: 100%;
     padding: 15px;
 }
 .post_container.unique:before {

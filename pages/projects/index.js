@@ -12,7 +12,7 @@ const index = ({ projects }) => {
     return (
         <>
         <HeadersCustom title={"AngelFolio | Projects"} description={"Some of my Projects"}/>
-        <main className={styles.main + ' main-body'}>
+        <main className={"flex flex-col pt-2 px-6 max-w-[50rem] align-center m-auto min-h-[600px] w-full"}>
           <Navbar/>
           <Header title={"Projects"}/>
           <ProjectList projects={projects}/>
