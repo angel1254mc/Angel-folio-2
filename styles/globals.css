@@ -127,12 +127,19 @@ a {
   animation-fill-mode: forwards;
 }
 .fadeIn {
+  opacity: 0;
   animation-name: fadeIn;
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
 }
 .fadeInNormal {
   animation-name: fadeInNormal;
+  animation-duration: 0.4s;
+  animation-fill-mode: forwards;
+}
+.popIn {
+  opacity: 0;
+  animation-name: popInRow;
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
 }
@@ -149,6 +156,15 @@ a {
 .blog-body a {
   color: lightseagreen;
   text-decoration: underline;
+}
+
+.scale-up {
+  transform: scale(1.20);
+  transition: 0.5s all ease;
+}
+.scale-down {
+  transform: scale(1.0);
+  transition: 0.5s all ease;
 }
 
 .gradient-link {
@@ -277,6 +293,10 @@ a {
   margin-top: 30px;
 }
 
+.bg-blue-gradient {
+  background: linear-gradient(180deg, #101010 0%, #174875 97.4%);
+}
+
 @media (max-width: 750px) {
     .three-two-split {
       align-items: center;
@@ -293,6 +313,16 @@ a {
   z-index: 10;
 }
 
+.card-container {
+  position: absolute;
+  will-change: transform, opacity;
+}
+
+.back {
+  background-size: cover;
+  background-image: url(https://imgur.com/Br7UFiJ.jpg)
+}
+
 .p-color-overlay {
   opacity:0.5;
   transition: 0.2s;
@@ -300,6 +330,7 @@ a {
 .projectCardBody {
   transition: 0.5s;
 }
+
 #projectCard {
   margin-top: 5px;
   margin-bottom: 5px;
