@@ -9,6 +9,7 @@ import Footer from '../components/Footer';
 import HeadersCustom from '../components/HeadersCustom'
 import { useSpring, useTrail, useTransition } from 'react-spring'
 import { animated } from 'react-spring'
+import IntroComponent from '../components/Home/IntroComponent'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts, projects}) {
@@ -64,7 +65,7 @@ export default function Home({posts, projects}) {
         <div className="w-full max-w-[50rem] h-auto flex flex-col gap-y-4">
           <div className="w-full justify-center flex gap-x-4">
             <animated.div style={trails[0]} className="flex flex-1 max-w-[24rem] h-96 bg-[#101010] rounded-md">
-              {/* Intro Box */}
+              <IntroComponent/>
             </animated.div>
             <div className="flex flex-1 max-w-[24rem] flex-col h-96 gap-y-4">
               <animated.div  style={trails[1]}className="flex flex-1 w-full bg-[#101010] rounded-md"> 
