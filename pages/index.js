@@ -10,6 +10,7 @@ import HeadersCustom from '../components/HeadersCustom'
 import { useSpring, useTrail, useTransition } from 'react-spring'
 import { animated } from 'react-spring'
 import IntroComponent from '../components/Home/IntroComponent'
+import WorkComponent from '../components/Home/WorkComponent'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts, projects}) {
@@ -63,15 +64,15 @@ export default function Home({posts, projects}) {
       </main>
       <div className="w-full px-8 flex justify-center">
         <div className="w-full max-w-[50rem] h-auto flex flex-col gap-y-4">
-          <div className="w-full justify-center flex gap-x-4">
-            <animated.div style={trails[0]} className="flex flex-1 max-w-[24rem] h-96 bg-[#101010] rounded-md">
+          <div className="w-full justify-center flex sm:flex-row flex-col sm:h-auto sm:min-h-[0] min-h-[48rem] gap-x-4 gap-y-4 items-center sm:items-start sm:gap-y-0">
+            <animated.div style={trails[0]} className="flex sm:flex-1 w-96 sm:max-w-[24rem] h-96 bg-[#101010] rounded-md">
               <IntroComponent/>
             </animated.div>
-            <div className="flex flex-1 max-w-[24rem] flex-col h-96 gap-y-4">
-              <animated.div  style={trails[1]}className="flex flex-1 w-full bg-[#101010] rounded-md"> 
-              {/* Work Expeerience Box */}
+            <div className="flex sm:flex-1 w-96 sm:max-w-[24rem] flex-col relative sm:h-96 sm:min-h-0 min-h-[36rem] gap-y-4">
+              <animated.div  style={trails[1]}className="flex sm:flex-1 w-full h-96 bg-[#101010] rounded-md"> 
+              <WorkComponent/>
               </animated.div>
-              <div className="flex flex-1 w-full gap-x-4">
+              <div className="flex h-[12rem] sm:h-auto sm:flex-1 w-full gap-x-4">
                 <animated.div style={trails[2]} className="flex flex-1 h-full bg-[#101010] rounded-md">
                   {/* Coffee Box 👁️🫦👁️ */}
                 </animated.div>
