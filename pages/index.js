@@ -11,6 +11,7 @@ import { useSpring, useTrail, useTransition } from 'react-spring'
 import { animated } from 'react-spring'
 import IntroComponent from '../components/Home/IntroComponent'
 import WorkComponent from '../components/Home/WorkComponent'
+import LastStarredRepo from '../components/Home/LastStarredRepo'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts, projects}) {
@@ -40,7 +41,6 @@ export default function Home({posts, projects}) {
       delay: 500,
     })
   )
-
 
 
   return (
@@ -77,7 +77,7 @@ export default function Home({posts, projects}) {
                   {/* Coffee Box 👁️🫦👁️ */}
                 </animated.div>
                 <animated.div style={trails[3]} className="flex flex-1 h-full bg-[#101010] rounded-md">
-                  {/* Last Starred Repo Box 👁️🫦👁️ */}
+                  <LastStarredRepo/>
                 </animated.div>
               </div>
             </div>
