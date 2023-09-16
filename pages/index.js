@@ -14,6 +14,7 @@ import WorkComponent from '../components/Home/WorkComponent'
 import LastStarredRepo from '../components/Home/LastStarredRepo'
 import CoffeeComponent from '../components/Home/CoffeeComponent'
 import SpotifyComponent from '../components/Home/SpotifyComponent'
+import BlogPostComponent from '../components/Home/BlogPostComponent'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts, projects}) {
@@ -105,7 +106,7 @@ export default function Home({posts, projects}) {
             <div className="flex flex-col gap-y-4 flex-1 w-96 sm:max-w-[24rem]">
               <animated.h1 style={trails[6]} className="text-2xl font-bold">Peep The Blog</animated.h1>
               <animated.div style={trails[7]} className="flex w-full h-48 bg-[#101010] rounded-md">
-                 {/* Latest Blog Post Box */}
+                 <BlogPostComponent latest={posts[0]}/>
               </animated.div>
               <animated.h1 style={trails[9]} className="text-2xl font-bold">Peep The Projects</animated.h1>
               <animated.div style={trails[12]} className="flex w-full h-48 bg-[#101010] rounded-md">
