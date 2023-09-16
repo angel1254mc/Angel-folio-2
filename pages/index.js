@@ -13,6 +13,7 @@ import IntroComponent from '../components/Home/IntroComponent'
 import WorkComponent from '../components/Home/WorkComponent'
 import LastStarredRepo from '../components/Home/LastStarredRepo'
 import CoffeeComponent from '../components/Home/CoffeeComponent'
+import SpotifyComponent from '../components/Home/SpotifyComponent'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts, projects}) {
@@ -28,7 +29,7 @@ export default function Home({posts, projects}) {
   }))
 
   const [trails, api] = useTrail(
-    13,
+    14,
     () => ({
       from: { 
         opacity: 0,
@@ -83,30 +84,31 @@ export default function Home({posts, projects}) {
               </div>
             </div>
           </div>
-          <div className="w-full justify-center flex gap-x-4">
-            <div className="flex flex-col gap-y-4 flex-1 max-w-[24rem]">
-              <animated.div style={trails[4]} className="flex w-full h-44 bg-[#101010] rounded-md">
-                  {/* Spotify Box 👁️🫦👁️ */}
+          <div className="w-full items-center gap-y-4 sm:items-start sm:justify-center flex flex-col-reverse sm:flex-row gap-x-4">
+            <div className="flex flex-col gap-y-4 flex-1  w-96 sm:max-w-[24rem]">
+              <animated.h1 style={trails[4]} className="text-2xl font-bold">I&apos;m Listening To...</animated.h1>
+              <animated.div style={trails[5]} className="flex w-full h-44 bg-[#101010] rounded-md">
+                  <SpotifyComponent/>
               </animated.div>
-              <animated.h1 style={trails[7]} className="text-2xl font-bold">Peep The Rest</animated.h1>
+              <animated.h1 style={trails[8]} className="text-2xl font-bold">Peep The Rest</animated.h1>
               <div className="flex w-full gap-x-4 h-44">
-                <animated.div style={trails[9]}  className="flex flex-1 h-full bg-[#101010] rounded-md">
+                <animated.div style={trails[10]}  className="flex flex-1 h-full bg-[#101010] rounded-md">
                   {/* SSD Box / Link to SSDiscord */}
                 </animated.div>
-                <animated.div style={trails[10]} className="flex flex-1 h-full bg-[#101010] rounded-md">
+                <animated.div style={trails[11]} className="flex flex-1 h-full bg-[#101010] rounded-md">
                   {/* Twitch Box 👁️🫦👁️ */}
                 </animated.div>
               </div>
-              <animated.div style={trails[12]} className="flex w-full gap-x-4 h-60 bg-[#101010] rounded-md">
+              <animated.div style={trails[13]} className="flex w-full gap-x-4 h-60 bg-[#101010] rounded-md">
               </animated.div>
             </div>
-            <div className="flex flex-col gap-y-4 flex-1 max-w-[24rem]">
-              <animated.h1 style={trails[5]} className="text-2xl font-bold">Peep The Blog</animated.h1>
-              <animated.div style={trails[6]} className="flex w-full h-48 bg-[#101010] rounded-md">
+            <div className="flex flex-col gap-y-4 flex-1 w-96 sm:max-w-[24rem]">
+              <animated.h1 style={trails[6]} className="text-2xl font-bold">Peep The Blog</animated.h1>
+              <animated.div style={trails[7]} className="flex w-full h-48 bg-[#101010] rounded-md">
                  {/* Latest Blog Post Box */}
               </animated.div>
-              <animated.h1 style={trails[8]} className="text-2xl font-bold">Peep The Projects</animated.h1>
-              <animated.div style={trails[11]} className="flex w-full h-48 bg-[#101010] rounded-md">
+              <animated.h1 style={trails[9]} className="text-2xl font-bold">Peep The Projects</animated.h1>
+              <animated.div style={trails[12]} className="flex w-full h-48 bg-[#101010] rounded-md">
                 {/* Most Relevant Project */}
               </animated.div>
               <animated.div style={trails[13]} className="flex w-full h-48 bg-[#101010] rounded-md">
