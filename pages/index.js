@@ -12,6 +12,7 @@ import { animated } from 'react-spring'
 import IntroComponent from '../components/Home/IntroComponent'
 import WorkComponent from '../components/Home/WorkComponent'
 import LastStarredRepo from '../components/Home/LastStarredRepo'
+import CoffeeComponent from '../components/Home/CoffeeComponent'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts, projects}) {
@@ -74,7 +75,7 @@ export default function Home({posts, projects}) {
               </animated.div>
               <div className="flex h-[12rem] sm:h-auto sm:flex-1 w-full gap-x-4">
                 <animated.div style={trails[2]} className="flex flex-1 h-full bg-[#101010] rounded-md">
-                  {/* Coffee Box 👁️🫦👁️ */}
+                  <CoffeeComponent/>
                 </animated.div>
                 <animated.div style={trails[3]} className="flex flex-1 h-full bg-[#101010] rounded-md">
                   <LastStarredRepo/>

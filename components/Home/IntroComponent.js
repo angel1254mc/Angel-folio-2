@@ -10,11 +10,12 @@ import {
 import { faRepeat } from "@fortawesome/free-solid-svg-icons";
 import { useSpring } from "react-spring";
 import { animated } from "react-spring";
+import usePurpleHover from "../hooks/usePurpleHover";
 
 const IntroComponent = () => {
     // For now, I'll have my paragraphs be stored in variables. In the future this can be handled
     // via admin interface
-
+    const [setIsHover, hoverAnimate] = usePurpleHover();
     const [flipped, setFlipped] = useState(false);
     const { transform, opacity } = useSpring({
         opacity: flipped ? 1 : 0,
@@ -22,16 +23,7 @@ const IntroComponent = () => {
         config: { mass: 5, tension: 500, friction: 80 },
     });
 
-    const handleScaleUp = (e) => {
-        e.target.classList.remove("scale-down");
-        e.target.classList.add("scale-up");
-    };
-    const handleScaleDown = (e) => {
-        console.log(e);
-        e.target.classList.remove("scale-up");
-        e.target.classList.add("scale-down");
-    };
-    const firstParagraph = `I'm Angel, a <Sheen>4th year CISE Major</Sheen> at UF graduating <Sheen>May 2024!</Sheen> I'm a passionate, results-driven software and web developer. My past work experience mainly consists <Sheen>Web Dev</Sheen>, <Sheen>Systems Engineering</Sheen>, and <Sheen>UI  Design.</Sheen>`;
+    const firstParagraph = `I'm Angel, a <Sheen>4th year CISE Major</Sheen> at UF graduating <Sheen>May 2024!</Sheen> I'm a passionate, results-driven software and web developer. My past work experience mainly consists of <Sheen>Web Dev</Sheen>, <Sheen>Systems Engineering</Sheen>, and <Sheen>UI  Design.</Sheen>`;
     const secondParagraph = `I love browsing <Sheen>GitHub</Sheen> in search of new <Sheen>open-source technologies</Sheen> to try out and learn. I also love learning in general, and sharing what I learn with others who are also hungry for knowledge.`;
     const thirdParagraph = `I like to post about pretty much anything on my <Sheen>Blog</Sheen> every-so-often. In my free time I like to watch <Sheen>YouTube</Sheen>, play <Sheen>Video Games</Sheen>, and play <Sheen> Racquetball</Sheen>.`;
 
@@ -77,7 +69,7 @@ const IntroComponent = () => {
     let inSheen = false;
 
     return (
-        <div className="w-full h-full relative rounded-md flex items-center justify-center">
+        <animated.div onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)} style={hoverAnimate} className="w-full h-full relative rounded-md flex items-center z-50 justify-center">
             <animated.div
                 style={{
                     zIndex: 5,
@@ -190,7 +182,7 @@ const IntroComponent = () => {
                     </a>
                 </div>
             </animated.div>
-        </div>
+        </animated.div>
     );
 };
 
