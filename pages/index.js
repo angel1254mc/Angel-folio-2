@@ -15,6 +15,7 @@ import LastStarredRepo from '../components/Home/LastStarredRepo'
 import CoffeeComponent from '../components/Home/CoffeeComponent'
 import SpotifyComponent from '../components/Home/SpotifyComponent'
 import BlogPostComponent from '../components/Home/BlogPostComponent'
+import ProjectCardComponent from '../components/Home/ProjectCardComponent'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts, projects}) {
@@ -110,10 +111,10 @@ export default function Home({posts, projects}) {
               </animated.div>
               <animated.h1 style={trails[9]} className="text-2xl font-bold">Peep The Projects</animated.h1>
               <animated.div style={trails[12]} className="flex w-full h-48 bg-[#101010] rounded-md">
-                {/* Most Relevant Project */}
+                <ProjectCardComponent project={projects[0]} />
               </animated.div>
               <animated.div style={trails[13]} className="flex w-full h-48 bg-[#101010] rounded-md">
-                {/* Second Most Relevant Project */}
+                <ProjectCardComponent project={projects[1]}/>
               </animated.div>
             </div>
           </div>

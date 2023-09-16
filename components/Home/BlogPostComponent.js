@@ -11,7 +11,7 @@ const BlogPostComponent = ({ latest = {} }) => {
 
     return (
         <Link
-            className="transition-all relative border-[1px] rounded-md border-[#101010] w-full duration-300 hover:shadow-[0px_0px_105px_3px_rgba(192,77,246,0.25)]"
+            className="transition-all relative border-[1px] rounded-md border-[#101010] w-full duration-300 hover:scale-105 hover:shadow-[0px_0px_105px_3px_rgba(192,77,246,0.25)]"
             href={`/blog/posts/${post.slug}`}
         >
             <Image fill={true} src={post.imageURI} alt={" image"} />
