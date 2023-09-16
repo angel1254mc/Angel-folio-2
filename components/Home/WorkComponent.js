@@ -2,16 +2,16 @@ import { faAngleDoubleDown, faAngleDoubleRight, faCircle } from '@fortawesome/fr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useState } from 'react'
 import Sheen from '../typography/Sheen';
+import { animated } from "react-spring";
 import Image from 'next/image';
 import Link from 'next/link';
 
 const WorkComponent = () => {
 
     const [expanded, setExpanded] = useState(false);
-
     
   return (
-    <div className={`w-full rounded-md flex flex-col absolute bg-[#101010] h-full transition-all duration-150 overflow-y-hidden max-h-[24rem] border-2 z-10 ${!expanded ? 'sm:max-h-[11.5rem] sm:border-0 ' : 'sm:max-h-[24rem] border-2'}`}>
+    <div className={`w-full rounded-md flex flex-col absolute hover:scale-[103%] hover:border-white bg-[#101010] h-full transition-all duration-150 overflow-y-hidden max-h-[24rem] border-2 z-10 ${!expanded ? 'sm:max-h-[11.5rem] sm:border-2 sm:border-transparent ' : 'sm:max-h-[24rem] border-2'}`}>
         <div className="w-full text-xl font-bold pt-3 px-3 flex justify-between items-center">
             <h1>Where I&apos;ve Worked</h1>
             <button onClick={() => setExpanded(state => !state)}>
