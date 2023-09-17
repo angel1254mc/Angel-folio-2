@@ -193,7 +193,7 @@ export const getStaticProps = async ({params}) => {
             <>{author.name.split(' ')[0]}</>
             <FontAwesomeIcon icon={faGithub} className={projectStyles.tiny_github}/>
           </div>
-          <Image alt={'Profile Image'} src={author.image} key={author.name} height={30} width={30}/>
+          <Image className="w-8 h-8" alt={'Profile Image'} src={author.image} key={author.name} height={30} width={30}/>
         </Link>
         <ul className={projectStyles.collaborator_body}>
           {

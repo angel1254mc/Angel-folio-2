@@ -18,6 +18,7 @@ import BlogPostComponent from '../components/Home/BlogPostComponent'
 import ProjectCardComponent from '../components/Home/ProjectCardComponent'
 import SSDComponent from '../components/Home/SSDComponent'
 import TwitchComponent from '../components/Home/TwitchComponent'
+import FaroComponent from '../components/Home/FaroComponent'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts, projects}) {
@@ -68,7 +69,7 @@ export default function Home({posts, projects}) {
            */
         }
       </main>
-      <div className="w-full px-8 flex justify-center">
+      <div className="w-full px-8 pb-6 flex justify-center">
         <div className="w-full max-w-[50rem] h-auto flex flex-col gap-y-4">
           <div className="w-full justify-center flex sm:flex-row flex-col sm:h-auto sm:min-h-[0] min-h-[48rem] gap-x-4 gap-y-4 items-center sm:items-start sm:gap-y-0">
             <animated.div style={trails[0]} className="flex sm:flex-1 w-96 sm:max-w-[24rem] h-96 bg-[#101010] rounded-md">
@@ -104,6 +105,7 @@ export default function Home({posts, projects}) {
                 </animated.div>
               </div>
               <animated.div style={trails[13]} className="flex w-full gap-x-4 h-60 bg-[#101010] rounded-md">
+                <FaroComponent/>
               </animated.div>
             </div>
             <div className="flex flex-col gap-y-4 flex-1 w-96 sm:max-w-[24rem]">
