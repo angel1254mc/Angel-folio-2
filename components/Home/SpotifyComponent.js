@@ -46,11 +46,11 @@ const SpotifyComponent = () => {
             <FontAwesomeIcon icon={faGripLines}  className="text-3xl text-[#242424]"/>
         </div>
         <div className="w-full h-full flex pl-3 pr-2 gap-x-2 items-center">
-            <a className="w-28 h-28" target="_blank" rel="noreferrer" href={spotifyObj?.item?.external_urls?.spotify ?? ""} ><Image className="w-28 h-28" width={200} height={200} src={spotifyObj && spotifyObj.item ? spotifyObj?.item?.album?.images[0]?.url : defaultCover}/></a>
+            <a className="min-w-[7rem] min-h-[7rem]" target="_blank" rel="noreferrer" href={spotifyObj?.item?.external_urls?.spotify ?? ""} ><Image className="w-28 h-28" width={200} height={200} src={spotifyObj && spotifyObj.item ? spotifyObj?.item?.album?.images[0]?.url : defaultCover}/></a>
             <div className="flex flex-col gap-y-1 pl-1 flex-wrap min-h-[6rem]">
-                <a target="_blank" rel="noreferrer" href={spotifyObj?.item?.external_urls?.spotify ?? ""} className="text-base font-semibold">{spotifyObj?.item?.name ? clampWords(spotifyObj.item.name, 10) : 'Nothing right now!'}</a>
+                <a target="_blank" rel="noreferrer" href={spotifyObj?.item?.external_urls?.spotify ?? ""} className="text-base font-semibold">{spotifyObj?.item?.name ? clampWords(spotifyObj.item.name, 8) : 'Nothing right now!'}</a>
                 <div className="text-sm">{mapArtists(spotifyObj?.item?.artists ?? [{name: ""}], 4)}</div>
-                <a target="_blank" href={spotifyObj?.item?.album?.external_urls?.spotify ?? ""}rel="noreferrer" className="text-xs font-light">{spotifyObj?.item?.album?.name ? clampWords(spotifyObj.item.album.name, 10) :  ''}</a>
+                <a target="_blank" href={spotifyObj?.item?.album?.external_urls?.spotify ?? ""}rel="noreferrer" className="text-xs font-light">{spotifyObj?.item?.album?.name ? clampWords(spotifyObj.item.album.name, 8) :  ''}</a>
             </div>
         </div>
     </animated.div>

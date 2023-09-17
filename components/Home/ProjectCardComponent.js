@@ -5,7 +5,6 @@ import React from 'react'
 
 const ProjectCardComponent = ({project = {}}) => {
 
-  console.log(project);
   return (
     <div className="rounded-md border-[1px] transition-all duration-150 hover:scale-105 hover:shadow-[0px_0px_105px_3px_rgba(192,77,246,0.25)] hover:border-white px-4 py-4 flex flex-col justify-between gap-y-2 bg-[#090808] border-[#101010] w-full h-full">
       <div className="flex flex-col gap-y-2">
