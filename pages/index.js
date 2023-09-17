@@ -16,6 +16,8 @@ import CoffeeComponent from '../components/Home/CoffeeComponent'
 import SpotifyComponent from '../components/Home/SpotifyComponent'
 import BlogPostComponent from '../components/Home/BlogPostComponent'
 import ProjectCardComponent from '../components/Home/ProjectCardComponent'
+import SSDComponent from '../components/Home/SSDComponent'
+import TwitchComponent from '../components/Home/TwitchComponent'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({posts, projects}) {
@@ -95,10 +97,10 @@ export default function Home({posts, projects}) {
               <animated.h1 style={trails[8]} className="text-2xl font-bold">Peep The Rest</animated.h1>
               <div className="flex w-full gap-x-4 h-44">
                 <animated.div style={trails[10]}  className="flex flex-1 h-full bg-[#101010] rounded-md">
-                  {/* SSD Box / Link to SSDiscord */}
+                  <SSDComponent/>
                 </animated.div>
                 <animated.div style={trails[11]} className="flex flex-1 h-full bg-[#101010] rounded-md">
-                  {/* Twitch Box 👁️🫦👁️ */}
+                  <TwitchComponent/>
                 </animated.div>
               </div>
               <animated.div style={trails[13]} className="flex w-full gap-x-4 h-60 bg-[#101010] rounded-md">
