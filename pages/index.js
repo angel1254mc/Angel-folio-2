@@ -54,32 +54,23 @@ export default function Home({posts, projects}) {
     <div className="w-full flex flex-col items-center">
       <HeadersCustom/>
       <main className="w-full flex flex-col items-center ">
-        <div className="w-full max-w-[50rem] flex flex-col justify-start py-2 px-6">
+        <div className="w-full max-w-[50rem] 2xl:max-w-[64rem] flex flex-col justify-start py-2 px-6">
           <Navbar/>
           <Header animateStyle={headerSpring} title={"Home"}/>
 
         </div>
-        {
-          /**
-           * <div className={styles.animate_hero}>
-          <ShmoveImages openTrigger={image}/>
-          <TLDR id="home-tldr" triggerImage={showImage} content={tldr} delay={100}/>
-          <Socials openTrigger={image} delay={500} id={"awesome"}/>
-        </div>
-           */
-        }
       </main>
       <div className="w-full px-8 pb-6 flex justify-center">
-        <div className="w-full max-w-[50rem] h-auto flex flex-col gap-y-4">
-          <div className="w-full justify-center flex sm:flex-row flex-col sm:h-auto sm:min-h-[0] min-h-[48rem] gap-x-4 gap-y-4 items-center sm:items-start sm:gap-y-0">
-            <animated.div style={trails[0]} className="flex sm:flex-1 w-96 sm:max-w-[24rem] h-96 bg-[#101010] rounded-md">
+        <div className="w-full max-w-[50rem] 2xl:max-w-[64rem] h-auto flex flex-col gap-y-4">
+          <div className="w-full justify-center flex md:flex-row flex-col md:h-auto md:min-h-[0] min-h-[48rem] gap-x-4 gap-y-4 items-center md:items-start md:gap-y-0">
+            <animated.div style={trails[0]} className="flex md:flex-1 w-96 2xl:w-[28rem] md:max-w-[24rem] 2xl:max-w-[28rem] h-96 2xl:h-[28rem] bg-[#101010] rounded-md">
               <IntroComponent/>
             </animated.div>
-            <div className="flex sm:flex-1 w-96 sm:max-w-[24rem] flex-col relative sm:h-96 sm:min-h-0 min-h-[36rem] gap-y-4">
-              <animated.div  style={trails[1]}className="flex sm:flex-1 w-full h-96 bg-[#101010] rounded-md"> 
+            <div className="flex md:flex-1 w-96 md:max-w-[24rem] 2xl:w-[28rem] 2xl:max-w-[28rem] flex-col relative md:h-96  2xl:h-[28rem] md:min-h-0 min-h-[36rem] gap-y-4">
+              <animated.div  style={trails[1]}className="flex md:flex-1 w-full h-96 2xl:h-[28rem] bg-[#101010] rounded-md"> 
               <WorkComponent/>
               </animated.div>
-              <div className="flex h-[12rem] sm:h-auto sm:flex-1 w-full gap-x-4">
+              <div className="flex h-[12rem] md:h-auto md:flex-1 w-full gap-x-4">
                 <animated.div style={trails[2]} className="flex flex-1 h-full bg-[#101010] rounded-md">
                   <CoffeeComponent/>
                 </animated.div>
@@ -89,8 +80,8 @@ export default function Home({posts, projects}) {
               </div>
             </div>
           </div>
-          <div className="w-full items-center gap-y-4 sm:items-start sm:justify-center flex flex-col-reverse sm:flex-row gap-x-4">
-            <div className="flex flex-col gap-y-4 flex-1  w-96 sm:max-w-[24rem]">
+          <div className="w-full items-center gap-y-4 md:items-start md:justify-center flex flex-col-reverse md:flex-row gap-x-4">
+            <div className="flex flex-col gap-y-4 flex-1  w-96 md:max-w-[24rem]">
               <animated.h1 style={trails[4]} className="text-2xl font-bold">I&apos;m Listening To...</animated.h1>
               <animated.div style={trails[5]} className="flex w-full h-44 bg-[#101010] rounded-md">
                   <SpotifyComponent/>
@@ -108,7 +99,7 @@ export default function Home({posts, projects}) {
                 <FaroComponent/>
               </animated.div>
             </div>
-            <div className="flex flex-col gap-y-4 flex-1 w-96 sm:max-w-[24rem]">
+            <div className="flex flex-col gap-y-4 flex-1 w-96 md:max-w-[24rem]">
               <animated.h1 style={trails[6]} className="text-2xl font-bold">Peep The Blog</animated.h1>
               <animated.div style={trails[7]} className="flex w-full h-48 bg-[#101010] rounded-md">
                  <BlogPostComponent latest={posts[0]}/>
@@ -124,26 +115,6 @@ export default function Home({posts, projects}) {
           </div>
         </div>
       </div>
-        {/**
-         * 
-         * <section className={styles.projects_and_blog}>
-        <div className={styles.projects_container}>
-            <Header title={"Some of My Projects"} size={'2.5rem'}/>
-            <HomeProjectsList projects={projects} dynamic={false} innerRef={projectsRef} open={showProjects}/>
-        </div>
-        <div className={styles.blog_container}>
-          <Header title={"Latest Blog Posts"} size={'2.5rem'}/>
-          <BlogShortList dynamic={false} innerRef={blogsRef} open={showBlogs} posts={posts.map(post => post.meta)}/>
-        </div>
-      </section>
-      <section className={styles.spotify_container}>
-        <Header title={`If I'm listening to something, I'm not dead.`} style={{fontSize: '2.0rem'}} />
-        
-        <SpotifyBubble trigger={true}></SpotifyBubble>
-      </section>
-         * 
-         * 
-         */}
       <Footer></Footer>
     </div>
   )

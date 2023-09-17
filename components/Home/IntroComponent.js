@@ -78,7 +78,7 @@ const IntroComponent = () => {
                     rotateX: "180deg",
                 }}
                 onClick={() => setFlipped((state) => !state)}
-                className="card-container back h-96 w-96 rounded-md cursor-pointer"
+                className="card-container back h-96 2xl:h-[28rem] w-96 2xl:w-[28rem] rounded-md cursor-pointer"
             >
                 <div className="pt-3 pl-3 pb-3 w-full bg-black">
                     <Sheen>This is my dog Bella btw</Sheen>
@@ -98,10 +98,10 @@ const IntroComponent = () => {
                 >
                     <FontAwesomeIcon icon={faRepeat} />
                 </div>
-                <h1 className="text-2xl px-8 font-bold tracking-normal">
+                <h1 className="text-2xl 2xl:text-3xl px-8 font-bold tracking-normal">
                     Buenas!
                 </h1>
-                <div className="text-xs px-8 text-[#A19D9D]">
+                <div className="text-xs 2xl:text-sm px-8 text-[#A19D9D]">
                     <p className="flex flex-wrap">
                         {sequenceAnimation(firstParagraph, 0)}
                     </p>
@@ -121,12 +121,12 @@ const IntroComponent = () => {
                         )}
                     </p>
                 </div>
-                <div className="w-full pl-8 pt-2 flex gap-x-2">
+                <div className="w-full pl-8 pt-2 flex gap-x-2 2xl:gap-x-3">
                     <a
                         target="_blank"
                         rel="noreferrer"
                         href="https://github.com/angel1254mc/"
-                        className="w-7 h-7 hover:text-blue-300 text-2xl flex justify-center transition-all duration-100 cursor-pointer hover:text-3xl"
+                        className="w-7 h-7 2xl:text-3xl hover:text-blue-300 text-2xl flex justify-center transition-all duration-100 cursor-pointer hover:text-3xl"
                     >
                         <FontAwesomeIcon
                             style={{
@@ -142,7 +142,7 @@ const IntroComponent = () => {
                         target="_blank"
                         rel="noreferrer"
                         href="https://www.linkedin.com/in/angel1254/"
-                        className="w-7 h-7 hover:text-blue-300 text-2xl flex justify-center transition-all duration-100 cursor-pointer hover:text-3xl"
+                        className="w-7 h-7 2xl:text-3xl hover:text-blue-300 text-2xl flex justify-center transition-all duration-100 cursor-pointer hover:text-3xl"
                     >
                         <FontAwesomeIcon
                             style={{
@@ -156,7 +156,7 @@ const IntroComponent = () => {
                         target="_blank"
                         rel="noreferrer"
                         href="https://www.instagram.com/angel1254/"
-                        className="w-7 h-7 hover:text-blue-300 text-2xl flex justify-center transition-all duration-100 cursor-pointer hover:text-3xl"
+                        className="w-7 h-7 2xl:text-3xl hover:text-blue-300 text-2xl flex justify-center transition-all duration-100 cursor-pointer hover:text-3xl"
                     >
                         <FontAwesomeIcon
                             style={{
@@ -170,7 +170,7 @@ const IntroComponent = () => {
                         target="_blank"
                         rel="noreferrer"
                         href="https://www.youtube.com/channel/UC-kEszCPZTbWdRjt9RhVsYA"
-                        className="w-7 h-7 hover:text-blue-300 text-2xl flex justify-center transition-all duration-100 cursor-pointer hover:text-3xl"
+                        className="w-7 h-7 2xl:text-3xl hover:text-blue-300 text-2xl flex justify-center transition-all duration-100 cursor-pointer hover:text-3xl"
                     >
                         <FontAwesomeIcon
                             style={{

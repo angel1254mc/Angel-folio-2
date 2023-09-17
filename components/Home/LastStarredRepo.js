@@ -45,10 +45,10 @@ const LastStarredRepo = () => {
             } rounded-md py-4 px-2 flex flex-col`}
             style={hoverAnimate}
         >
-            <div className="flex text-sm flex-wrap gap-x-2 gap-y-1 items-start">
+            <div className="flex text-sm 2xl:text-lg flex-wrap gap-x-2 gap-y-1 items-start">
                 <FontAwesomeIcon
                     icon={faStar}
-                    className=" text-purple-400 h-4 w-4"
+                    className=" text-purple-400 h-4 w-4  pt-1 2xl:h-5 2xl:w-5"
                 />
                 <h1 className="font-bold text-white">Last Starred Repo</h1>
             </div>
@@ -56,10 +56,10 @@ const LastStarredRepo = () => {
                 className="flex flex-col px-2 gap-y-1"
                 href={lastStarred?.url ? lastStarred.url : "/"}
             >
-                <h1 className="text-base font-light text-white underline">
+                <h1 className="text-base 2xl:text-xl font-light text-white underline">
                     {lastStarred?.full_name ? lastStarred.full_name : ""}
                 </h1>
-                <p className="text-xs text-gray-200 font-light text-overflow overflow-hidden max-h-[5rem]">
+                <p className="text-xs 2xl:text-sm text-gray-200 font-light text-overflow overflow-hidden max-h-[5rem] 2xl:max-h-[7.5rem]">
                     {lastStarred?.description
                         ? clampWords(removeEmojiColon(lastStarred.description))
                         : ""}

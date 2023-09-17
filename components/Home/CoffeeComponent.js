@@ -58,8 +58,8 @@ const CoffeeComponent = () => {
             <FontAwesomeIcon className="text-6xl pl-2 pt-4" icon={faCoffee} />
             {showCoffee ? (
                 <div className="w-full pl-2 flex flex-wrap">
-                    <h1 id="last-drank" className="text-lg font-bold"></h1>
-                    <p className="text-base text-gray-400 font-iight">
+                    <h1 id="last-drank" className="text-lg 2xl:text-xl font-bold"></h1>
+                    <p className="text-base 2xl:text-lg text-gray-400 font-iight">
                         Without drinking Coffee
                     </p>
                 </div>
