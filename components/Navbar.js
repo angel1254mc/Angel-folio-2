@@ -16,8 +16,8 @@ function Navbar() {
         <div className={styles.navlink} onClick={ () => router.push('/projects')}>
             Projects
         </div>
-        <div className={styles.navlink} onClick={ () => router.push('/about')}>
-            About
+        <div className={styles.navlink} onClick={ () => router.push('/resume')}>
+            Resume
         </div>
     </nav>
   )
