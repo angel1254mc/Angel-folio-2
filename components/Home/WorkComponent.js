@@ -27,7 +27,7 @@ const WorkComponent = () => {
                         <p className="text-xs 2xl:text-sm">Software Engineering Intern in the #infra-O11y squad</p>
                         <p className="text-xs 2xl:text-sm">May 2023 - Aug. 2023</p>
                         <div className="flex gap-x-4 items-center">
-                            <Link href="/about" className="py-1 mt-2 px-4 border-[1px] rounded-sm border-white">
+                            <Link href="/resume" className="py-1 mt-2 px-4 border-[1px] rounded-sm border-white">
                                 Read More <FontAwesomeIcon className="text-xs 2xl:text-sm" icon={faAngleDoubleRight}/>
                             </Link>
                             <Image className="w-7 h-7" width="92" height="72" loading="eager" src="/grafana-logo.png" />
@@ -42,7 +42,7 @@ const WorkComponent = () => {
                         <p className="text-xs 2xl:text-sm">Associate Software Engineer</p>
                         <p className="text-xs 2xl:text-sm">May 2023 - Present</p>
                         <div className="flex gap-x-4 items-center">
-                            <Link href="/about" className=" py-1 mt-2 px-4 border-[1px] rounded-sm border-white">
+                            <Link href="/resume" className=" py-1 mt-2 px-4 border-[1px] rounded-sm border-white">
                                 Read More <FontAwesomeIcon className="text-xs 2xl:text-sm" icon={faAngleDoubleRight}/>
                             </Link>
                             <Image className="w-10 h-5" width="92" height="72" loading="eager" src="/et-logo.png" />
@@ -51,7 +51,7 @@ const WorkComponent = () => {
                 </div>
             </div>
             <div className={`flex pb-8 text-sm 2xl:text-base px-4 h-auto items-start transition-all duration-150 ${ expanded ? "md:opacity-1" : "md:opacity-0" }`}>
-                <p>For more info on my past work experience, check out my <Sheen>LinkedIn</Sheen> or my <Sheen>About</Sheen> page!</p>
+                <p>For more info on my past work experience, check out my <a href="https://www.linkedin.com/in/angel1254/"><Sheen>LinkedIn</Sheen></a> or my <Link href="/resume"><Sheen>Resume</Sheen></Link> page!</p>
             </div>
             
         </div>
