@@ -20,7 +20,7 @@ const index = ({project, projectPosts}) => {
   return (
    <>
    <HeadersCustom title={`AngelFolio | ${project.name}`}/>
-    <main className={styles.main + ' main-body'}>
+    <main className={"flex flex-col pt-2 px-6 max-w-[50rem] align-center m-auto min-h-[600px] w-full"}>
       <Navbar/>
       <Header title={`Projects/${project.slug}`} size={'3rem'}/>
       {project?.accomplishments ? <MainAccomplishments accomplishments={project.accomplishments}/> : <></>}
@@ -193,7 +193,7 @@ export const getStaticProps = async ({params}) => {
             <>{author.name.split(' ')[0]}</>
             <FontAwesomeIcon icon={faGithub} className={projectStyles.tiny_github}/>
           </div>
-          <Image alt={'Profile Image'} src={author.image} key={author.name} height={30} width={30}/>
+          <Image className="w-8 h-8" alt={'Profile Image'} src={author.image} key={author.name} height={30} width={30}/>
         </Link>
         <ul className={projectStyles.collaborator_body}>
           {
