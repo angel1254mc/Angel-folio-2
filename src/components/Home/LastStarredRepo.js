@@ -32,6 +32,11 @@ const LastStarredRepo = () => {
          })
          .catch((err) => {
             console.log('There was an error retrieving the last starred repo!');
+            setLastStarred({
+               url: "https://github.com/angel1254mc/Angel-folio-2",
+               full_name: "error-fetching-starred",
+               description: "Might need to regenerate the GH auth token 🥹"
+            })
          });
    }, []);
 

@@ -4,6 +4,7 @@ import React from 'react';
 const HeadersCustom = ({
    title = 'AngelFolio',
    description = "Angel's portfolio site and blog. Come check it out!",
+   imageURL = "https://www.angel1254.com/link-image.png"
 }) => {
    return (
       <Head>
@@ -17,7 +18,7 @@ const HeadersCustom = ({
          <meta property='og:description' content={description} />
          <meta
             property='og:image'
-            content='https://www.angel1254.com/link-image.png'
+            content={imageURL}
          />
 
          <meta property='twitter:card' content='summary_large_image' />
@@ -26,7 +27,7 @@ const HeadersCustom = ({
          <meta property='twitter:description' content={description} />
          <meta
             property='twitter:image'
-            content='https://www.angel1254.com/link-image.png'
+            content={imageURL}
          />
       </Head>
    );

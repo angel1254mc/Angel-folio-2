@@ -31,6 +31,7 @@ const PostPage = async ({ params }) => {
          <HeadersCustom
             title={post.meta.title}
             description={post.meta.excerpt}
+            imageURL={post.meta.imageURI}
          />
          <main
             className={
