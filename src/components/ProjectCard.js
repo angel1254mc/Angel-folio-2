@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { useTrail, useSpring, animated, useGesture } from 'react-spring';
+import { useSpring, animated } from 'react-spring';
 import styles from '../styles/components/HomeProjectsList.module.css';
 
 export const ProjectCard = ({ height, opacity, x, index, project }) => {

@@ -5,8 +5,8 @@ import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './SpotifyBubble.module.css';
 import cover from '../../../public/default-music-cover.png';
-import { useGesture, useDrag } from '@use-gesture/react';
-import { faGrip, faGripLines } from '@fortawesome/free-solid-svg-icons';
+import { useGesture } from '@use-gesture/react';
+import { faGripLines } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 const SpotifyBubble = ({ trigger }) => {
    const target = useRef(null);

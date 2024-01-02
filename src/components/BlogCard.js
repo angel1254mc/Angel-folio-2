@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import styles from '../styles/components/BlogShortList.module.css';
 import { animated, useSpring } from 'react-spring';
 import Image from 'next/image';
 import blogCardStyles from '../styles/components/blog/BlogList.module.css';

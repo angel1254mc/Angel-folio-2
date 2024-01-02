@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import styles from './BlogList.module.css';
 import BlogItem from './BlogItem';
 export default function BlogList({ posts, limit = null, innerRef = null }) {

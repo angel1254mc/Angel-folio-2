@@ -1,4 +1,3 @@
-import path from 'path';
 import { Octokit } from 'octokit';
 import { createClient } from '@supabase/supabase-js';
 const octokit = new Octokit({
@@ -45,26 +44,7 @@ export const getProjectFromSlugSupa = async (slug) => {
    }
    return project;
 };
-/**
- * @deprecated used back when projects were stored locally
- * @param {string} slug the slug referring to  that project
- * @returns
- */
-export const getProjectFromSlug = async (slug) => {
-   await getProjectFromSlugSupa(slug);
-   let proj = {};
-   for (let i = 0; i < Projects.length; i++) {
-      if (Projects[i].slug == slug) proj = Projects[i];
-   }
-   for (let i = 0; i < proj.authors.length; i++) {
-      const user = await octokit.request('GET /users/{username}', {
-         username: proj.authors[i].github,
-      });
-      const url = user.data.avatar_url;
-      proj.authors[i].image = url ? url : 'epic';
-   }
-   return proj;
-};
+
 export const getAllPostsSupa = async (project = null) => {
    if (project) {
       // Get all post slugs

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { animated, useSpring } from 'react-spring';
+import { useState } from 'react';
+import { useSpring } from 'react-spring';
 
 const usePurpleHover = () => {
    const [isHover, setIsHover] = useState(false);

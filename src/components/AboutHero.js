@@ -1,5 +1,4 @@
 import React from 'react';
-import Header from './Header/Header';
 import styles from '../styles/About.module.css';
 import Image from 'next/image';
 import { MDXRemote } from 'next-mdx-remote';

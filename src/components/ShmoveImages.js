@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import SpotifyBubble from './SpotifyBubble';
 export const ShmoveImages = ({ openTrigger }) => {
    const [triggerChildren, setTriggerChildren] = useState(false);
    const handleShowImages = () => {

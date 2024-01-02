@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import React from 'react';
 import Utils from '../Utils';
 import styles from './Footer.module.css';

@@ -1,5 +1,4 @@
 import React from 'react';
-import { animated } from 'react-spring';
 
 const Sheen = ({ children, style = {}, className = '' }) => {
    return (

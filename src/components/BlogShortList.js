@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from '../styles/components/BlogShortList.module.css';
-import { useTrail, useSpring, animated, useGesture } from 'react-spring';
+import { useTrail } from 'react-spring';
 import BlogCard from './BlogCard';
 const BlogShortList = ({ dynamic = false, open = false, innerRef, posts }) => {
    const isDynamic = useRef(dynamic);

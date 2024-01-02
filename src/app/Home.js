@@ -1,10 +1,7 @@
 'use client';
-
-import { Inter } from '@next/font/google';
-import Header from '@/components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import HeadersCustom from '../components/HeadersCustom';
-import { useSpring, useTrail, useTransition } from 'react-spring';
+import { useSpring, useTrail } from 'react-spring';
 import { animated } from 'react-spring';
 import IntroComponent from '../components/Home/IntroComponent';
 import WorkComponent from '../components/Home/WorkComponent';

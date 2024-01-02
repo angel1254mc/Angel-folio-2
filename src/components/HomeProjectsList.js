@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import styles from '../styles/components/HomeProjectsList.module.css';
-import { Parallax, ParallaxLayer } from '@react-spring/parallax';
-import { useTrail, useSpring, animated, useGesture } from 'react-spring';
+import { useTrail, useSpring } from 'react-spring';
 import { ProjectCard } from './ProjectCard';
 
 const HomeProjectsList = ({

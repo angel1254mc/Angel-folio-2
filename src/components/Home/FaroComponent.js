@@ -3,7 +3,7 @@ import Image from 'next/image';
 import React from 'react';
 import FaroImage from '../../../public/faro.webp';
 import { useEffect, useContext, useState } from 'react';
-import { onFID, onTTFB, onFCP, onINP, onCLS } from 'web-vitals';
+import { onFID, onTTFB, onFCP, onCLS } from 'web-vitals';
 import FaroContext from '@/context/FaroContext';
 
 const FaroComponent = () => {

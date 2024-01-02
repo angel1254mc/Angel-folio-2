@@ -19,6 +19,7 @@
       "@supabase/supabase-js": "^2.39.2",
       "@tailwindcss/typography": "^0.5.10",
       "@use-gesture/react": "^10.3.0",
+      "eslint-plugin-unused-imports": "^3.0.0",
       "next": "14.0.4",
       "next-mdx-remote": "^4.4.1",
       "octokit": "^3.1.2",

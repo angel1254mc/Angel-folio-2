@@ -1,7 +1,5 @@
 'use client';
 import React from 'react';
-import { useState } from 'react';
-import { animated, useSpring } from '@react-spring/web';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

@@ -7,7 +7,6 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import Sheen from '../typography/Sheen';
-import { animated } from 'react-spring';
 import Image from 'next/image';
 import Link from 'next/link';
 
