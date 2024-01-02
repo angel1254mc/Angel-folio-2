@@ -3,7 +3,6 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import styles from './Navbar.module.css';
 function Navbar() {
-   //const {navigateAway} = useContext(PageTransitionContext);
    const router = useRouter();
    return (
       <nav className={styles.navbar}>

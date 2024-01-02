@@ -51,11 +51,11 @@ export const ProjectCard = () => {
    );
 };
 
-let GetAuthors = ({ authorsarray }) => {
-   let size = authorsarray.length;
+let GetAuthors = ({ authorsArray }) => {
+   let size = authorsArray.length;
    return (
       <div className='flex w-full flex-wrap'>
-         {authorsarray.map((el, index) => {
+         {authorsArray.map((el, index) => {
             return index == size - 1 && index != 0 ? (
                <Author
                   key={el}
