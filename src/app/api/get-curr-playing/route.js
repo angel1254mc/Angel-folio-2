@@ -15,8 +15,6 @@ const NOW_PLAYING_URL =
 export const GET = async () => {
    const { access_token } = await getAccessToken();
 
-   console.log('Received Access Token: ' + access_token);
-
    const info = await fetch(NOW_PLAYING_URL, {
       headers: {
          Authorization: `Bearer ${access_token}`,
