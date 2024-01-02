@@ -6,16 +6,19 @@ const supabase = createClient(
    process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+const getSessionId = async (req, params) => {
+   const ipAddy = req.headers['x-forwarded-for'] ?? '0.0.0.0';
+   const slug = params.slug;
+   // use IP Address from header, encrypt using a salt. Don't want to infringe on anyone's privacy or anything
+   const currentUserId = createHash('md5')
+      .update(ipAddy + process.env.IP_ADDRESS_SALT, 'utf8')
+      .digest('hex');
+   return slug + '___' + currentUserId;
+}
+
 export const GET = async (req, { params }) => {
    try {
-      const ipAddy = req.headers['x-forwarded-for'] ?? '0.0.0.0';
-      const slug = params.slug;
-      // use IP Address from header, encrypt using a salt. Don't want to infringe on anyone's privacy or anything
-      const currentUserId = createHash('md5')
-         .update(ipAddy + process.env.IP_ADDRESS_SALT, 'utf8')
-         .digest('hex');
-
-      const sessionId = slug + '___' + currentUserId;
+      const sessionId = getSessionId(req, params);
       // In both GET and POST method  situation, we havee to grab the likes on the post as well as the likes already
       // added by the user
       // Both technically return an object with a "likes" field, so account for this by retrieving the integer
@@ -44,14 +47,7 @@ export const GET = async (req, { params }) => {
 
 export const POST = async (req, { params }) => {
    try {
-      const ipAddy = req.headers['x-forwarded-for'] ?? '0.0.0.0';
-      const slug = params.slug;
-      // use IP Address from header, encrypt using a salt. Don't want to infringe on anyone's privacy or anything
-      const currentUserId = createHash('md5')
-         .update(ipAddy + process.env.IP_ADDRESS_SALT, 'utf8')
-         .digest('hex');
-
-      const sessionId = slug + '___' + currentUserId;
+      const sessionId = getSessionId(req, params);
       // In both GET and POST method  situation, we havee to grab the likes on the post as well as the likes already
       // added by the user
       // Both technically return an object with a "likes" field, so account for this by retrieving the integer
