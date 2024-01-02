@@ -1,0 +1,114 @@
+.blog_list {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   row-gap: 15px;
+   max-width: 100%;
+   padding: 15px;
+}
+.post_container.unique:before {
+   content: '';
+   position: absolute;
+   box-sizing: border-box;
+   z-index: -1;
+   width: calc(100% + 2px);
+   height: calc(100% + 2px);
+   left: -1px;
+   top: -1px;
+
+   border-radius: 10px;
+   background: rgb(255, 255, 255);
+   background: linear-gradient(
+      65deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 88, 88, 1) 0%,
+      rgba(0, 177, 0, 1) 25%,
+      rgba(70, 229, 230, 1) 50%,
+      rgba(218, 121, 61, 1) 75%,
+      rgba(143, 3, 104, 1) 100%
+   );
+   background-size: 390% 390%;
+   animation-name: shmoveGradient;
+   animation-duration: 3s;
+   animation-timing-function: linear;
+   animation-iteration-count: infinite;
+   animation-direction: alternate;
+}
+.post_container.unique {
+   background-clip: padding-box;
+   background-color: #101010;
+   box-sizing: border-box;
+   border: 0px solid transparent;
+   border-radius: 10px;
+}
+.post_container {
+   position: relative;
+   display: flex;
+   flex-direction: column;
+   border: 1px solid #1f1f1f;
+   background-color: #101010;
+   border-radius: 10px;
+   width: 100%;
+}
+
+.post_top_group {
+   display: flex;
+   justify-content: space-between;
+   margin-bottom: 15px;
+   align-items: flex-start;
+   column-gap: 10px;
+}
+.post_title {
+   font-size: 2rem;
+   font-weight: bold;
+}
+.post_excerpt {
+   display: flex;
+   width: auto;
+   font-size: 1rem;
+   margin-bottom: 10px;
+}
+
+.post_bottom_group {
+   display: flex;
+   justify-content: flex-end;
+   align-items: flex-end;
+   flex-wrap: wrap;
+   row-gap: 10px;
+}
+.bottom_margin {
+   margin-bottom: 10px;
+}
+
+@keyframes shmoveGradient {
+   from {
+      background-position: 3% 3%;
+   }
+   to {
+      background-position: 100% 100%;
+   }
+}
+
+.notion_group {
+   position: relative;
+   border-radius: 10px;
+}
+.notion_group > img {
+   border-top-left-radius: 10px;
+   border-top-right-radius: 10px;
+   object-fit: cover;
+}
+.content_container {
+   padding: 30px;
+   padding-left: 30px;
+   padding-right: 30px;
+
+   border-radius: 10px;
+}
+.post_emoji {
+   position: absolute;
+   font-size: 60px;
+   left: 30px;
+   bottom: -30px;
+   z-index: 10;
+}

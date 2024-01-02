@@ -1,0 +1,135 @@
+.projects_container {
+   display: flex;
+   flex-direction: column;
+   row-gap: 15px;
+}
+.project-element-container {
+   display: flex;
+   flex-direction: column;
+   padding: 20px;
+   padding-left: 30px;
+   padding-right: 30px;
+   border: 1px solid #1f1f1f;
+   border-radius: 5px;
+   background-color: #101010;
+   row-gap: 10px;
+}
+.project-top-group {
+   display: flex;
+   width: auto;
+   justify-content: space-between;
+}
+.project-name-group {
+   display: flex;
+   column-gap: 20px;
+}
+.project-element-name {
+   font-size: 28px;
+   min-width: 110px;
+   font-weight: 600;
+   display: flex;
+   column-gap: 20px;
+}
+.project-date-group {
+   display: flex;
+   align-items: center;
+   font-size: 18px;
+}
+.project-element-description {
+   font-size: 14px;
+}
+.project-bottom-group {
+   width: auto;
+   display: flex;
+   justify-content: space-between;
+}
+.project-collaborators-group {
+   display: flex;
+   column-gap: 10px;
+   height: 30px;
+}
+.project-collaborators-group > img {
+   border-radius: 50%;
+}
+.project-element-tools {
+   width: auto;
+   display: flex;
+   column-gap: 7px;
+   flex-wrap: wrap;
+}
+.project-element-tool {
+   padding: 5px;
+   padding-left: 10px;
+   padding-right: 10px;
+   background-color: #1a1a1a;
+   border-radius: 5px;
+   font-style: italic;
+   font-weight: 600;
+}
+.project-element-tool.unique {
+   border: 1px solid grey;
+}
+.project-github-public {
+   height: 42px;
+   display: flex;
+   column-gap: 10px;
+   font-size: 16px;
+   align-items: center;
+   transition: 0.3s all;
+   padding: 5px;
+   border: 1px solid transparent;
+   border-radius: 5px;
+}
+.project-github-public:hover {
+   border: 1px solid white;
+   transform: translateY(-5px);
+}
+.project-github-public:focus {
+   transform: translateY(0px);
+}
+.project-github-private {
+   height: 42px;
+   display: flex;
+   column-gap: 10px;
+   font-size: 16px;
+   color: grey;
+   align-items: center;
+}
+.project-element-github {
+   width: 30px;
+   height: 30px;
+   font-size: 16px;
+}
+
+@media screen and (max-width: 800px) {
+   .project-top-group {
+      flex-direction: column;
+   }
+   .project-bottom-group {
+      flex-direction: column;
+      row-gap: 30px;
+   }
+   .project-element-container {
+      padding: 20px;
+   }
+}
+.project-see-more {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 5px;
+   padding-left: 7px;
+   padding-right: 7px;
+   border: 2px solid white;
+   border-radius: 3px;
+   transition: 0.3s all;
+   background-clip: border-box;
+   color: white;
+}
+.project-see-more > p {
+   transition: 0.3s all;
+}
+.project-see-more:hover > p {
+   background: linear-gradient(225deg, #48e6cd 0%, #d2a2fb 100%);
+   background-clip: text;
+}
