@@ -19,7 +19,7 @@ export const GET = async () => {
 
    const info = await fetch(NOW_PLAYING_URL, {
       next: {
-         revalidate: 15
+         revalidate: 0
       },
       headers: {
          Authorization: `Bearer ${access_token}`,
