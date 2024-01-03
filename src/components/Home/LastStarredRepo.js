@@ -23,9 +23,8 @@ const LastStarredRepo = () => {
       return str.split(' ', 14).join(' ') + '...';
    };
    useEffect(() => {
-      fetch('/api/get-last-starred-repo',
-         { next: { revalidate: 60 } }
-      ).then((response) => {
+      fetch('/api/get-last-starred-repo')
+         .then((response) => {
             return response.json();
          })
          .then((json) => {

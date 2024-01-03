@@ -40,9 +40,7 @@ const SpotifyComponent = () => {
    );
 
    const getCurrentlyPlaying = async () => {
-      const response = await fetch('/api/get-curr-playing',
-      { next: { revalidate: 60 } }
-      );
+      const response = await fetch('/api/get-curr-playing');
       const json = await response.json();
       setSpotifyObj(json);
    };
