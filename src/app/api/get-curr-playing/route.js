@@ -21,6 +21,7 @@ export const GET = async () => {
       next: {
          revalidate: 0
       },
+      cache: 'no-store',
       headers: {
          Authorization: `Bearer ${access_token}`,
       },
