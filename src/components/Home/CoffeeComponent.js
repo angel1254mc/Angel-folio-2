@@ -32,7 +32,9 @@ const CoffeeComponent = () => {
    };
 
    useEffect(() => {
-      fetch('/api/get-last-coffee-date')
+      fetch('/api/get-last-coffee-date', {
+         cache: 'no-store'
+      })
          .then((resp) => resp.json())
          .then((json) => {
             setShowCoffee(true);
