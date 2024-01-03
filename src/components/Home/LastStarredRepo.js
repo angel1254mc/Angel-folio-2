@@ -24,7 +24,7 @@ const LastStarredRepo = () => {
    };
    useEffect(() => {
       fetch('/api/get-last-starred-repo',
-         { next: { revalidate: 60 } }
+         { next: 'no-store' }
       ).then((response) => {
             return response.json();
          })
