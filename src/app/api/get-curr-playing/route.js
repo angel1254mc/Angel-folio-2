@@ -12,9 +12,11 @@ const basicAuth = Buffer.from(`${clientID}:${clientSecret}`).toString('base64');
 const NOW_PLAYING_URL =
    'https://api.spotify.com/v1/me/player/currently-playing';
 
-export const GET = async () => {
-   const { access_token } = await getAccessToken();
+export const dynamic = 'force-dynamic'
 
+export const GET = async () => {
+   console.log("Hellooooo")
+   const { access_token } = await getAccessToken();
    console.log('Received Access Token: ' + access_token);
 
    const info = await fetch(NOW_PLAYING_URL, {
@@ -40,6 +42,7 @@ export const GET = async () => {
 const getAccessToken = async () => {
    const response = await fetch(TOKEN_URL, {
       method: 'POST',
+      cache: 'no-store',
       headers: {
          Authorization: `Basic ${basicAuth}`,
          'Content-Type': 'application/x-www-form-urlencoded',

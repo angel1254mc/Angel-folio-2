@@ -1,5 +1,7 @@
 import { getLastStarredRepo } from '@/app/api';
 
+export const dynamic = 'force-dynamic'
+
 export const GET = async () => {
    let lastStarredRepo = await getLastStarredRepo();
 
