@@ -15,7 +15,6 @@ const NOW_PLAYING_URL =
 export const dynamic = 'force-dynamic'
 
 export const GET = async () => {
-   console.log("Hellooooo")
    const { access_token } = await getAccessToken();
    console.log('Received Access Token: ' + access_token);
 
