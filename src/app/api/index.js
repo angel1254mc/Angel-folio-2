@@ -152,3 +152,18 @@ export const getLastStarredRepo = async () => {
 
    return lastStarredRepo;
 };
+
+export const getProjectById = async (id) => {
+   const {
+      data: [project],
+   } = await supabase.from('projects').select('*').eq('id', id);
+   
+   return project;
+}
+
+export const getPostById = async (id) => {
+   const {
+      data: [post],
+   } = await supabase.from('posts').select('*').eq('id', id);
+   return post;
+}

@@ -18,16 +18,17 @@
    display: flex;
    width: auto;
    justify-content: space-between;
+   column-gap: 10px;
 }
 .project-name-group {
    display: flex;
    column-gap: 20px;
+   align-items: center
 }
 .project-element-name {
    font-size: 28px;
    min-width: 110px;
    font-weight: 600;
-   display: flex;
    column-gap: 20px;
 }
 .project-date-group {
