@@ -10,6 +10,7 @@ import { serialize } from 'next-mdx-remote/serialize';
 
 const PostEdit = ({ defaultPost }) => {
 
+   const [error, setError] = useState(null);
    const [code, setCode] = useState("");
    const [mdxSource, setMdxSource] = useState(null)
 
@@ -20,12 +21,19 @@ const PostEdit = ({ defaultPost }) => {
    }
 
    const updateMDXSource = async (code) => {
-      setMdxSource(await  serialize(code, {
-         mdxOptions: {
-            rehypePlugins: [rehypeSlug, rehypePrism],
-            development: process.env.NODE_ENV === 'development',
-         },
-      }))
+      try {
+         const source = await serialize(code, {
+            mdxOptions: {
+               rehypePlugins: [rehypeSlug, rehypePrism],
+               development: process.env.NODE_ENV === 'development',
+            },
+         })
+         setMdxSource(source)
+         setError(null);
+      } catch (err) {
+         console.log(err);
+         setError(err);
+      }
    }
    
    const debounceRef = useRef(null);
@@ -42,14 +50,6 @@ const PostEdit = ({ defaultPost }) => {
       }
    }, [code])
 
-   const postPreview = {
-      source: mdxSource,
-      meta: {
-         
-      }
-   };
-
-   console.log(mdxSource);
 
    return (
       <div className='w-full px-8 pb-6 flex justify-center'>
@@ -80,6 +80,15 @@ const PostEdit = ({ defaultPost }) => {
                      </label>
                      <input
                         placeholder='🗿😏'
+                        className='w-full mt-2 py-1 px-2 bg-transparent border-gray-700 border-b-2 text-base'
+                     />
+                  </div>
+                  <div className='flex flex-col'>
+                     <label htmlFor='name' className='text-base font-light '>
+                        Image URL
+                     </label>
+                     <input
+                        placeholder='Preferably something from Unsplash or Imgur 🥺'
                         className='w-full mt-2 py-1 px-2 bg-transparent border-gray-700 border-b-2 text-base'
                      />
                   </div>
@@ -119,9 +128,22 @@ const PostEdit = ({ defaultPost }) => {
                      <div className="w-1/2 flex flex-col gap-y-2">
                         <label className="text-xl">Preview Here</label>
                         <p className="text-sm opacity-0">OOoooooo hidden</p>
-                        <div className="h-[38rem] overflow-auto blog-body border-2 border-[#101010] prose prose-invert">
-                           { mdxSource && <MDXRemote {...postPreview.source} components={{ Utils }} />}
+                        <div className="h-[38rem] w-full overflow-auto border-2 border-[#101010]">
+                              {error && (
+                                 <div className="w-auto m-4 fadeIn h-full px-4 py-4 border-red-600 border-2 rounded-lg">
+                                    <h2 className="font-bold text-2xl mb-4">Error Compiling MDX</h2>
+                                    <p className="mb-8 text-white text-sm pb-2 border-b-2">See below message for more details</p>
+
+                                    <p className="text-sm px-4 py-4 border-red-900 bg-red-950 border-[1px] shadow-[#101010] shadow-xl">{error.toString()}</p>
+                                 </div>
+                              )}
+                              { mdxSource && !error && (
+                                 <div className="blog-body prose prose-invert h-full">
+                                    <MDXRemote {...mdxSource} components={{ Utils }} />
+                                 </div>
+                              )}
                         </div>
+                        
                      </div>
                   </div>
                </div>
