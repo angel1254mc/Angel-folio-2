@@ -5,6 +5,8 @@ import Footer from '@/components/Footer/Footer';
 import ProjectList from '@/components/Projects/ProjectList';
 import { getAllProjectsSupa } from '@/app/api';
 
+export const revalidate = false
+
 const ProjectsIndex = async ({}) => {
    const projects = await getAllProjectsSupa();
 

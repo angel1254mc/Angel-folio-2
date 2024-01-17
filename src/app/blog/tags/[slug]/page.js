@@ -7,7 +7,7 @@ import Header from '@/components/Header/Header';
 import Navbar from '@/components/NavBar/Navbar';
 
 export const dynamicParams = true;
-
+export const revalidate = 30;
 
 const PostPage = async ({ params }) => {
    const { slug } = params;
