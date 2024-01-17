@@ -40,7 +40,9 @@ const SpotifyComponent = () => {
    );
 
    const getCurrentlyPlaying = async () => {
-      const response = await fetch('/api/get-curr-playing');
+      const response = await fetch('/api/get-curr-playing',
+      { cache: 'no-store' }
+      );
       const json = await response.json();
       setSpotifyObj(json);
    };
