@@ -8,8 +8,7 @@ import ProjectSummaryComponent from '@/components/ProjectPage/ProjectSummary';
 import CollaboratorsList from '@/components/ProjectPage/CollaboratorsList';
 import MainAccomplishments from '@/components/ProjectPage/MainAccomplishments';
 
-export const dynamicParams = true;
-export const revalidate = true
+export const revalidate = 10
 
 const ProjectPage = async ({ params }) => {
    // Just slap all of the getStaticProps stuff in here, ignore getStaticPaths
