@@ -21,6 +21,7 @@ const page = async ({ params }) => {
   if (project) {
     project.authors = formatAuthors(project.authors);
     project.tools = project.tools.join(", ");
+    project.github.isPublic = project.github.isPublic ? "True" : "False";
     return (
         <ProjectEdit defaultProject={project} />
     )
