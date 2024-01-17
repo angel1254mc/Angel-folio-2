@@ -4,6 +4,7 @@ import BlogList from '@/components/Blog/BlogList';
 import { getAllPostsSupa } from '@/app/api';
 import HeadersCustom from '@/components/HeadersCustom';
 import Footer from '@/components/Footer/Footer';
+export const dynamic = 'force-dynamic';
 
 const index = async () => {
    const posts = (await getAllPostsSupa()).map((post) => post.meta);
