@@ -101,7 +101,6 @@ export const POST = async (req, { params }) => {
          const response = await supabase.rpc('increment_likes', {
             pid: post.id,
          });
-         console.log(response);
 
          return Response.json({
             currentUserLikes: currLikes + 1,

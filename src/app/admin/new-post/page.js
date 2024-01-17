@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 import React from 'react';
-import ProjectEdit from '@/components/Admin/ProjectEdit';
 import PostEdit from '@/components/Admin/PostEdit';
 
 const supabase = createClient(
@@ -14,7 +13,6 @@ const Page = async ({ params }) => {
       .select('*')
       .order('created_at', { ascending: false });
 
-    console.log(posts[0]);
    return (
       <>
          <PostEdit />

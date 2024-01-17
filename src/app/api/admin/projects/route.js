@@ -1,5 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 const supabase = createClient(
@@ -20,8 +19,7 @@ const getNextAddedNum = async () => {
   .order('added', { ascending: false })
   .limit(1);
 
-  console.log(num);
-  return 11;
+  return num;
 }
 
 const formatAuthors = (authors) => {
@@ -68,7 +66,6 @@ export async function POST(request) {
           path: "/api/admin/projects",
         }, {status: 500})
       }
-      console.log(request.nextUrl.origin)
       return NextResponse.json({
          message: 'Project Creation was successful!',
          link: request.nextUrl.origin.includes('localhost')

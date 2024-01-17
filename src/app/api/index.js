@@ -128,6 +128,7 @@ export const getPostFromSlugSupa = async (slug) => {
 
    return {
       content: post.content,
+      id: post.id,
       meta: {
          slug: post.slug,
          excerpt: post.excerpt,

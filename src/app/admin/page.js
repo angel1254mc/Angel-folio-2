@@ -59,7 +59,7 @@ const page = async ({ params }) => {
                   <div className="w-full px-2 py-2">
                       {
                         posts.map((post) => (
-                          <div key={post.meta.title} className="w-full flex flex-col py-2 border-b-[1px] border-dashed border-white ">
+                          <Link href={`/admin/edit-post/${post.id}`} key={post.meta.title} className="w-full flex flex-col py-2 border-b-[1px] border-dashed border-white ">
                             <h3 className="font-semibold">{post.meta.emoji + " " + post.meta.title}</h3>
                             <p className="text-xs font-light">{post.meta.excerpt}</p>
                             <div className="w-full flex text-xs flex-wrap py-1 gap-x-2 gap-y-2">
@@ -69,7 +69,7 @@ const page = async ({ params }) => {
                                 </div>
                               ))}
                             </div>
-                          </div>
+                          </Link>
                         ))
                       }
                   </div>

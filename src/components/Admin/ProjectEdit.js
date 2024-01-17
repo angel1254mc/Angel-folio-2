@@ -7,33 +7,10 @@ import GitHubURLs from './GitHubURLs';
 import ProjectAuthors from './ProjectAuthors';
 import LessonsLearned from './LessonsLearned';
 import { useRouter } from 'next/navigation';
+import { projectSchema } from '@/schema/schemas';
 
 const ProjectEdit = ({ defaultProject }) => {
-
    const router = useRouter();
-   const schema = yup.object({
-      id: yup.number(),
-      date: yup.string().required(),
-      created_at: yup.string(),
-      name: yup.string().required(),
-      tools: yup.string().required(),
-      slug: yup.string().required(),
-      summary: yup.string().required(),
-      desc: yup.string().required(),
-      github: yup.object({
-         url: yup.string(),
-         urls: yup.array().of(yup.object({})),
-         isPublic: yup.bool().required(),
-      }),
-      authors: yup.array().of(
-         yup.object({
-            name: yup.string(),
-            github: yup.string(),
-            responsibilities: yup.string(),
-         })
-      ),
-      lessons: yup.array().of(yup.string()),
-   });
 
    const {
       register,
@@ -42,35 +19,38 @@ const ProjectEdit = ({ defaultProject }) => {
       control,
       formState: { errors },
    } = useForm({
-      resolver: yupResolver(schema),
-      ...(defaultProject && {defaultValues: defaultProject})
+      resolver: yupResolver(projectSchema),
+      ...(defaultProject && { defaultValues: defaultProject }),
    });
 
    const state = watch();
 
    const onSubmit = async (project) => {
       console.log(project);
-      const response = await fetch("/api/admin/projects", {
-         method: "POST",
+      const response = await fetch('/api/admin/projects', {
+         method: 'POST',
          body: JSON.stringify(project),
-      })
+      });
 
       if (response.status == 200) {
-         console.log("Project insertion was successful!");
+         console.log('Project insertion was successful!');
          // Do whatever needs to be done like reroute to admin page or smth
-         router.push("/admin");
+         router.push('/admin');
       } else {
          if (response.status == 500) {
             const body = await response.json();
             console.log(body);
          }
       }
-   }
+   };
 
    console.log(errors);
 
    return (
-      <form onSubmit={handleSubmit(onSubmit)} className='w-full px-8 pb-6 flex justify-center'>
+      <form
+         onSubmit={handleSubmit(onSubmit)}
+         className='w-full px-8 pb-6 flex justify-center'
+      >
          <div className='w-full max-w-[50rem] gap-x-2 2xl:max-w-[64rem] h-auto flex flex-col lg:flex-row gap-y-4'>
             <div className='w-full flex flex-col'>
                <div className='flex flex-col gap-y-4 border-b-2 pb-14 text-white w-full'>
@@ -177,9 +157,9 @@ const ProjectEdit = ({ defaultProject }) => {
                         </div>
                      </div>
                   </div>
-                  <GitHubURLs {...{control, register}}/>
-                  <ProjectAuthors {...{control, register }} /> 
-                  <LessonsLearned {...{control, register}} />
+                  <GitHubURLs {...{ control, register }} />
+                  <ProjectAuthors {...{ control, register }} />
+                  <LessonsLearned {...{ control, register }} />
                </div>
                <button className='w-full flex justify-center items-center px-4 py-2 font-semibold border-[#101010] bg-[#101010] border-[1px] rounded-md mt-6 hover:border-white transition-all duration-150 text-white'>
                   Save Project
