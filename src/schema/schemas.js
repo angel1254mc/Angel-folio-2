@@ -36,4 +36,5 @@ export const projectSchema = yup.object({
       })
    ),
    lessons: yup.array().of(yup.string()),
+   added: yup.number(),
 });

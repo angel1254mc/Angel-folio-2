@@ -137,7 +137,7 @@ const ProjectEdit = ({ defaultProject }) => {
                         <div className='flex gap-x-2 text-sm mt-1'>
                            <input
                               type='radio'
-                              value='True'
+                              value={"True"}
                               className='py-1 mt-1 px-2 bg-transparent border-gray-700 rounded-md border-b-2 text-base'
                               {...register('github.isPublic')}
                            />
@@ -146,7 +146,7 @@ const ProjectEdit = ({ defaultProject }) => {
                         <div className=' flex gap-x-2 text-sm'>
                            <input
                               type='radio'
-                              value='False'
+                              value={"False"}
                               className='py-1 mt-1 px-2 bg-transparent border-gray-700 rounded-md border-b-2 text-base'
                               {...register('github.isPublic')}
                            />

@@ -9,6 +9,7 @@ import CollaboratorsList from '@/components/ProjectPage/CollaboratorsList';
 import MainAccomplishments from '@/components/ProjectPage/MainAccomplishments';
 
 export const dynamicParams = true;
+export const revalidate = true
 
 const ProjectPage = async ({ params }) => {
    // Just slap all of the getStaticProps stuff in here, ignore getStaticPaths

@@ -2,6 +2,8 @@ import { getProjectById } from '@/app/api';
 import ProjectEdit from '@/components/Admin/ProjectEdit'
 import React from 'react'
 
+export const revalidate = true
+
 const formatAuthors = (authors) => {
     if (authors?.length > 0)
        return authors.map(author => ({
@@ -21,6 +23,7 @@ const page = async ({ params }) => {
   if (project) {
     project.authors = formatAuthors(project.authors);
     project.tools = project.tools.join(", ");
+    project.github.isPublic = project.github.isPublic ? "True" : "False";
     return (
         <ProjectEdit defaultProject={project} />
     )
