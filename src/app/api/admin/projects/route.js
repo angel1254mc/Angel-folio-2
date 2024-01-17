@@ -19,7 +19,7 @@ const getNextAddedNum = async () => {
   .order('added', { ascending: false })
   .limit(1);
 
-  return num;
+  return num.added;
 }
 
 const formatAuthors = (authors) => {
@@ -44,7 +44,7 @@ export async function POST(request) {
          // If project ID was sent along with request, we are editing, not creating
          // a new project
          ...(project.id && { id: project.id }),
-         created_at: new Date().toISOString().toLocaleString(),
+         created_at: project.created_at ?? new Date().toISOString().toLocaleString(),
          name: project.name,
          tools: splitCommaList(project.tools),
          slug: project.slug,
@@ -54,7 +54,7 @@ export async function POST(request) {
          authors: authors,
          lessons: project.lessons ?? [],
          date: project.date ?? "N/A",
-         added: addedNum,
+         added: project.added ?? addedNum,
       });
 
       if (error) {
