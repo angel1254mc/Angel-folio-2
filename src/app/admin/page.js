@@ -7,6 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 15
+
 const page = async ({ params }) => {
   
   
