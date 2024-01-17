@@ -1,4 +1,3 @@
-'use server';
 import HeadersCustom from '../../../components/HeadersCustom';
 import { getAllPostsSupa, getProjectFromSlugSupa } from '@/app/api';
 import BlogList from '@/components/Blog/BlogList';
