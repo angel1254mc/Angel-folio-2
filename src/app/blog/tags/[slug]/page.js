@@ -5,6 +5,10 @@ import BlogList from '@/components/Blog/BlogList';
 import Footer from '@/components/Footer/Footer';
 import Header from '@/components/Header/Header';
 import Navbar from '@/components/NavBar/Navbar';
+
+export const dynamicParams = true;
+export const revalidate = 30;
+
 const PostPage = async ({ params }) => {
    const { slug } = params;
    const posts = (await getAllPostsSupa()).filter((post) =>

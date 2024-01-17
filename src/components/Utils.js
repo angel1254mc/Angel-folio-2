@@ -2,11 +2,11 @@
 import Link from 'next/link';
 import React from 'react';
 
-const Utils = ({ children, href = null, fontSize = '1rem' }) => {
+const Utils = ({ children, href = null, fontSize = '1rem', className}) => {
    if (href)
       return (
          <Link
-            className='gradient-link'
+            className={`gradient-link ${className}`}
             href={href}
             style={{
                textDecoration: 'underline',

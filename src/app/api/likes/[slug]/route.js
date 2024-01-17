@@ -17,6 +17,7 @@ const getSessionId = async (req, params) => {
 }
 
 export const GET = async (req, { params }) => {
+   let slug = params.slug;
    try {
       const sessionId = getSessionId(req, params);
       // In both GET and POST method  situation, we havee to grab the likes on the post as well as the likes already
@@ -46,6 +47,7 @@ export const GET = async (req, { params }) => {
 };
 
 export const POST = async (req, { params }) => {
+   let slug = params.slug;
    try {
       const sessionId = getSessionId(req, params);
       // In both GET and POST method  situation, we havee to grab the likes on the post as well as the likes already
@@ -101,7 +103,6 @@ export const POST = async (req, { params }) => {
          const response = await supabase.rpc('increment_likes', {
             pid: post.id,
          });
-         console.log(response);
 
          return Response.json({
             currentUserLikes: currLikes + 1,

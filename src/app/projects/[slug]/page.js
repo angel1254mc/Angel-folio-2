@@ -1,4 +1,3 @@
-'use server';
 import HeadersCustom from '../../../components/HeadersCustom';
 import { getAllPostsSupa, getProjectFromSlugSupa } from '@/app/api';
 import BlogList from '@/components/Blog/BlogList';
@@ -8,6 +7,8 @@ import Header from '@/components/Header/Header';
 import ProjectSummaryComponent from '@/components/ProjectPage/ProjectSummary';
 import CollaboratorsList from '@/components/ProjectPage/CollaboratorsList';
 import MainAccomplishments from '@/components/ProjectPage/MainAccomplishments';
+
+export const dynamicParams = true;
 
 const ProjectPage = async ({ params }) => {
    // Just slap all of the getStaticProps stuff in here, ignore getStaticPaths

@@ -16,8 +16,6 @@ export const dynamic = 'force-dynamic'
 
 export const GET = async () => {
    const { access_token } = await getAccessToken();
-   console.log('Received Access Token: ' + access_token);
-
    const info = await fetch(NOW_PLAYING_URL, {
       next: {
          revalidate: 0

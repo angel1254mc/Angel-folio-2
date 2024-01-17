@@ -11,6 +11,9 @@ import Footer from '@/components/Footer/Footer.js';
 import HeadersCustom from '@/components/HeadersCustom.js';
 import LikeButton from '@/components/Likes/LikeButton.js';
 import ClientMDXWrapper from '@/components/MDX/ClientMDXWrapper';
+
+export const dynamicParams = true;
+
 const PostPage = async ({ params }) => {
    const { slug } = params;
    const { content, meta } = await getPostFromSlugSupa(slug);
