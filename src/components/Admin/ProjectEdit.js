@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import GitHubURLs from './GitHubURLs';
@@ -22,8 +21,6 @@ const ProjectEdit = ({ defaultProject }) => {
       resolver: yupResolver(projectSchema),
       ...(defaultProject && { defaultValues: defaultProject }),
    });
-
-   const state = watch();
 
    const onSubmit = async (project) => {
       console.log(project);

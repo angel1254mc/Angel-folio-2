@@ -1,8 +1,5 @@
 'use client';
-import { faShieldDog, faX } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Image from 'next/image';
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useFieldArray } from 'react-hook-form';
 import ProjectAuthor from './ProjectAuthor';
 
@@ -20,7 +17,7 @@ const ProjectAuthors = ({ control, register, authors }) => {
          </h3>
          <div className='flex flex-col w-full'>
             {fields.map((field, index) => (
-               <ProjectAuthor {...{field, index, register, remove }} />
+               <ProjectAuthor key={`${field}-${index}`} {...{field, index, register, remove }} />
             ))}
             <button
                onClick={() => {
