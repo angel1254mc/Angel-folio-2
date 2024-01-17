@@ -8,7 +8,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
-export const revalidate = 15
+export const revalidate = true
 
 const page = async ({ params }) => {
   

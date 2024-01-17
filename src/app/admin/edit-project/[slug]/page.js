@@ -2,6 +2,8 @@ import { getProjectById } from '@/app/api';
 import ProjectEdit from '@/components/Admin/ProjectEdit'
 import React from 'react'
 
+export const revalidate = true
+
 const formatAuthors = (authors) => {
     if (authors?.length > 0)
        return authors.map(author => ({
