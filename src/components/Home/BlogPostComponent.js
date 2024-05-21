@@ -13,7 +13,7 @@ const BlogPostComponent = ({ latest = {} }) => {
          className='transition-all relative border-[1px] rounded-md border-[#101010] w-full duration-300 hover:scale-105 hover:shadow-[0px_0px_105px_3px_rgba(192,77,246,0.25)]'
          href={`/blog/posts/${post.slug}`}
       >
-         <Image fill={true} src={post.imageURI} alt={' image'} />
+         <Image fill={true} src={post.imageURI} alt={'Blog Post Graphic'} />
          <div className='absolute flex flex-col justify-between h-full px-4 py-4 bg-[#101010] hover:shadow-inner shadow-2xl hover:bg-[rgba(16,16,16,0.7)] duration-300 transition-all z-50 w-full'>
             <div className='flex flex-col gap-y-2'>
                <h1 className='text-xl font-bold'>{post.title}</h1>

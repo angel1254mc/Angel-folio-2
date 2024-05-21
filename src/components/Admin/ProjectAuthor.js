@@ -53,6 +53,7 @@ const ProjectAuthor = ({ field, index, register, remove }) => {
                           src={pictureURL ?? '/profile-placeholder.webp'}
                           height={100}
                           width={100}
+                          alt={"Author Github"}
                           className='min-w-10 min-h-10 max-w-10 max-h-10 object-cover rounded-full'
                        ></Image>
                     </div>
