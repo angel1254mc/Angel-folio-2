@@ -40,7 +40,7 @@ const BlogCard = ({ height, opacity, x, index, post }) => {
             className={blogCardStyles.notion_group}
          >
             <div className={blogCardStyles.post_emoji}>{post.emoji}</div>
-            <Image fill={true} src={post.imageURI} alt={' image'} />
+            <Image fill={true} src={post.imageURI} alt={'Blog Card Graphic'} />
          </animated.div>
          <div className='mt-6 p-4 text-2xl font-bold'>{post.title}</div>
          <div className='p-4 pt-2 text-lg'>{post.excerpt}</div>

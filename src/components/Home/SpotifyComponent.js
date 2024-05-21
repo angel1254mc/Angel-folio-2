@@ -20,7 +20,7 @@ const SpotifyComponent = () => {
                return (
                   <a
                      href={artistObj?.external_urls?.spotify ?? ''}
-                     key={artistObj.id}
+                     key={artistObj.id ? artistObj.id : `some-artist-${index}`}
                   >
                      {artistObj.name}
                   </a>
@@ -79,6 +79,7 @@ const SpotifyComponent = () => {
                   className='w-28 h-28'
                   width={200}
                   height={200}
+                  alt={spotifyObj?.item?.name ? spotifyObj.item.name : "Placeholder for no Spotify Songs" }
                   src={
                      spotifyObj && spotifyObj.item
                         ? spotifyObj?.item?.album?.images[0]?.url

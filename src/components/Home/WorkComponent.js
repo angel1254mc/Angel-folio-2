@@ -64,6 +64,7 @@ const WorkComponent = () => {
                            height='72'
                            loading='eager'
                            src='/grafana-logo.png'
+                           alt="Grafana Labs Inc Logo"
                         />
                      </div>
                   </div>
@@ -103,6 +104,7 @@ const WorkComponent = () => {
                            height='72'
                            loading='eager'
                            src='/et-logo.png'
+                           alt='Emerging Tech LLC Logo'
                         />
                      </div>
                   </div>

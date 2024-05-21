@@ -15,6 +15,7 @@ const SSDComponent = () => {
                loading='eager'
                width={'50'}
                height={'50'}
+               alt={"Society of Software Developers Logo"}
             />
             <a
                className='text-lg transition-all duration-300 hover:rotate-[360deg] hover:text-blue-300'

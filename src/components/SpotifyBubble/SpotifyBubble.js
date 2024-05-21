@@ -76,6 +76,7 @@ const SpotifyBubble = ({ trigger }) => {
                         ? spotifyObj?.item?.album?.images[0]?.url
                         : cover
                   }
+                  alt="Spotify Album Image"
                />
                <div className={styles.spotify_data_container}>
                   <div className={styles.spotify_song_title}>
