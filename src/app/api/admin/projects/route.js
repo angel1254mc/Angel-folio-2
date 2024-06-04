@@ -70,7 +70,7 @@ export async function POST(request) {
          message: 'Project Creation was successful!',
          link: request.nextUrl.origin.includes('localhost')
             ? `${request.nextUrl.origin}:3000/projects/${project.slug}`
-            : process.env`${request.nextUrl.origin}/projects/${project.slug}`,
+            : `${request.nextUrl.origin}/projects/${project.slug}`,
       }, {
         status: 200
       });
