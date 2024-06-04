@@ -2,7 +2,7 @@ import { getProjectById } from '@/app/api';
 import ProjectEdit from '@/components/Admin/ProjectEdit'
 import React from 'react'
 
-export const revalidate = true
+export const revalidate = 0;
 
 const formatAuthors = (authors) => {
     if (authors?.length > 0)

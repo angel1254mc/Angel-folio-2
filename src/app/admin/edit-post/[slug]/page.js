@@ -3,7 +3,7 @@ import React from 'react';
 import PostEdit from '@/components/Admin/PostEdit';
 import { getPostById } from '@/app/api';
 
-export const revalidate = true
+export const revalidate = 0;
 
 const supabase = createClient(
    process.env.NEXT_PUBLIC_SUPABASE_URL,
