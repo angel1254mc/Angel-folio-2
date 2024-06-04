@@ -211,7 +211,7 @@ const PostEdit = ({ defaultPost }) => {
                   </div>
                </div>
                <button className='w-full flex justify-center items-center px-4 py-2 font-semibold border-[#101010] bg-[#101010] border-[1px] rounded-md mt-6 hover:border-white transition-all duration-150 text-white'>
-                  Save Project
+                  Save Post
                </button>
             </div>
          </div>
