@@ -1,8 +1,5 @@
-import { Octokit } from 'octokit';
+import {createOctokitClient} from '@/lib/octokit';
 import { createClient } from '@supabase/supabase-js';
-const octokit = new Octokit({
-   auth: process.env.GITHUB_AUTH,
-});
 
 const supabase = createClient(
    process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -29,6 +26,12 @@ export const getProjectSlugsSupa = async () => {
    return projects.map((project) => project.slug);
 };
 export const getProjectFromSlugSupa = async (slug) => {
+   let octokit = null;
+   try {
+      octokit = createOctokitClient();
+   } catch (err) {
+      return { error: 'Could not create octokit client' };
+   }
    // Grab project that matches slug from supabase
    const {
       data: [project],
@@ -38,6 +41,7 @@ export const getProjectFromSlugSupa = async (slug) => {
    for (let i = 0; i < project.authors.length; i++) {
       const user = await octokit.request('GET /users/{username}', {
          username: project.authors[i].github,
+         
       });
       const url = user.data.avatar_url;
       project.authors[i].image = url ? url : 'epic';
@@ -83,6 +87,12 @@ export const getAllPostsSupa = async (project = null) => {
 };
 
 export const getAllProjectsSupa = async () => {
+   try {
+      octokit = createOctokitClient();
+   } catch (err) {
+      return { error: 'Could not create octokit client' };
+   }
+   
    // First, get all projects, then get all image URLS for the users
    let { data: projects } = await supabase
       .from('projects')

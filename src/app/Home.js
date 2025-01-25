@@ -18,7 +18,7 @@ import Header from '@/components/Header/Header';
 
 export default function Home({ posts, projects }) {
    // TODO (@angel1254mc) change pageState useState to global context
-   const [headerSpring, headerApi] = useSpring(() => ({
+   const [headerSpring] = useSpring(() => ({
       from: {
          opacity: 0,
       },
@@ -27,7 +27,7 @@ export default function Home({ posts, projects }) {
       },
    }));
 
-   const [trails, api] = useTrail(14, () => ({
+   const [trails] = useTrail(14, () => ({
       from: {
          opacity: 0,
          scale: 1.03,
@@ -151,7 +151,9 @@ export default function Home({ posts, projects }) {
                         style={trails[13]}
                         className='flex w-full h-48 bg-[#101010] rounded-md'
                      >
-                        <ProjectCardComponent project={projects[1]} />
+                        {projects?.length > 1 && (
+                           <ProjectCardComponent project={projects[1]} />
+                        )}
                      </animated.div>
                   </div>
                </div>
