@@ -22,7 +22,8 @@ const HomePage = async ({ children }) => {
          },
       ];
    }
-   let posts = null; //await getAllPostsSupa();
+   let posts = null;
+   await getAllPostsSupa();
    if (!posts || posts.error) {
       // default post information on error.
       posts = [
