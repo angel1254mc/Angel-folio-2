@@ -5,7 +5,7 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-const ProjectElement = ({ project, x, opacity, transform }) => {
+const ProjectElement = ({ project, x, opacity }) => {
    const [isHover, setIsHover] = useState(false);
    const hoverAnimate = useSpring({
       config: { mass: 5, tension: 2000, friction: 200 },
@@ -28,7 +28,7 @@ const ProjectElement = ({ project, x, opacity, transform }) => {
       >
          <div className='project-top-group'>
             <div className='project-name-group'>
-               <div className='project-element-name'>{project.name}</div>
+               <div className='project-element-name'>{project?.name}</div>
                {project?.github?.isPublic ? (
                   <Link
                      href={project.github.url}
@@ -51,11 +51,11 @@ const ProjectElement = ({ project, x, opacity, transform }) => {
                )}
             </div>
 
-            <div className='project-date-group'>{project.date}</div>
+            <div className='project-date-group'>{project?.date}</div>
          </div>
-         <div className='project-element-description'>{project.desc}</div>
+         <div className='project-element-description'>{project?.desc}</div>
          <div className='project-element-tools'>
-            {project.tools.map((tool) => {
+            {project?.tools?.map((tool) => {
                return (
                   <div key={tool} className='project-element-tool'>
                      {tool}
@@ -65,7 +65,7 @@ const ProjectElement = ({ project, x, opacity, transform }) => {
          </div>
          <div className='project-bottom-group'>
             <div className='project-collaborators-group'>
-               {project.authors.map((author) => {
+               {project?.authors?.map((author) => {
                   return (
                      <Image
                         alt={'Profile Image'}
