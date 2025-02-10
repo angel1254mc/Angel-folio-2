@@ -1,5 +1,8 @@
 import { createOctokitClient } from '@/lib/octokit';
 import { createClient } from '@supabase/supabase-js';
+import * as matter from 'gray-matter';
+import path from 'path';
+import fs from 'fs';
 
 const supabase = createClient(
    process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -114,12 +117,40 @@ export const getAllProjectsSupa = async () => {
    );
    return proj;
 };
+
 /**
  * @interface Post
  * @param content
  * @param meta = {excerpt, slug, title, tags, date}
  *
  */
+
+export const getPostFromFile = async (slug) => {
+   const TEST_PATH = path.join(process.cwd(), 'src/posts');
+   const postPath = path.join(TEST_PATH, `${slug}.mdx`);
+   // Now that path is figured out, read out the contents
+   console.log(postPath);
+   const source = fs.readFileSync(postPath);
+   // Get the frontmatter from the post
+   const { data: frontmatter, content } = matter(source);
+   // Return the post
+   return {
+      content,
+      meta: {
+         slug: frontmatter.slug,
+         excerpt: frontmatter.excerpt,
+         title: frontmatter.title ?? slug,
+         tags: (frontmatter.tags ?? []).sort(), // Nullish Coalesscing
+         date: new Date(frontmatter.created_at).toString(),
+         project:
+            frontmatter.project && frontmatter.project.length > 1
+               ? frontmatter.project
+               : 'None',
+         imageURI: frontmatter.imageURI ?? '',
+         emoji: frontmatter.emoji ?? '🗒️',
+      },
+   };
+};
 
 export const getPostFromSlugSupa = async (slug) => {
    // No need for frontmatter or data parsing, we just grab from supabase

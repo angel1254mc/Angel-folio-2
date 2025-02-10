@@ -1,0 +1,282 @@
+---
+title: Formik and React Hook Form beef explained
+tags:
+  - React
+date: 2023-2-6
+project: null
+emoji: '📜'
+imageURI: https://i.imgur.com/iUb12Ss.png
+excerpt: The strongest react form library of today vs the strongest react form library of yesteryear
+---
+<div>
+<Utils>Formik</Utils>, the strongest react hook form library of yesteryear, and <Utils>React Hook Form</Utils>, the strongest react hook form library of today. 
+These are two of the most popular form control libraries for React. Both these libraries provide simple and extensible ways to create, manage, and validate form fields,
+saving devs valuable time and potential headaches when building out form flows.
+</div>
+
+## The Beef
+
+<div className="w-full flex justify-center">
+<img width="90%" src="https://i.imgur.com/WH0MkOZ.png"/>
+</div>
+
+
+<div> I'm a new-gen React developer, so I joined the ecosystem around the same time that <Utils>React Hook Form</Utils> (RHF) became the de facto industry standard for form management in React. If you compare historical downloads across both libraries, you'll notice that for a long time, <Utils>Formik</Utils> dominated the space- until eventually RHF <Utils>overtook it</Utils>. This shift happened right around the time I started learning React.</div>
+<br/>
+<div>I didn't even know about Formik until after I joined <Utils>ALTR</Utils>. Today, the library receives minimal maintenance from its owners. Despite its dwindling monthly downloads, it still holds a significant footprint in enterprise applications and continues to receive a surprising number of <Utils href="https://github.com/jaredpalmer/formik/issues">community issues</Utils> and <Utils href="https://github.com/jaredpalmer/formik/pulls">pull requests</Utils> on its <Utils href="https://github.com/jaredpalmer/formik/pulls">GitHub repo</Utils> almost <Utils>weekly</Utils> 🤯. I gave Formik a try, and in terms of ease of use it's comparable to RHF.</div>
+<br/>
+<div>This got me wondering, how did RHF end up winning the war almost unanimously? It's crazy to me how there's barely any argument about which library is better. Most devs admit RHF is just the <Utils>optimal choice</Utils> for a large majority of use cases. At fist I didn't really understand why this was, but after using both libraries for a while, <Utils>I think I've figured it out</Utils> (the answer is obvious).</div>
+
+RHF is incredibly straightforward when setting up forms, especially with native HTML inputs. The primary entry point is the `useForm` hook, which returns utility methods for managing form state.
+
+```jsx
+import { useForm } from 'react-hook-form';
+
+const myApp = () => {
+  const { register, handleSubmit } = useForm();
+  //...any other stuff.
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register('firstName')} />
+      <input {...register('lastName')} />
+      <input type="submit" />
+    </form>
+  )
+}
+```
+The two key components here are `register` and `handleSubmit`. `handleSubmit` takes a callback function that is called when the form is submitted and fully valid. 
+It provides the callback with information on the form values, the form state, and other useful information. `register` is a function that returns an object with a `ref` property that is used to bind the input to the form state. 
+There's a couple of other useful methods that `useForm` provides, but these are the two most important ones.
+
+Formik is a little older than RHF, and it has a different approach to form management. Instead of "registering" components by handling their refs under the hood, Formik uses a controlled component approach.
+The primary entrypoint for this library is a `Formik` component, which you wrap around the form components you want to manage.. This is a higher order component that provides an object composed of form state and utility methods to manage that state (sounds familiar hmm). Here's an example ripped straight from the docs.
+
+```jsx 
+import { Formik, Form, Field } from 'formik';
+
+const myApp = () => {
+  return (
+    <Formik
+      initialValues={{ firstName: '', lastName: '' }}
+      onSubmit={values => console.log(values)}
+    >
+      <Form>
+          <input
+             type="email"
+             name="email"
+             onChange={handleChange}
+             onBlur={handleBlur}
+             value={values.email}
+           />
+           {errors.email && touched.email && errors.email}
+           <input
+             type="password"
+             name="password"
+             onChange={handleChange}
+             onBlur={handleBlur}
+             value={values.password}
+           />
+        <button type="submit">Submit</button>
+      </Form>
+    </Formik>
+  )
+}
+```
+
+Like RHF, formik is able to take a callback function that is called on submit, and is provided with the form values. However, unlike RHF, actually *controlling* the input fields is left to the developer. 
+
+These two examples show both libraries in their most basic usecase, and for most intents and purposes they don't seem all that different. If you try either of these forms out locally you won't notice much of a difference in terms of functionality. However, the differences between these two libraries become more apparent when you start to build out more complex forms.
+
+## The Invisible Hand of the Formik Rerender Economy
+
+Say that you're an online scientific journal site that accepts submissions from researchers in the community. Verified users can submit articles to the site by attaching a file, entering an abstract, and filling out a form with their personal information. This form has a lot of fields, and some of them are required. One of the fields for the form allows researchers to enter a list of authors/co-authors for the article.
+
+This field is a list of `AuthorInput` components. Users can input the first name, last name, and email of each author. Let's build out a super basic version of this form using both libraries and see how they compare.
+
+### Formik Example Sandbox
+<iframe src="https://codesandbox.io/embed/l5gjmg?view=editor+%2B+preview"
+     style={{width:"100%", height: "500px", border:0, borderRadius: "4px", overflow:"hidden"}}
+     title="Formik - Advanced Form Example"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+
+### React Hook Form Example Sandbox
+<iframe src="https://codesandbox.io/embed/wxd9yf?view=editor+%2B+preview"
+     style={{width:"100%", height: "500px", border:0, borderRadius: "4px", overflow:"hidden"}}
+     title="React Hook Form - Advanced Form Example"
+     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+   ></iframe>
+
+<div>The code is slightly different, but the functionality is exactly the same. If you mess around on the "Preview" tab of the sandbox you'll see that both forms work as expected. </div>
+<br/>
+
+<div>However, if you click the <Utils>"open in new window"</Utils> near the top right of the preview, you'll be brought to a new window, where you'll notice we are using a handy tool named <Utils href="https://github.com/aidenybai/react-scan">react-scan (link to repo)</Utils>. This is a performance monitoring tool that allows us to identify component re-renders using simple visual cues. Super handy tool that I've been using a lot lately to identify performance bottlenecks in my code.</div>
+
+<br/>
+
+<div>Now, if you add an author and type something into the first instance of the 'first name' field, you'll notice that the <Utils>entire author component re-renders for each keystroke</Utils>. In fact, if you try adding a bunch of authors and typing into any of the fields, you'll notice the <Utils>entire form</Utils> re-renders for each keystroke. </div>
+<div className="w-full flex justify-center">
+<img width="90%" src="https://i.imgur.com/OzCpNqJ.gif"/>
+</div>
+
+<div>On the other hand, if you try out the same thing with the <Utils>RHF</Utils> example, you'll notice that, regardless of how many keystrokes, no components rerender (except when you push a new author, during which you'll notice AuthorComponents rerender due to the changing contents of the list).</div>
+<div className="w-full flex justify-center">
+<img width="90%" src="https://i.imgur.com/GlIj7Ha.gif"/>
+</div>
+
+
+<div>Now, I'm not gonna pretend this is some kind of human rights violation. A few more re-renders is totally fine on smaller forms not meant for heavy usecases. If all you need is a couple of static forms where the number of fields onscreen at a time won't exceed 20 or so, go crazy. However, as your forms require more fields and complex render/validation logic, the performance impact becomes increasingly apparent. Unless you're very clever about how you memoize expensive components (with <Utils>`React.memo`</Utils> or if you use the <Utils>React Compiler</Utils>) and/or using components like `FastField`, you're going to be fighting demons trying to nest two FieldArrays without grinding your form to a halt.</div>
+
+## Why the difference?
+
+Why does Formik rerender so much? The answer is pretty straightforward. Formik uses a controlled component approach, which means that technically every time an input is modified, the entire form state is updated. If you take a look at the <Utils href="https://github.com/jaredpalmer/formik/blob/0e0cf9ea09ec864dd63c52cf775f862795ef2cf4/packages/formik/src/Formik.tsx#L176C2-L184C6">Formik source code</Utils>, you'll see that most of the state management happens in the `useFormik` hook and revolves around a single ref, `stateRef`. Methods that get passed to the form components, like `handleChange`, `handleBlur`, and `setFieldValue`, internally call a `dispatch` calllback, which takes in an action that is then passed into an internal reducer that figures out what operation (update, read, validate, etc.) needs to be performed on `stateRef`. Once the operation is performed, an internal `iteration` counter is incremented. This `iteration` is based on a `useState()` call, so when it changes, a re-render is triggered. This ref then gets destructured on the return statement of the `useFormik` hook, thus literally redefining the entire form values state on every update.
+
+```jsx
+export function useFormik(
+  {
+    /**...*/
+  },
+) {
+  // Bunch of extra state for stuff like validation, utility functions for FieldArrays, etc...
+  // ...
+
+  // We care about THIS
+  const stateRef = React.useRef({
+    values: cloneDeep(props.initialValues),
+    errors: cloneDeep(props.initialErrors) || emptyErrors,
+    touched: cloneDeep(props.initialTouched) || emptyTouched,
+    status: cloneDeep(props.initialStatus),
+    isSubmitting: false,
+    isValidating: false,
+    submitCount: 0,
+  });
+  const state = stateRef.current;
+
+  // Big Humongous Ginormous Reducer function that handles all the state updates to `stateRef`
+
+  // State reducer
+  function formikReducer(state, msg) {
+    switch (msg.type) {
+      case "SET_VALUES":
+        return { ...state, values: msg.payload };
+      case "SET_TOUCHED":
+        return { ...state, touched: msg.payload };
+      case "SET_ERRORS":
+        if (isEqual(state.errors, msg.payload)) {
+          return state;
+        }
+      // etc
+      // ...
+    }
+    // ...
+    // Dispatch function that sends actions to the `formikReducer`, which is responsible for updating the ref and incrementing the iteration.
+    const dispatch = React.useCallback((action) => {
+      const prev = stateRef.current;
+
+      stateRef.current = formikReducer(prev, action);
+
+      // force rerender
+      if (prev !== stateRef.current) setIteration((x) => x + 1);
+    }, []);
+
+    // Even more stuff, handleChange, onBlur, onFocus handlers, etc.
+
+    // Finally, formik returns the form state and any other fields provided
+    // by the library
+    return {
+      ...state,
+      // ...
+      // And a whole lot more
+    };
+  }
+}
+```
+
+It's really easy to shoot yourself in the foot when you're building something complex with Formik. If you're clever (I'm not fyi) you can get around a lot of this with some memoization and good component design. Of course, it's really only worth going for memoization if your form is big enough to outweigh the immediate performance cost of memoization. If you're building a small form, you're probably better off just using RHF.
+
+React Hook Form, on the other hand, uses an uncontrolled component approach. RHF yoinks the ref from the input component, and passes in all of the necessary callbacks (onChange, onBlur, onFocus. etc.) via the `register` function. The input callbacks then save whatever values the user inputs into an additional ref named `_formValues` (similar to the `values` field in formik) however RHF doesn't trigger a state update unless it needs to.
+
+For instance, lets look at what it takes to `watch` a field value using the `useWatch hook. Internally, RHF employs an observer pattern in order to determine whether or not a state update needs to be triggered. Scattered around the RHF codebase, you'll see various mentions of `_subjects.state.next({})`, `watch.next({})`, `array.next({})`, etc. You'll also notice that a lot of these only get called if certain conditions are `true`. For instance, inside of the onChange handler provided by `register`, there's a call to `_subjects.state.next()` if the calling event is not a blur event
+
+```jsx
+!isBlurEvent &&
+        _subjects.state.next({
+          name,
+          type: event.type,
+          values: cloneObject(_formValues),
+        });
+```
+
+That `state` variable present within `subjects` is an instance of a `Subject` class, which exposes a `next` method as seen above as well as a `subscribe` method. It also keeps an array of subscribers under the `_observers` variable. When a user calls `subject.subscribe()` they are able to pass in an object with a callback under the `next` key. The `Subject` keeps an array of all the observers that are subscribed, and when a field is changed resulting in a change to `subject.next()`, we loop over all valid observers and trigger their callback. If no observers are present, the `next` function does nothing.
+
+```jsx
+/** slightly simplified version of the actual thing in RHF */
+const Subject = () => {
+  let observers = [];
+  const subscribe = (observer) => {
+    observers.push(observer)
+  }
+  const next = (data) => {
+    observers.forEach(observer => observer.next(data))
+  }
+
+  return {
+    get observers() {
+      return observers
+    },
+    next,
+    subscribe,
+  }
+}
+```
+
+The useWatch hook makes use of this observer functionally in order to "listen" for when the state should be updated for the specific field we are watching. Internally, useWatch sets up a `value` state variable and an `updateValue` setter function. On mount, `useWatch` subscribes to updates from the `subject`, and the observer that gets passed in contains a callback that updates the `value` state variable only when the `name` of the field being updated matches the `name` of the field being watched. It looks roughly like what we have below.
+
+```jsx
+const useWatch = (name) => {
+  const [value, updateValue] = useState();
+  // Get the form control object from the overarching RHF context.
+  const { control } = useFormContext();
+  useEffect(() => {
+    const observer = {
+      next: ({fieldName, newValue}) => {
+        if (fieldName === name) {
+          updateValue(newValue);
+        }
+      },
+    };
+    // _subscribe is a wrapper around `subject.subscribe`
+    control._subscribe(observer);
+    return () => {
+      control._unsubscribe(observer);
+    };
+  }, []);
+
+  return value;
+};
+```
+
+This is a very simplified version of what actually happens in RHF, but it should give you a good idea of some of the cool stuff RHF does under the hood to avoid unnecessary re-renders. Most importantly, going into the source code and looking at how others employ the library is what made me understand why React Hook Form was the final victor of the Great Form Control Library Wars of the early 2020s. Very nice 😎👍
+
+Here's a really cute diagram showing what we discussed above. Please be nice to it, I suck at diagrams bro 💔
+
+<div className="w-full flex justify-center">
+<img width="90%" src="https://i.imgur.com/J73dJWL.png"/>
+</div>
+
+Thanks for reading this far! I hope you enjoyed this blog post and maybe even learned something new from it. If you have any questions or comments, feel free to reach out to me on <Utils href="https://www.linkedin.com/in/angel1254/">LinkedIn</Utils> or <Utils href="https://www.instagram.com/angel1254/">Insta</Utils>
+
+
+## What I'm BUMPIN Today
+Last blog post was like a year ago so here's a couple of songs I've been listening to.
+<br/>
+<iframe style={{borderRadius:'12px'}}  src="https://open.spotify.com/embed/track/2lTm559tuIvatlT1u0JYG2?utm_source=generator" width="100%" height="152" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<br/>
+<iframe style={{borderRadius:'12px'}}  src="https://open.spotify.com/embed/track/2p980qlVXYLh3HdHusbhfa?utm_source=generator" width="100%" height="152" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<br/>
+<iframe style={{borderRadius:'12px'}}  src="https://open.spotify.com/embed/track/39ieqctcdXu2Ltu3QsHrDt?utm_source=generator" width="100%" height="152" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<br/>
+<iframe style={{borderRadius:'12px'}}  src="https://open.spotify.com/embed/track/4VpaUuyuGF8GoQCdabstLd?utm_source=generator" width="100%" height="152" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<br/>
