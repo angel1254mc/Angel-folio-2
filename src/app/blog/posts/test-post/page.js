@@ -9,7 +9,6 @@ import Header from '@/components/Header/Header.js';
 import Utils from '@/components/Utils.js';
 import Footer from '@/components/Footer/Footer.js';
 import HeadersCustom from '@/components/HeadersCustom.js';
-import LikeButton from '@/components/Likes/LikeButton.js';
 import ClientMDXWrapper from '@/components/MDX/ClientMDXWrapper';
 
 const PostPage = async ({ params }) => {
