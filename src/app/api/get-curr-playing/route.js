@@ -9,29 +9,38 @@ const refreshToken = process.env.REFRESH_TOKEN;
 // Grab that access token
 const TOKEN_URL = `https://accounts.spotify.com/api/token`;
 const basicAuth = Buffer.from(`${clientID}:${clientSecret}`).toString('base64');
-const NOW_PLAYING_URL =
-   'https://api.spotify.com/v1/me/player/currently-playing';
+const NOW_PLAYING_URL = 'https://api.spotify.com/v1/me/player/recently-played';
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
 
 export const GET = async () => {
    const { access_token } = await getAccessToken();
-   const info = await fetch(NOW_PLAYING_URL, {
-      next: {
-         revalidate: 0
-      },
-      cache: 'no-store',
-      headers: {
-         Authorization: `Bearer ${access_token}`,
-      },
-   });
-   if (info.status == 204)
+   try {
+      const info = await fetch(NOW_PLAYING_URL, {
+         next: {
+            revalidate: 0,
+         },
+         cache: 'no-store',
+         headers: {
+            Authorization: `Bearer ${access_token}`,
+         },
+      });
+
+      if (info.status == 204)
+         return Response.json(
+            { message: 'Nothing currently playing!' },
+            { status: 200 }
+         );
+
+      const json = await info.json();
+
+      return Response.json({ item: json.items[0].track }, { status: 200 });
+   } catch (err) {
       return Response.json(
          { message: 'Nothing currently playing!' },
-         { status: 200 }
+         { status: 500 }
       );
-   const json = await info.json();
-   return Response.json(json);
+   }
 };
 
 // Gets the access token required for the api call in the handler function
