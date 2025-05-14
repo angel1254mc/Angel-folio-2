@@ -15,13 +15,12 @@ const FaroComponent = () => {
       if (!webVitalsInterval.current)
          webVitalsInterval.current = setInterval(() => {
             if (Object.keys(webVitalsRef.current) != Object.keys(webVitals))
-               setWebVitals({... webVitalsRef.current});
-         }, 1000)
-   }, [])
+               setWebVitals({ ...webVitalsRef.current });
+         }, 1000);
+   }, []);
 
    useEffect(() => {
       if (webVitals.FID && webVitals.CLS && webVitals.TTFB && webVitals.FCP) {
-         console.log("Pinged THe Overall Rating algo")
          let goodCounter = 0;
          let ratingArr = Object.keys(webVitals).map(
             (metric) => webVitals[metric].rating
@@ -49,7 +48,7 @@ const FaroComponent = () => {
                loading='eager'
                width={100}
                height={100}
-               alt={"Grafana Faro Logo"}
+               alt={'Grafana Faro Logo'}
             />
             <div>
                <h1 className='text-sm font-bold'>Site Stats</h1>
