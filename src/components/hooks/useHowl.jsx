@@ -42,6 +42,7 @@ export const useHowl = ({ src, fadeAfter, ...configOptions }) => {
          }
       };
    }, []);
+   // Push some random stuff
 
    // Turns the howler.play() function into a promise
    const playSound = async () => {
