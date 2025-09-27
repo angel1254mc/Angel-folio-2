@@ -56,7 +56,7 @@ const index = ({}) => {
                               University of Florida
                            </h3>
                            <p className='block md:hidden text-sm sm:text-base'>
-                              Expected May 2024
+                              May 2024
                            </p>
                            <p className='text-xs sm:text-sm font-light'>
                               Herbert Wertheim College of Engineering
@@ -66,10 +66,8 @@ const index = ({}) => {
                            </p>
                         </div>
                      </div>
-                     <div className='flex flex-col text-base font-semibold mt-4'>
-                        <p className='text-right hidden md:block'>
-                           Expected May 2024
-                        </p>
+                     <div className='flex flex-col text-base font-semibold mt-4 flex-1'>
+                        <p className='text-right hidden md:block'>May 2024</p>
                      </div>
                   </div>
                </section>
@@ -80,6 +78,72 @@ const index = ({}) => {
                   <h1 className='text-lg sm:text-2xl font-semibold text-white pl-3 border-b-2 border-gray-400 pb-2'>
                      PROFESSIONAL EXPERIENCE
                   </h1>
+                  <div className='flex flex-row w-full'>
+                     <div className='w-10/12 flex flex-row mt-4'>
+                        <div className='h-full flex items-start justify-end pr-2 pt-[10px]'>
+                           <FontAwesomeIcon
+                              className='w-2 h-2'
+                              icon={faCircleDot}
+                           />
+                        </div>
+                        <div className='flex flex-col gap-x-1'>
+                           <h3 className='sm:text-lg text-base font-semibold'>
+                              Frontend Engineer | ALTR
+                           </h3>
+                           <p className='block md:hidden sm:text-base text-sm'>
+                              May 2024 - Present
+                           </p>
+                           <p className='sm:text-base text-sm font-extralight italic'>
+                              frontend subject matter expert and lead engineer
+                              on cross-datasource policy controls
+                           </p>
+
+                           <ul className='ml-8 list-disc font-extralight sm:text-base text-sm mt-2'>
+                              <li>
+                                 Led frontend development of ALTR&apos;s Unified
+                                 Policy project, extending Snowflake Masking
+                                 support to Databricks in close collaboration
+                                 with backend and platform teams.
+                              </li>
+                              <li>
+                                 Developed a novel web-signup flow utilizing AWS
+                                 WAF Captcha challenges. Collaborated with
+                                 members of the product team to track the signup
+                                 journey via Mixpanel events. Standardized
+                                 ALTR&apos;s Figma design system as an
+                                 extensible MaterialUI-based component library
+                                 for use across our various web components
+                              </li>
+                              <li>
+                                 Standardized ALTR&apos;s Figma design system as
+                                 an extensible MaterialUI-based component
+                                 library for use across our various web
+                                 components
+                              </li>
+                              <li>
+                                 Built performant infinite-scroll data tables
+                                 supporting 100k+ columns using memoization and
+                                 table virtualization for fast filtering. This
+                                 enabled frontend functionality to support
+                                 ALTR&apos;s Databricks and Snowflake
+                                 auto-tagging initiative.
+                              </li>
+                              <li>
+                                 Instrumented our Axios client to record
+                                 end-to-end response times on API calls to
+                                 enrich Mixpanel events, giving the Product team
+                                 insight into lambda latency patterns and
+                                 informing product roadmap decisions.
+                              </li>
+                           </ul>
+                        </div>
+                     </div>
+                     <div className='flex flex-col text-base font-semibold mt-4'>
+                        <p className='text-right md:block hidden'>
+                           May 2024 - Present
+                        </p>
+                     </div>
+                  </div>
                   <div className='flex flex-row w-full'>
                      <div className='w-10/12 flex flex-row mt-4'>
                         <div className='h-full flex items-start justify-end pr-2 pt-[10px]'>
@@ -151,7 +215,7 @@ const index = ({}) => {
                               Associate Software Engineer - Emerging Tech LLC
                            </h3>
                            <p className='block md:hidden sm:text-base text-sm'>
-                              May 2022 - Present
+                              May 2022 - May 2023
                            </p>
                            <p className='sm:text-base text-sm font-extralight italic'>
                               Provided Web Development expertise and led
@@ -190,7 +254,7 @@ const index = ({}) => {
                      </div>
                      <div className='flex flex-col text-base font-semibold mt-4'>
                         <p className='text-right md:block hidden'>
-                           May 2022 - Present
+                           May 2022 - May 2023
                         </p>
                      </div>
                   </div>
