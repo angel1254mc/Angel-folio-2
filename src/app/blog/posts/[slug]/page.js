@@ -93,7 +93,6 @@ const PostPage = async (props) => {
 
 export const generateStaticParams = async () => {
    const paths = (await getSlugsSupa()).map((slug) => ({ params: { slug } }));
-   console.log(paths);
    return paths;
 };
 
