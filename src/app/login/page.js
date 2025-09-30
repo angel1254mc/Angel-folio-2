@@ -3,7 +3,7 @@ import { LoginErrorListener } from '@/components/Login/LoginErrorListener';
 
 export default function Login() {
    return (
-      <div className='w-full flex flex-col justify-center items-center h-[100vh py-8 px-16 text-white bg-black'>
+      <div className='w-full flex flex-col justify-center items-center h-[100vh] py-8 px-16 text-white bg-black'>
          <div className='w-full max-w-[800px] flex flex-col py-2'>
             <Header title='Login' />
          </div>

@@ -1,4 +1,3 @@
-import { postSchema } from '@/schema/schemas';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 

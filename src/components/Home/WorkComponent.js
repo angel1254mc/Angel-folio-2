@@ -10,7 +10,14 @@ import Sheen from '../typography/Sheen';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const WorkItem = ({ company, role, duration, logoPath, logoClassName }) => {
+const WorkItem = ({
+   company,
+   role,
+   duration,
+   logoPath,
+   logoClassName,
+   logoAlt,
+}) => {
    return (
       <div className='w-full flex gap-x-3 h-auto items-start'>
          <FontAwesomeIcon
@@ -38,7 +45,7 @@ const WorkItem = ({ company, role, duration, logoPath, logoClassName }) => {
                   height='72'
                   loading='eager'
                   src={logoPath}
-                  alt='Grafana Labs Inc Logo'
+                  alt={logoAlt ?? company + ' logo'}
                />
             </div>
          </div>
@@ -69,7 +76,7 @@ const WorkComponent = () => {
             </button>
          </div>
          <div className='w-full flex flex-col h-full justify-between'>
-            <div className='flex flex-col w-full h-full gap-x-1 gap-y-4 pt-1'>
+            <div className='flex flex-col w-full h-full gap-x-1 gap-y-4 md:gap-y-8 pt-1'>
                <WorkItem
                   company={'ALTR'}
                   role={'Frontend Engineer'}
@@ -81,7 +88,7 @@ const WorkComponent = () => {
                <WorkItem
                   company={'Grafana Labs Inc'}
                   role={'Software Engineer Intern'}
-                  duration={'May 2022 - Aug 2022'}
+                  duration={'June 2023 - Aug 2023'}
                   description={''}
                   logoPath={'/grafana-logo.png'}
                />

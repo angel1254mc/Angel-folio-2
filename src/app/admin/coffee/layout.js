@@ -10,8 +10,8 @@ const layout = ({ children }) => {
                <Navbar />
                <Header title={'Coffee Count'} />
             </div>
+            {children}
          </main>
-         {children}
       </>
    );
 };
