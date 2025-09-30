@@ -25,7 +25,7 @@ export async function POST(request) {
                status: 500,
                error: "Error updating the 'coffee' table",
                rawError: error,
-               path: '/api/admin/projects',
+               path: '/api/admin/coffee',
             },
             { status: 500 }
          );
