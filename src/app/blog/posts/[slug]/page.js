@@ -14,7 +14,9 @@ import ClientMDXWrapper from '@/components/MDX/ClientMDXWrapper';
 
 export const dynamicParams = true;
 
-const PostPage = async ({ params }) => {
+const PostPage = async (props) => {
+   const { params } = props;
+   if (!params) return <div>No post found</div>;
    const { slug } = params;
    const { content, meta } = await getPostFromSlugSupa(slug);
    // Take the content and convert it into html/css/js
@@ -89,12 +91,10 @@ const PostPage = async ({ params }) => {
    );
 };
 
-export const getStaticPaths = async () => {
+export const generateStaticParams = async () => {
    const paths = (await getSlugsSupa()).map((slug) => ({ params: { slug } }));
-   return {
-      paths,
-      fallback: 'blocking',
-   };
+   console.log(paths);
+   return paths;
 };
 
 export default PostPage;

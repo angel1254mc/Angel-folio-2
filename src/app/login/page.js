@@ -1,5 +1,6 @@
 import Header from '@/components/Header/Header';
 import { LoginErrorListener } from '@/components/Login/LoginErrorListener';
+import { Suspense } from 'react';
 
 export default function Login() {
    return (
@@ -34,7 +35,9 @@ export default function Login() {
                Login
             </button>
          </form>
-         <LoginErrorListener />
+         <Suspense fallback={<div />}>
+            <LoginErrorListener />
+         </Suspense>
       </div>
    );
 }
