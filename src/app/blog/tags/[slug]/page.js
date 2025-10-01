@@ -44,7 +44,6 @@ export const generateStaticParams = async () => {
    // At this point if we map tags, we should have an array of arrays. Lets try and
    // flatten these arrays into a set
    const tags = new Set(posts.map((post) => post.meta.tags).flat());
-   const paths = Array.from(tags).map((tag) => ({ params: { slug: tag } }));
-   return paths;
+   return Array.from(tags).map((tag) => ({ slug: tag }));
 };
 export default PostPage;
