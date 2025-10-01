@@ -36,6 +36,11 @@ export default async function PostPage(props) {
 
    return (
       <>
+         <HeadersCustom
+            title={post.meta.title}
+            description={post.meta.excerpt}
+            imageURL={post.meta.imageURI}
+         />
          <main
             className={
                'flex flex-col pt-2 px-6 max-w-[50rem] align-center m-auto min-h-[600px] w-full'
