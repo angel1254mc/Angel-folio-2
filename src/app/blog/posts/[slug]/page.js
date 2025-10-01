@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { getPostFromSlugSupa, getSlugsSupa } from '@/app/api';
 import Navbar from '@/components/NavBar/Navbar';
 import Header from '@/components/Header/Header.js';
-import Utils from '@/components/Utils.js';
 import Footer from '@/components/Footer/Footer.js';
 import HeadersCustom from '@/components/HeadersCustom.js';
 import LikeButton from '@/components/Likes/LikeButton.js';
@@ -14,10 +13,14 @@ import ClientMDXWrapper from '@/components/MDX/ClientMDXWrapper';
 
 export const dynamicParams = true;
 
-const PostPage = async (props) => {
+export const generateStaticParams = async () => {
+   const paths = (await getSlugsSupa()).map((slug) => ({ slug: slug }));
+   return paths;
+};
+
+export default async function PostPage(props) {
    const { params } = props;
-   if (!params) return <div>No post found</div>;
-   const { slug } = params;
+   const { slug } = await params;
    const { content, meta } = await getPostFromSlugSupa(slug);
    // Take the content and convert it into html/css/js
    const mdxSource = await serialize(content, {
@@ -33,11 +36,6 @@ const PostPage = async (props) => {
 
    return (
       <>
-         <HeadersCustom
-            title={post.meta.title}
-            description={post.meta.excerpt}
-            imageURL={post.meta.imageURI}
-         />
          <main
             className={
                'flex flex-col pt-2 px-6 max-w-[50rem] align-center m-auto min-h-[600px] w-full'
@@ -83,17 +81,10 @@ const PostPage = async (props) => {
                <LikeButton slug={post.meta.slug}></LikeButton>
             </div>
             <div className='blog-body prose prose-invert'>
-               <ClientMDXWrapper {...{ post, Utils }} />
+               <ClientMDXWrapper post={post} />
             </div>
          </main>
          <Footer />
       </>
    );
-};
-
-export const generateStaticParams = async () => {
-   const paths = (await getSlugsSupa()).map((slug) => ({ params: { slug } }));
-   return paths;
-};
-
-export default PostPage;
+}
