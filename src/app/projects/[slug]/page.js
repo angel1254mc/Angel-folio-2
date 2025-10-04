@@ -8,10 +8,10 @@ import ProjectSummaryComponent from '@/components/ProjectPage/ProjectSummary';
 import CollaboratorsList from '@/components/ProjectPage/CollaboratorsList';
 import MainAccomplishments from '@/components/ProjectPage/MainAccomplishments';
 
-export const revalidate = 10
+export const revalidate = 10;
 
 const ProjectPage = async ({ params }) => {
-   // Just slap all of the getStaticProps stuff in here, ignore getStaticPaths
+   // Fetch the project given initial params from generateStaticParams
    const unformattedProj = await getProjectFromSlugSupa(params.slug);
    let project = JSON.stringify(unformattedProj);
    // Above function returns the project object, metadata for any related blog posts, and {tentatively} a 'content' var

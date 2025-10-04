@@ -10,6 +10,49 @@ import Sheen from '../typography/Sheen';
 import Image from 'next/image';
 import Link from 'next/link';
 
+const WorkItem = ({
+   company,
+   role,
+   duration,
+   logoPath,
+   logoClassName,
+   logoAlt,
+}) => {
+   return (
+      <div className='w-full flex gap-x-3 h-auto items-start'>
+         <FontAwesomeIcon
+            className='text-[0.50rem] pt-[0.75rem] 2xl:pt-[1rem] pl-4'
+            icon={faCircle}
+         />
+         <div className='flex flex-col pt-1 flex-wrap gap-y-1'>
+            <h1 className='text-base 2xl:text-xl font-semibold'>{company}</h1>
+            <p className='text-xs 2xl:text-sm'>{role}</p>
+            <p className='text-xs 2xl:text-sm'>{duration}</p>
+            <div className='flex gap-x-4 items-center'>
+               <Link
+                  href='/resume'
+                  className='py-1 mt-2 px-4 border-[1px] rounded-sm border-white'
+               >
+                  Read More{' '}
+                  <FontAwesomeIcon
+                     className='text-xs 2xl:text-sm'
+                     icon={faAngleDoubleRight}
+                  />
+               </Link>
+               <Image
+                  className={logoClassName ?? 'w-7 h-7'}
+                  width='92'
+                  height='72'
+                  loading='eager'
+                  src={logoPath}
+                  alt={logoAlt ?? company + ' logo'}
+               />
+            </div>
+         </div>
+      </div>
+   );
+};
+
 const WorkComponent = () => {
    const [expanded, setExpanded] = useState(false);
 
@@ -33,82 +76,22 @@ const WorkComponent = () => {
             </button>
          </div>
          <div className='w-full flex flex-col h-full justify-between'>
-            <div className='flex flex-col w-full h-full gap-x-1 pt-1'>
-               <div className='w-full flex gap-x-3 h-auto items-start'>
-                  <FontAwesomeIcon
-                     className='text-[0.50rem] pt-[0.75rem] 2xl:pt-[1rem] pl-4'
-                     icon={faCircle}
-                  />
-                  <div className='flex flex-col pt-1 flex-wrap gap-y-1'>
-                     <h1 className='text-base 2xl:text-xl font-semibold'>
-                        Grafana Labs Inc.
-                     </h1>
-                     <p className='text-xs 2xl:text-sm'>
-                        Software Engineering Intern in the #infra-O11y squad
-                     </p>
-                     <p className='text-xs 2xl:text-sm'>May 2023 - Aug. 2023</p>
-                     <div className='flex gap-x-4 items-center'>
-                        <Link
-                           href='/resume'
-                           className='py-1 mt-2 px-4 border-[1px] rounded-sm border-white'
-                        >
-                           Read More{' '}
-                           <FontAwesomeIcon
-                              className='text-xs 2xl:text-sm'
-                              icon={faAngleDoubleRight}
-                           />
-                        </Link>
-                        <Image
-                           className='w-7 h-7'
-                           width='92'
-                           height='72'
-                           loading='eager'
-                           src='/grafana-logo.png'
-                           alt="Grafana Labs Inc Logo"
-                        />
-                     </div>
-                  </div>
-               </div>
-
-               <div
-                  className={`w-full pt-3 flex gap-x-3 h-auto items-start duration-150 ${
-                     expanded ? 'md:opacity-1' : 'md:opacity-0'
-                  }`}
-               >
-                  <FontAwesomeIcon
-                     className='text-[0.50rem] pt-[0.75rem] 2xl:pt-[1rem] pl-4'
-                     icon={faCircle}
-                  />
-                  <div className='flex flex-col pt-1 flex-wrap gap-y-1'>
-                     <h1 className='text-base 2xl:text-xl font-semibold'>
-                        Emerging Tech LLC
-                     </h1>
-                     <p className='text-xs 2xl:text-sm'>
-                        Associate Software Engineer
-                     </p>
-                     <p className='text-xs 2xl:text-sm'>May 2023 - Present</p>
-                     <div className='flex gap-x-4 items-center'>
-                        <Link
-                           href='/resume'
-                           className=' py-1 mt-2 px-4 border-[1px] rounded-sm border-white'
-                        >
-                           Read More{' '}
-                           <FontAwesomeIcon
-                              className='text-xs 2xl:text-sm'
-                              icon={faAngleDoubleRight}
-                           />
-                        </Link>
-                        <Image
-                           className='w-10 h-5'
-                           width='92'
-                           height='72'
-                           loading='eager'
-                           src='/et-logo.png'
-                           alt='Emerging Tech LLC Logo'
-                        />
-                     </div>
-                  </div>
-               </div>
+            <div className='flex flex-col w-full h-full gap-x-1 gap-y-4 md:gap-y-8 pt-1'>
+               <WorkItem
+                  company={'ALTR'}
+                  role={'Frontend Engineer'}
+                  duration={'May 2024 - Present'}
+                  description={''}
+                  logoPath={'/ALTR-logo.png'}
+                  logoClassName={`h-5 w-16`}
+               />
+               <WorkItem
+                  company={'Grafana Labs Inc'}
+                  role={'Software Engineer Intern'}
+                  duration={'June 2023 - Aug 2023'}
+                  description={''}
+                  logoPath={'/grafana-logo.png'}
+               />
             </div>
             <div
                className={`flex pb-8 text-sm 2xl:text-base px-4 h-auto items-start transition-all duration-150 ${

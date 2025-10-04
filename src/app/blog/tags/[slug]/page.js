@@ -39,15 +39,11 @@ const PostPage = async ({ params }) => {
    );
 };
 
-export const getStaticPaths = async () => {
+export const generateStaticParams = async () => {
    const posts = await getAllPostsSupa();
    // At this point if we map tags, we should have an array of arrays. Lets try and
    // flatten these arrays into a set
    const tags = new Set(posts.map((post) => post.meta.tags).flat());
-   const paths = Array.from(tags).map((tag) => ({ params: { slug: tag } }));
-   return {
-      paths,
-      fallback: 'blocking',
-   };
+   return Array.from(tags).map((tag) => ({ slug: tag }));
 };
 export default PostPage;
