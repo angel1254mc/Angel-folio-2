@@ -24,10 +24,11 @@ const CoffeeComponent = () => {
       if (showCoffee)
          document.getElementById('last-drank').textContent = lastDrank.current;
       coffeeInterval.current = setInterval(() => {
-         lastDrank.current += toIntPrecision(100 / 86400000, 6);
+         lastDrank.current += toIntPrecision(100 / 86400000, 4);
          if (document.getElementById('last-drank'))
-            document.getElementById('last-drank').textContent =
-               lastDrank.current.toPrecision(4) + ' Days';
+            console.log(lastDrank.current);
+         document.getElementById('last-drank').textContent =
+            lastDrank.current.toPrecision(4) + ' Days';
       }, 100);
    };
 
