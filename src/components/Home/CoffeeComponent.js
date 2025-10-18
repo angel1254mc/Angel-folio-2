@@ -27,13 +27,13 @@ const CoffeeComponent = () => {
          lastDrank.current += toIntPrecision(100 / 86400000, 6);
          if (document.getElementById('last-drank'))
             document.getElementById('last-drank').textContent =
-               lastDrank.current.toPrecision(6) + ' Days';
+               lastDrank.current.toPrecision(4) + ' Days';
       }, 100);
    };
 
    useEffect(() => {
       fetch('/api/get-last-coffee-date', {
-         cache: 'no-store'
+         cache: 'no-store',
       })
          .then((resp) => resp.json())
          .then((json) => {
