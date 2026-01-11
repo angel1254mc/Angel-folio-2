@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import querystring from 'querystring';
 
 // Store grab clientID, clientSecret, refreshToken from environment
