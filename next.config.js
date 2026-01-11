@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+   webpack: (config) => {
+    config.externals.push("pino");
+    return config;
+  },
    transpilePackages: ['next-mdx-remote'],
    images: {
       remotePatterns: [
@@ -7,7 +11,7 @@ const nextConfig = {
             protocol: 'https',
             hostname: 'i.imgur.com',
             port: '',
-            pathname: '/**',
+            pathname: '/**'
          },
          {
             protocol: 'https',
@@ -26,14 +30,7 @@ const nextConfig = {
             hostname: 'i.scdn.co',
             port: '',
             pathname: '/**',
-         },
-         {
-            protocol: 'https',
-            hostname:
-               'https://cdn.discordapp.com/attachments/722671549299294239/1076807623950749736/',
-            port: '',
-            pathname: '/**',
-         },
+         }
       ],
    },
    reactStrictMode: false,
