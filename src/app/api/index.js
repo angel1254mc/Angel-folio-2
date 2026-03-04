@@ -30,21 +30,29 @@ export const getProjectFromSlugSupa = async (slug) => {
    try {
       octokit = createOctokitClient();
    } catch (err) {
-      return { error: 'Could not create octokit client' };
+      octokit = null;
    }
-   // Grab project that matches slug from supabase
-   const {
-      data: [project],
-   } = await supabase.from('projects').select('*').eq('slug', slug);
-   // Additionally parse the github info for this project
 
-   for (let i = 0; i < project.authors.length; i++) {
-      const user = await octokit.request('GET /users/{username}', {
-         username: project.authors[i].github,
-      });
-      const url = user.data.avatar_url;
-      project.authors[i].image = url ? url : 'epic';
+   const { data } = await supabase.from('projects').select('*').eq('slug', slug);
+
+   if (!data || data.length === 0) return { error: 'Project not found' };
+
+   const project = data[0];
+
+   if (octokit) {
+      try {
+         for (let i = 0; i < project.authors.length; i++) {
+            const user = await octokit.request('GET /users/{username}', {
+               username: project.authors[i].github,
+            });
+            const url = user.data.avatar_url;
+            project.authors[i].image = url ? url : '';
+         }
+      } catch (err) {
+         console.error('Failed to fetch author avatars from GitHub:', err.message);
+      }
    }
+
    return project;
 };
 
@@ -90,24 +98,29 @@ export const getAllProjectsSupa = async () => {
    try {
       octokit = createOctokitClient();
    } catch (err) {
-      return { error: 'Could not create octokit client' };
+      octokit = null;
    }
 
-   // First, get all projects, then get all image URLS for the users
    let { data: projects } = await supabase
       .from('projects')
       .select('*')
       .order('created_at', { ascending: false });
 
+   if (!projects) return [];
+
    let proj = await Promise.all(
       projects.map(async (project) => {
-         // Get github image url for each author
-         for (let i = 0; i < project.authors.length; i++) {
-            const user = await octokit.request('GET /users/{username}', {
-               username: project.authors[i].github,
-            });
-            const url = user.data.avatar_url;
-            project.authors[i].image = url ? url : 'epic';
+         if (!octokit) return project;
+         try {
+            for (let i = 0; i < project.authors.length; i++) {
+               const user = await octokit.request('GET /users/{username}', {
+                  username: project.authors[i].github,
+               });
+               const url = user.data.avatar_url;
+               project.authors[i].image = url ? url : '';
+            }
+         } catch (err) {
+            console.error('Failed to fetch author avatars from GitHub:', err.message);
          }
          return project;
       })
@@ -154,21 +167,19 @@ export const getPostFromSlugSupa = async (slug) => {
 };
 
 export const getLastStarredRepo = async () => {
-   let octokit;
    try {
-      octokit = createOctokitClient();
+      const octokit = createOctokitClient();
+      const lastStarredRepo = await octokit.request(
+         'GET /users/{username}/starred?per_page=1',
+         {
+            username: 'angel1254mc',
+         }
+      );
+      return lastStarredRepo;
    } catch (err) {
-      return { error: 'Could not create octokit client' };
+      console.error('Failed to fetch last starred repo from GitHub:', err.message);
+      return { error: 'Could not fetch last starred repo', data: [] };
    }
-
-   let lastStarredRepo = await octokit.request(
-      'GET /users/{username}/starred?per_page=1',
-      {
-         username: 'angel1254mc',
-      }
-   );
-
-   return lastStarredRepo;
 };
 
 export const getProjectById = async (id) => {

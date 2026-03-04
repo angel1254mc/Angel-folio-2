@@ -11,15 +11,36 @@ import MainAccomplishments from '@/components/ProjectPage/MainAccomplishments';
 export const revalidate = 10;
 
 const ProjectPage = async ({ params }) => {
-   // Fetch the project given initial params from generateStaticParams
    const unformattedProj = await getProjectFromSlugSupa(params.slug);
-   let project = JSON.stringify(unformattedProj);
-   // Above function returns the project object, metadata for any related blog posts, and {tentatively} a 'content' var
-   // that basically has a mini blog post description of the project
-   const projectPosts = (await getAllPostsSupa(params.slug)).map(
-      (post) => post.meta
-   );
-   project = JSON.parse(project);
+
+   if (!unformattedProj || unformattedProj.error) {
+      return (
+         <>
+            <HeadersCustom title={`AngelFolio | Project Not Found`} />
+            <main
+               className={
+                  'flex flex-col pt-2 px-6 max-w-[50rem] align-center m-auto min-h-[600px] w-full'
+               }
+            >
+               <Navbar />
+               <Header title={`Projects/${params.slug}`} size={'3rem'} />
+               <p>This project could not be loaded. Please try again later.</p>
+            </main>
+            <Footer></Footer>
+         </>
+      );
+   }
+
+   let project = JSON.parse(JSON.stringify(unformattedProj));
+
+   let projectPosts = [];
+   try {
+      projectPosts = (await getAllPostsSupa(params.slug)).map(
+         (post) => post.meta
+      );
+   } catch (err) {
+      console.error('Failed to fetch project posts:', err.message);
+   }
 
    return (
       <>
@@ -38,7 +59,7 @@ const ProjectPage = async ({ params }) => {
             )}
             <div className='three-two-split'>
                <ProjectSummaryComponent project={project} />
-               <CollaboratorsList authors={project.authors} />
+               <CollaboratorsList authors={project.authors ?? []} />
             </div>
             <div className={project.blog_list}>
                <Header title={`Related Blog Posts`} size={'3rem'} />
