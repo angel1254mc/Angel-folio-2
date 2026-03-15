@@ -1,198 +1,126 @@
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
 import { createOctokitClient } from '@/lib/octokit';
-import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-   process.env.NEXT_PUBLIC_SUPABASE_URL,
-   process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const POSTS_DIR = path.join(process.cwd(), 'src/content/posts');
+const PROJECTS_DIR = path.join(process.cwd(), 'src/content/projects');
 
-export const getSlugsSupa = async () => {
-   // get slugs from supabase and return
-   let { data: slugs } = await supabase.from('posts').select('slug');
-   // Return the slugs
-   let slugStrings = [];
-   slugs.forEach((slug) => slugStrings.push(slug.slug));
-   // For some reason slugs.map(slugObj => slugObj.slug) was not working? so i did a forEach instead
-   return slugStrings;
+// ── POSTS ──────────────────────────────────────────────────────────────────
+
+export const getSlugsSupa = () => {
+  return fs.readdirSync(POSTS_DIR)
+    .filter(f => f.endsWith('.mdx'))
+    .map(f => f.replace(/\.mdx$/, ''));
 };
-/**
- * @function getProjectSlugsSupa
- * @returns returns an array of slug strings
- */
-export const getProjectSlugsSupa = async () => {
-   // Get projects from supabase
-   const { data: projects } = await supabase.from('projects').select('*');
-   // Map these projects to their slugs and return the slugs
-   return projects.map((project) => project.slug);
+
+export const getPostFromSlugSupa = (slug) => {
+  const filePath = path.join(POSTS_DIR, `${slug}.mdx`);
+  const raw = fs.readFileSync(filePath, 'utf-8');
+  const { content, data } = matter(raw);
+  return {
+    content,
+    id: slug,
+    meta: {
+      slug,
+      excerpt: data.excerpt ?? '',
+      title: data.title ?? slug,
+      tags: (data.tags ?? []).sort(),
+      date: new Date(data.date).toString(),
+      project: data.project && data.project !== 'None' ? data.project : 'None',
+      imageURI: data.imageURI ?? '',
+      emoji: data.emoji ?? '🗒️',
+    },
+  };
 };
+
+export const getAllPostsSupa = (project = null) => {
+  const slugs = getSlugsSupa();
+  let posts = slugs.map(slug => getPostFromSlugSupa(slug));
+  posts.sort((a, b) => new Date(b.meta.date) - new Date(a.meta.date));
+  if (project) {
+    posts = posts.filter(post => post?.meta?.project === project);
+  }
+  return posts;
+};
+
+export const getPostById = (id) => getPostFromSlugSupa(id);
+
+// ── PROJECTS ───────────────────────────────────────────────────────────────
+
+export const getProjectSlugsSupa = () => {
+  return fs.readdirSync(PROJECTS_DIR)
+    .filter(f => f.endsWith('.json'))
+    .map(f => f.replace(/\.json$/, ''));
+};
+
+const loadProject = (slug) => {
+  const filePath = path.join(PROJECTS_DIR, `${slug}.json`);
+  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+};
+
 export const getProjectFromSlugSupa = async (slug) => {
-   let octokit;
-   try {
-      octokit = createOctokitClient();
-   } catch (err) {
-      octokit = null;
-   }
-
-   const { data } = await supabase.from('projects').select('*').eq('slug', slug);
-
-   if (!data || data.length === 0) return { error: 'Project not found' };
-
-   const project = data[0];
-
-   if (octokit) {
-      try {
-         for (let i = 0; i < project.authors.length; i++) {
-            const user = await octokit.request('GET /users/{username}', {
-               username: project.authors[i].github,
-            });
-            const url = user.data.avatar_url;
-            project.authors[i].image = url ? url : '';
-         }
-      } catch (err) {
-         console.error('Failed to fetch author avatars from GitHub:', err.message);
-      }
-   }
-
-   return project;
-};
-
-export const getAllPostsSupa = async (project = null) => {
-   if (project) {
-      // Get all post slugs
-      let slugs = await getSlugsSupa();
-      // Map each slug and get the post for that given slug
-      let projectPosts = await Promise.all(
-         slugs.map((slug) => getPostFromSlugSupa(slug))
-      );
-
-      projectPosts.sort((a, b) => {
-         if (a.meta.date > b.meta.date) return 1;
-         if (a.meta.date < b.meta.date) return -1;
-         return 0;
+  const project = loadProject(slug);
+  let octokit;
+  try {
+    octokit = createOctokitClient();
+  } catch (err) {
+    return project;
+  }
+  for (let i = 0; i < project.authors.length; i++) {
+    try {
+      const user = await octokit.request('GET /users/{username}', {
+        username: project.authors[i].github,
       });
-      projectPosts.reverse();
-      // Filter those belonging to the project
-      let filteredPosts = projectPosts.filter(
-         (post) => post?.meta?.project == project
-      );
-      // Return posts related to project
-      return filteredPosts;
-   } else {
-      let posts = await getSlugsSupa();
-      const allPosts = await Promise.all(
-         posts.map(async (slug) => await getPostFromSlugSupa(slug))
-      );
-      allPosts
-         .sort((a, b) => {
-            if (new Date(a.meta.date) > new Date(b.meta.date)) return 1;
-            if (new Date(a.meta.date) < new Date(b.meta.date)) return -1;
-            return 0;
-         })
-         .reverse();
-      return allPosts;
-   }
+      project.authors[i].image = user.data.avatar_url ?? '';
+    } catch (err) {
+      project.authors[i].image = '';
+    }
+  }
+  return project;
 };
 
 export const getAllProjectsSupa = async () => {
-   let octokit;
-   try {
-      octokit = createOctokitClient();
-   } catch (err) {
-      octokit = null;
-   }
+  const allProjects = getProjectSlugsSupa()
+    .map(loadProject)
+    .sort((a, b) => (b.added ?? 0) - (a.added ?? 0));
 
-   let { data: projects } = await supabase
-      .from('projects')
-      .select('*')
-      .order('created_at', { ascending: false });
+  let octokit;
+  try {
+    octokit = createOctokitClient();
+  } catch (err) {
+    return allProjects;
+  }
 
-   if (!projects) return [];
-
-   let proj = await Promise.all(
-      projects.map(async (project) => {
-         if (!octokit) return project;
-         try {
-            for (let i = 0; i < project.authors.length; i++) {
-               const user = await octokit.request('GET /users/{username}', {
-                  username: project.authors[i].github,
-               });
-               const url = user.data.avatar_url;
-               project.authors[i].image = url ? url : '';
-            }
-         } catch (err) {
-            console.error('Failed to fetch author avatars from GitHub:', err.message);
-         }
-         return project;
-      })
-   );
-   return proj;
+  return Promise.all(
+    allProjects.map(async (project) => {
+      for (let i = 0; i < project.authors.length; i++) {
+        try {
+          const user = await octokit.request('GET /users/{username}', {
+            username: project.authors[i].github,
+          });
+          project.authors[i].image = user.data.avatar_url ?? '';
+        } catch (err) {
+          project.authors[i].image = '';
+        }
+      }
+      return project;
+    })
+  );
 };
-/**
- * @interface Post
- * @param content
- * @param meta = {excerpt, slug, title, tags, date}
- *
- */
 
-export const getPostFromSlugSupa = async (slug) => {
-   // No need for frontmatter or data parsing, we just grab from supabase
-   // Destructuring since there should only be one post for any given slug
-   const {
-      data: [post],
-   } = await supabase.from('posts').select('*').eq('slug', slug);
-   // Also nab tags from supabase by getting the 'tag' field from PostTag objects belonging to post with id post.id
-   const { data: tags } = await supabase
-      .from('PostTag')
-      .select('tag')
-      .eq('post', post.id);
-   // Whip out the tag "string" from the tag object
-   let stringTags = [];
-   tags.forEach((tag) => stringTags.push(tag.tag));
+export const getProjectById = (id) => loadProject(id);
 
-   return {
-      content: post.content,
-      id: post.id,
-      meta: {
-         slug: post.slug,
-         excerpt: post.excerpt,
-         title: post.title ?? slug,
-         tags: (stringTags ?? []).sort(), // Nullish Coalesscing
-         date: new Date(post.created_at).toString(),
-         project:
-            post.project && post.project.length > 1 ? post.project : 'None',
-         imageURI: post.imageURI ?? '',
-         emoji: post.emoji ?? '🗒️',
-      },
-   };
-};
+// ── GITHUB (unchanged) ─────────────────────────────────────────────────────
 
 export const getLastStarredRepo = async () => {
-   try {
-      const octokit = createOctokitClient();
-      const lastStarredRepo = await octokit.request(
-         'GET /users/{username}/starred?per_page=1',
-         {
-            username: 'angel1254mc',
-         }
-      );
-      return lastStarredRepo;
-   } catch (err) {
-      console.error('Failed to fetch last starred repo from GitHub:', err.message);
-      return { error: 'Could not fetch last starred repo', data: [] };
-   }
-};
-
-export const getProjectById = async (id) => {
-   const {
-      data: [project],
-   } = await supabase.from('projects').select('*').eq('id', id);
-
-   return project;
-};
-
-export const getPostById = async (id) => {
-   const {
-      data: [post],
-   } = await supabase.from('posts').select('*').eq('id', id);
-   return post;
+  let octokit;
+  try {
+    octokit = createOctokitClient();
+  } catch (err) {
+    return { error: 'Could not fetch last starred repo', data: [] };
+  }
+  return octokit.request('GET /users/{username}/starred?per_page=1', {
+    username: 'angel1254mc',
+  });
 };
