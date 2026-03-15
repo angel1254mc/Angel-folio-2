@@ -6,7 +6,7 @@ const supabase = createClient(
    process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const getSessionId = async (req, params) => {
+const getSessionId = (req, params) => {
    const ipAddy = req.headers['x-forwarded-for'] ?? '0.0.0.0';
    const slug = params.slug;
    // use IP Address from header, encrypt using a salt. Don't want to infringe on anyone's privacy or anything
@@ -70,7 +70,7 @@ export const POST = async (req, { params }) => {
             data: [updatedLikesObj],
          } = await supabase.from('post_likes').select('count').eq('slug', slug);
          return Response.json({
-            currentUserlikes: 1,
+            currentUserLikes: 1,
             likes: updatedLikesObj ? updatedLikesObj.count : 1,
          });
       } else {
