@@ -1,0 +1,66 @@
+{
+  "name": "ET CRM",
+  "slug": "et-crm-for-et",
+  "date": "November 2022 - Present",
+  "desc": "Customer Relationship Management System geared towards Government Contractors and Contractees. Centralizes Pipeline Management, Contract Search, Proposal/Quote drafting, and Intercompany collaboration on one single platform.",
+  "summary": "Breadgetter CRM (or just ET CRM) is an in-house utility under active development by the System Engineering, Software Development, and Cybersecurity Intern teams at Emerging Tech LLC. It serves as a scalable, highly customizable SaaS with rich Out-Of-The-Box functionality. The platform gathers listings in real-time to ensure users are presented with actionable RFP's and RFI's. By centralizing the data, contacts, and pipelines, capture teams are able to maximize proposal throughput and secure more wins.",
+  "tools": ["React", "Python", "Firebase", "AWS", "SAM.gov", "Docker", "Nginx"],
+  "github": {
+    "isPublic": false,
+    "urls": [],
+    "url": "https://github.com/angel1254mc/et-crm-firebase-draft"
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez Pol",
+      "github": "angel1254mc",
+      "responsibilities": ["Overall System Design", "Frontend", "Firebase & Security Rules", "POC for Project Manager"]
+    },
+    {
+      "name": "Eric Dequevedo",
+      "github": "ericdequ",
+      "responsibilities": ["API research and integration", "System Design Engineer", "Backend Developer"]
+    },
+    {
+      "name": "Luke Cutting",
+      "github": "cutluk",
+      "responsibilities": ["Frontend Dev", "UI Design", "AWS Infrastructure"]
+    },
+    {
+      "name": "Ayden Colby",
+      "github": "ColbyJack1134",
+      "responsibilities": ["Backend Lead", "API Lead", "Cybersecurity Compliance", "Infrastructure Provisioning", "Docker Orchestration"]
+    },
+    {
+      "name": "Carlos Rios",
+      "github": "CarlosRios-ET",
+      "responsibilities": ["UI Design Lead"]
+    },
+    {
+      "name": "Garry Bowman",
+      "github": "garrettbowman",
+      "responsibilities": ["Backend Research"]
+    },
+    {
+      "name": "Anton Salvador",
+      "github": "Tylerwong2",
+      "responsibilities": ["Project Supervisor", "Frontend Dev"]
+    },
+    {
+      "name": "Conner Goddu",
+      "github": "cgoddu",
+      "responsibilities": ["Frontend Dev"]
+    },
+    {
+      "name": "Gateston Johns",
+      "github": "gatestonjohns",
+      "responsibilities": ["Frontend Dev"]
+    }
+  ],
+  "lessons": [
+    "Dividing tasks among a team by strengths and mutual independence between tasks is a powerful way to increase throughput",
+    "clever use of sub-collections can help keep bandwidth low in otherwise intrinsically high-bandwidth apps."
+  ],
+  "accomplishments": [],
+  "added": 7
+}

@@ -1,0 +1,37 @@
+{
+  "name": "Degrees of Separation Finder (DSA)",
+  "slug": "degrees-of-separation",
+  "date": "Fall 2021",
+  "desc": "Command-line program that implements DFS and Djikstra's Search algorithm to find the minimum degrees of separation between any two nodes in a graph. Utilized on a graph with more than 400,000 nodes and a million edges.",
+  "summary": "Final Project for Data Structures and Algorithms at UF, 2021. Command-line program that implements DFS and Djikstra's Search algorithm to find the minimum degrees of separation between any two nodes in a graph. Utilized on a graph with more than 400,000 nodes and a million edges.",
+  "tools": ["C++", "Kaggle", "DSA", "Graph Algorithms"],
+  "github": {
+    "isPublic": true,
+    "urls": [],
+    "url": "https://github.com/angel1254mc/TweetTeam-DegreesOfSeparation"
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez Pol",
+      "github": "angel1254mc",
+      "responsibilities": ["Algorithm - DFS", "BFS - Adjacency and Edge Lists - Data pre-processing"]
+    },
+    {
+      "name": "Jenna Sheldon",
+      "github": "jennasheldon",
+      "responsibilities": ["CLI", "I/O"]
+    },
+    {
+      "name": "Jeya Iyadurai",
+      "github": "JeyaI",
+      "responsibilities": ["Djikstra Search on Edge and Adjacency Lists"]
+    }
+  ],
+  "lessons": [
+    "Graph Implementations can vary greatly in performance depending on what operation is performed.",
+    "Kaggle is a great source of large specialized datasets",
+    "The need for distributed systems is made apparent by this project. The dataset used comes from Stanford's SNAP and it comprises posts and follower-following relationships from 20 million users covering a meager 7 month period. A single computer cannot feasibly compute (in real time) the monstrous amount of data sent to and from twitter everyday"
+  ],
+  "accomplishments": [],
+  "added": 3
+}

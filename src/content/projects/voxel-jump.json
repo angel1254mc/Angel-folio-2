@@ -1,0 +1,34 @@
+{
+  "name": "Voxel-Jump",
+  "slug": "voxel-jump",
+  "date": "May 2022",
+  "desc": "Doodle Jump-esque platformer built on NextJS, HTML Canvas, and SocketIO w/ Firebase Auth and Github integration.",
+  "summary": "Unfortunately, the website for this project is inactive following the removal of the Heroku free tier. Voxel Jump is a recreation of Doodle Jump built on HTML Canvas, with support for multiplayer with anywhere from 2 to 20 players in one game. You can sign in with github to have your voxel carry your Github Avatar, and compete against your friends in a race mode where you battle it out to get to the finish line first. Not yet mobile-compatible",
+  "tools": ["SocketIO", "NextJS", "HTML Canvas", "Heroku", "Github Auth", "Firebase"],
+  "github": {
+    "url": "https://github.com/angel1254mc/I-do-what-I-must",
+    "urls": [
+      {
+        "url": "https://github.com/angel1254mc/I-do-what-I-must",
+        "title": "Main Repo"
+      }
+    ],
+    "isPublic": true
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez Pol",
+      "github": "angel1254mc",
+      "responsibilities": ["Everything"]
+    }
+  ],
+  "lessons": [
+    "Multiplayer Network Architecture is simple to conceptualize, but difficult to implement",
+    "Sending the minimum amount of realtime data necessary helps keep bandwidth and latency low in competitive multiplayer games",
+    "Having friends playtest your game is a good way of finding out what",
+    "Do not expose your Private Firebase API Key on the frontend",
+    "Video Game Programming is super fun"
+  ],
+  "accomplishments": [],
+  "added": 4
+}

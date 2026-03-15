@@ -1,0 +1,44 @@
+{
+  "name": "MeetYourMajor",
+  "slug": "meet-your-major",
+  "date": "Spring 2022",
+  "desc": "Empirically-based Skill and Interest assessment that maps college students to majors that best suit them.",
+  "summary": "Empirically-based Skill and Interest assessment that maps college students to majors that best suit them.",
+  "tools": ["React", "Django", "Figma", "CircleCI", "Trello", "Agile"],
+  "github": {
+    "isPublic": true,
+    "urls": [],
+    "url": "https://github.com/juanrodl/cen3031_proj"
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez Pol",
+      "github": "angel1254mc",
+      "responsibilities": ["System Design", "Firebase and React"]
+    },
+    {
+      "name": "Juan Gonzales",
+      "github": "juanrodl",
+      "responsibilities": ["Frontend Developer"]
+    },
+    {
+      "name": "Shehzad Shah",
+      "github": "shehzad02",
+      "responsibilities": ["Backend Developer"]
+    },
+    {
+      "name": "Jorge Silva",
+      "github": "jesv99",
+      "responsibilities": ["Government API Research"]
+    }
+  ],
+  "lessons": [
+    "Agile Work Methodology is great at keeping teams transparent and accountable, and splitting work into sprints helps the team better understand/foresee the dev timeline",
+    "Agile can be cumbersome when meetings are so frequent that they waste more time than they save",
+    "React became my favorite Frontend Library after this project",
+    "Writing how my code works for my teammates increased my own understanding of the code I wrote",
+    "Wrote Unit Tests in Jest for all pages except the home page."
+  ],
+  "accomplishments": [],
+  "added": 5
+}

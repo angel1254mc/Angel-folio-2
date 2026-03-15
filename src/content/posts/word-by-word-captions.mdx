@@ -1,0 +1,243 @@
+---
+title: "Generating Word-By-Word Captions w/ Python"
+excerpt: "Automate BRAINROT with MoviePy and Whisper-Timestamped"
+emoji: "📱💬"
+imageURI: "https://images.unsplash.com/photo-1605787020600-b9ebd5df1d07?q=80&w=2602&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+tags: ["MoviePy","Python","TikTok","Whisper"]
+project: "None"
+date: "2024-03-10"
+---
+## The Gist
+Here's a link to a [GitHub Gist](https://gist.github.com/angel1254mc/94b0a3f4fcbe19772f45c06b89b91b29) containing the code, I'll also paste it below for ease of access. This post is based on a [YouTube Video](https://youtu.be/7Ic4JmKG0VQ?si=UuRNlLW7NQmBrLug) I posted a while back, feel free to check it out if you prefer video over text!
+```py
+from moviepy.editor import VideoFileClip, TextClip, CompositeVideoClip
+import whisper_timestamped as whisper
+
+filename = "example.mp4"
+
+screen_width = 1080
+screen_height = 1920
+
+def get_transcribed_text(filename):
+    audio = whisper.load_audio(filename)
+    model = whisper.load_model("small", device="cpu")
+    results = whisper.transcribe(model, audio, language="en")
+
+    return results["segments"]
+
+def get_text_clips(text, fontsize):
+    text_clips = []
+    for segment in text:
+        for word in segment["words"]:
+            text_clips.append(
+                TextClip(word["text"],
+                    fontsize=fontsize,
+                    method='caption',
+                    stroke_width=5, 
+                    stroke_color="white", 
+                    font="Arial-Bold",
+                      color="white")
+                .set_start(word["start"])
+                .set_end(word["end"])   
+                .set_position("center")
+            )
+    return text_clips
+
+# Loading the video as a VideoFileClip
+original_clip = VideoFileClip(filename)
+
+# Load the audio in the video to transcribe it and get transcribed text
+transcribed_text = get_transcribed_text(filename)
+# Generate text elements for video using transcribed text
+text_clip_list = get_text_clips(text=transcribed_text, fontsize=90)
+# Create a CompositeVideoClip that we write to a file
+final_clip = CompositeVideoClip([original_clip] + text_clip_list)
+
+final_clip.write_videofile("final.mp4", codec="libx264")
+```
+## The Idea
+
+Not too long ago I started looking at auto-generating short-form content for platforms like TikTok and Youtube Shorts. I started off by making a simple generator for <Utils>"Your Month, Your X"</Utils> slideshows and showed it to some of my homies. One of my CompSci buddies from UCF, Andrew Proneks, came up with the ingenious idea of creating a <Utils>Daily Horoscope Video Generator</Utils> in Python.
+
+We thought this would be a pretty fun project to play with on our free time. As I was researching how to generate <Utils>word-by-word captions</Utils> (like the ones on TikTok narration-style videos) I found that there weren't all that many video resources describing how to emulate these. I coded up a simple implementation and made a [YouTube Video](https://youtu.be/7Ic4JmKG0VQ?si=KupxNGr3B2c7zfNP) for anyone looking to do something similar. This post serves as the written version of that video :D
+
+## Installing Dependencies
+
+We'll need <Utils>Python 3.7</Utils> or greater, and PIP for installing <Utils>MoviePy</Utils> and <Utils>whisper-timestamped</Utils>. MoviePy is a handy python library for programmatically editing videos, while `whisper-timestamped` is going to help us transcribe the audio in our video for us to generate captions.
+
+Another dependency we'll need that does some stuff under the hood for both MoviePy and Whisper is <Utils>ffmpeg</Utils>. It's used for loading media in a way that MoviePy and Whisper can understand, as well as for writing the resulting output to a file. You can learn how to download it on the official [ffmpeg website](https://www.ffmpeg.org/download.html).
+
+Once we have ffmpeg ready, we're good to start pip installing everything!
+```sh
+# depending on your system, you might need to install ez_setup for
+# moviepy to handle setting up ImageMagick in your system. This
+# is used to help with adding captions on a video :D
+pip install ez_setup
+
+pip install moviepy
+
+pip install whisper-timestamped
+```
+
+## Setting Up Our Script
+Let's create our python script and start off by importing everything we need from MoviePy and whisper-timestamped. Lets also store the path to the video we'll be generating captions for in a variable called `filename`
+```py
+from moviepy.editor import VideoFileClip, TextClip, CompositeVideoClip
+import whisper_timestamped as whisper
+
+filename = "example.mp4"
+```
+At a high level, we want our script to do the following:
+- Load our original video in a way MoviePy can understand
+- Use Whisper to transcribe our video's audio and generate timestamps for each word
+- Use transcribed text + timestamps to create a text/caption element for each word.
+- Combine our original video and all our captions to create our final video and write it to a file.
+
+Loading the video into MoviePy is simple, we can just do the following:
+```py
+# Loading the video as a VideoFileClip
+original_clip = VideoFileClip(filename)
+```
+
+## Transcribing text
+Next, let's take care of loading our model and transcribing our text. We'll abstract it out to a function `get_transcribed_text`. All we need to do is **load our audio**, **load our model**, and call **whisper.transcribe** to get a structure representing our text.
+
+```py
+def get_transcribed_text(filename):
+    audio = whisper.load_audio(filename)
+    model = whisper.load_model("small", device="cpu")
+    results = whisper.transcribe(model, audio, language="en")
+
+    return results["segments"]
+```
+## Generating our Captions
+Running `whisper.trancribe` returns a dictionary with a couple of useful attributes. I'll paste an example output from the (whisper-timestamped github)[https://github.com/linto-ai/whisper-timestamped] below.
+```json
+{
+  "text": " Bonjour! Est-ce que vous allez bien?",
+  "segments": [
+    {
+      "id": 0,
+      "seek": 0,
+      "start": 0.5,
+      "end": 1.2,
+      "text": " Bonjour!",
+      "tokens": [ 25431, 2298 ],
+      "temperature": 0.0,
+      "avg_logprob": -0.6674491882324218,
+      "compression_ratio": 0.8181818181818182,
+      "no_speech_prob": 0.10241222381591797,
+      "confidence": 0.51,
+      "words": [
+        {
+          "text": "Bonjour!",
+          "start": 0.5,
+          "end": 1.2,
+          "confidence": 0.51
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "seek": 200,
+      "start": 2.02,
+      "end": 4.48,
+      "text": " Est-ce que vous allez bien?",
+      "tokens": [ 50364, 4410, 12, 384, 631, 2630, 18146, 3610, 2506, 50464 ],
+      "temperature": 0.0,
+      "avg_logprob": -0.43492694334550336,
+      "compression_ratio": 0.7714285714285715,
+      "no_speech_prob": 0.06502953916788101,
+      "confidence": 0.595,
+      "words": [
+        {
+          "text": "Est-ce",
+          "start": 2.02,
+          "end": 3.78,
+          "confidence": 0.441
+        },
+        {
+          "text": "que",
+          "start": 3.78,
+          "end": 3.84,
+          "confidence": 0.948
+        },
+        {
+          "text": "vous",
+          "start": 3.84,
+          "end": 4.0,
+          "confidence": 0.935
+        },
+        {
+          "text": "allez",
+          "start": 4.0,
+          "end": 4.14,
+          "confidence": 0.347
+        },
+        {
+          "text": "bien?",
+          "start": 4.14,
+          "end": 4.48,
+          "confidence": 0.998
+        }
+      ]
+    }
+  ],
+  "language": "fr"
+}
+```
+The attribute we care about the most is `segments`. This contains a list of `segment` dictionaries, which themselves have a property `words` that stores a list of word objects. Each word object has the `text` representation of the word, the `start` timestamp of the word, and the `end` timestamp.
+
+We want to loop over all the words and create a TextClip/caption element for each of these words. Let's create a function that makes a TextClip for each word and returns them all in an array.
+```py
+def get_text_clips(text, fontsize):
+    text_clips = []
+    for segment in text:
+        for word in segment["words"]:
+            text_clips.append(
+                TextClip(word["text"],
+                    fontsize=fontsize,
+                    stroke_width=5, 
+                    stroke_color="white", 
+                    font="Arial-Bold",
+                      color="white")
+                .set_start(word["start"])
+                .set_end(word["end"])   
+                .set_position("center")
+            )
+    return text_clips
+```
+Feel free to play around with the parameters passed into TextClip based on how you want your text to look!
+
+## Putting it all together
+We can use the functions we've created to put everything together. We'll use the array of TextClip elements to create a **CompositeVideoClip** we can write to a file 🥳
+
+```py
+# Load the audio in the video to transcribe it and get transcribed text
+transcribed_text = get_transcribed_text(filename)
+# Generate text elements for video using transcribed text
+text_clip_list = get_text_clips(text=transcribed_text, fontsize=90)
+# Create a CompositeVideoClip that we write to a file
+final_clip = CompositeVideoClip([original_clip] + text_clip_list)
+
+final_clip.write_videofile("final.mp4", codec="libx264")
+```
+
+## Congrats, you made it!
+Wooooo we did it 🥳 We now have a pretty simple word-by-word caption generator. Here's a scuffed example video I made a while back using this script with a few changes (namely the font).
+<div className="flex justify-center">
+<video controls>
+    <source src="https://i.imgur.com/nX0c8Km.mp4" type="video/mp4"/>
+</video>
+</div>
+Keep in mind I was using the <Utils>tiny</Utils> version of Whisper, you can change the parameters on `whisper.load_model()` to use a heavier model like <Utils>medium</Utils> or <Utils>large</Utils>. You can even pull a compatible model from HuggingFace! Check out [this link](https://github.com/linto-ai/whisper-timestamped#:~:text=Note%20that%20you%20can%20use%20a%20finetuned%20Whisper%20model%20from%20HuggingFace%20or%20a%20local%20folder%20by%20using%20the%20load_model%20method%20of%20whisper_timestamped.%20For%20instance%2C%20if%20you%20want%20to%20use%20whisper%2Dlarge%2Dv2%2Dnob%2C%20you%20can%20simply%20do%20the%20following%3A) for more details on how to do this.
+
+Thanks for reading this far! Hope this helps you produce some PEAK content on your favorite platform 👁️👅👁️
+## What I'm BUMPIN Today
+
+<iframe style={{borderRadius: '12px' }} src="https://open.spotify.com/embed/track/1UsPflAuWTNteFUPJAJe8E?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<br/>
+<iframe style={{borderRadius: '12px' }} src="https://open.spotify.com/embed/track/7qAyWILStEa7VkjF00kXas?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<br/>
+<iframe style={{borderRadius: '12px' }} src="https://open.spotify.com/embed/track/366hct4ncFRf5TOvEjMVuf?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<br/>

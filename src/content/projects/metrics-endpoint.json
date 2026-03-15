@@ -1,0 +1,31 @@
+{
+  "name": "Metrics Endpoint Integration",
+  "slug": "metrics-endpoint",
+  "date": "June 2023 - Sept. 2023",
+  "desc": "Grafana Cloud integration that allows users to scrape prometheus-compatible metrics over HTTP, without standing up additional infrastructure!",
+  "summary": "WIP",
+  "tools": ["TypeScript", "React", "Golang", "Grafana", "Prometheus"],
+  "github": {
+    "isPublic": false,
+    "urls": [
+      {
+        "title": "Documentation Site",
+        "url": "https://grafana.com/docs/grafana-cloud/monitor-infrastructure/integrations/integration-reference/integration-metrics-endpoint/#:~:text=With%20the%20Metrics%20Endpoint%20integration,without%20requiring%20any%20additional%20infrastructure."
+      }
+    ],
+    "url": "https://github.com/grafana"
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez",
+      "github": "angel1254mc",
+      "responsibilities": ["Frontend and Backend Dev Intern"]
+    }
+  ],
+  "lessons": [
+    "Golang is a great programming language",
+    "achieving observability can be incredibly helpful in de-obfuscating the inner workings of a large application"
+  ],
+  "accomplishments": [],
+  "added": 11
+}

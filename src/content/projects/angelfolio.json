@@ -1,0 +1,25 @@
+{
+  "name": "AngelFolio (New Website)",
+  "slug": "angelfolio",
+  "date": "12/25/2022 - Present",
+  "desc": "My new Portfolio website that I am currently building out. Uses MDX for blog posts, Supabase for project  and post metadata, Github API to retrieve contributor info and Github accounts, and the spotify API to display what I am currently listening to!",
+  "summary": "New Portfolio website using MDX, NextJS, and Supabase",
+  "tools": ["NextJS", "Supabase", "react-spring", "MDX", "Github API", "Spotify API"],
+  "github": {
+    "isPublic": true,
+    "urls": [],
+    "url": "https://github.com/angel1254mc/Angel-folio-2"
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez Pol",
+      "github": "angel1254mc",
+      "responsibilities": ["Everything"]
+    }
+  ],
+  "lessons": [
+    "MDX is an awesome tool for writing blog posts with interactive JSX content"
+  ],
+  "accomplishments": [],
+  "added": 8
+}

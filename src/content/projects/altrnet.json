@@ -1,0 +1,17 @@
+{
+  "name": "ALTR Platform Frontend",
+  "slug": "altrnet",
+  "date": "May 2024 - Present",
+  "desc": "The frontend for the ALTR Data Security and Protection Monitoring platform",
+  "summary": "N/A",
+  "tools": ["React", "JavaScript", "Material UI"],
+  "github": {
+    "isPublic": false,
+    "urls": [],
+    "url": ""
+  },
+  "authors": [],
+  "lessons": [],
+  "accomplishments": [],
+  "added": 12
+}

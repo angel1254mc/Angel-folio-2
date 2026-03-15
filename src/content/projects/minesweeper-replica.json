@@ -1,0 +1,23 @@
+{
+  "name": "Minesweeper Replica",
+  "slug": "minesweeper-replica",
+  "date": "April 2021",
+  "desc": "C++ Application that uses SFML to display a fully-functioning minesweeper replica. Able to read existing boards and generate new ones",
+  "summary": "C++ Application that uses SFML to display a fully-functioning minesweeper replica. Able to read existing boards and generate new ones.",
+  "tools": ["SFML", "C++"],
+  "github": {
+    "isPublic": true,
+    "urls": [],
+    "url": "https://github.com/angel1254mc/Angel-Minesweeper-2020"
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez Pol",
+      "github": "angel1254mc",
+      "responsibilities": ["Everything"]
+    }
+  ],
+  "lessons": ["SFML is a pretty good library for Game Dev on C++"],
+  "accomplishments": [],
+  "added": 1
+}
