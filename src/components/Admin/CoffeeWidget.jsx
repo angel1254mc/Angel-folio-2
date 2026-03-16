@@ -37,15 +37,19 @@ export const CoffeeWidget = () => {
       const res = await fetch('/api/admin/coffee', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({}),
       });
-      if (res.ok) {
+      if (res.ok && res.headers.get('content-type')?.includes('application/json')) {
+        
         const now = new Date().toISOString();
         setLastDrank(now);
         setConfirmed(true);
         clearTimeout(confirmTimer.current);
         confirmTimer.current = setTimeout(() => setConfirmed(false), 2500);
       }
+    } catch(err) {
+      console.log(err);
     } finally {
       setLoading(false);
     }

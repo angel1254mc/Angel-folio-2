@@ -7,6 +7,7 @@ const supabase = createClient(
 );
 
 export async function POST(request) {
+   console.log(request);
    try {
       let error = (
          await supabase

@@ -16,7 +16,13 @@ export const getSlugsSupa = () => {
 
 export const getPostFromSlugSupa = (slug) => {
   const filePath = path.join(POSTS_DIR, `${slug}.mdx`);
-  const raw = fs.readFileSync(filePath, 'utf-8');
+  let raw;
+  try {
+    raw = fs.readFileSync(filePath, 'utf-8');
+  } catch (err) {
+    if (err.code === 'ENOENT') return null;
+    throw err;
+  }
   const { content, data } = matter(raw);
   return {
     content,
@@ -56,11 +62,19 @@ export const getProjectSlugsSupa = () => {
 
 const loadProject = (slug) => {
   const filePath = path.join(PROJECTS_DIR, `${slug}.json`);
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  let raw;
+  try {
+    raw = fs.readFileSync(filePath, 'utf-8');
+  } catch (err) {
+    if (err.code === 'ENOENT') return null;
+    throw err;
+  }
+  return JSON.parse(raw);
 };
 
 export const getProjectFromSlugSupa = async (slug) => {
   const project = loadProject(slug);
+  if (!project) return null;
   let octokit;
   try {
     octokit = createOctokitClient();
