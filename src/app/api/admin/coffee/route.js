@@ -6,50 +6,18 @@ const supabase = createClient(
    process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-export async function POST(request) {
-   console.log(request);
-   try {
-      let error = (
-         await supabase
-            .from('Coffee')
-            .update({
-               id: 1,
-               last_drank: new Date().toISOString().toLocaleString(),
-            })
-            .eq('id', 1)
-      ).error;
+export async function POST() {
+   const { error } = await supabase
+      .from('Coffee')
+      .update({ last_drank: new Date().toISOString() })
+      .eq('id', 1);
 
-      if (error) {
-         return NextResponse.json(
-            {
-               timestamp: Date.now(),
-               status: 500,
-               error: "Error updating the 'coffee' table",
-               rawError: error,
-               path: '/api/admin/coffee',
-            },
-            { status: 500 }
-         );
-      }
-
+   if (error) {
       return NextResponse.json(
-         {
-            message: 'Coffee counter reset successfully',
-         },
-         {
-            status: 200,
-         }
-      );
-   } catch (err) {
-      return NextResponse.json(
-         {
-            timestamp: Date.now(),
-            status: 500,
-            error: 'Error resetting coffee counter',
-            rawError: err,
-            path: '/api/admin/coffee',
-         },
+         { error: "Error updating the 'coffee' table", rawError: error },
          { status: 500 }
       );
    }
+
+   return NextResponse.json({ message: 'Coffee counter reset successfully' });
 }
