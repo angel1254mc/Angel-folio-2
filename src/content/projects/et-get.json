@@ -1,0 +1,56 @@
+{
+  "name": "ET GET Extension",
+  "slug": "et-get",
+  "date": "Summer 2022",
+  "desc": "Cybersecurity and CsfC Glossary and Term Search Engine that pools definitions from multiple standards-governing agencies and institutions.",
+  "summary": "Cybersecurity and CsfC Glossary and Term Search Engine that pools definitions from multiple standards-governing agencies and institutions. Client-facing portion is a Manifest V3-type chrome extension that fetches terms and definitions from our backend. Backend is built in ExpressJS and interfaces with a MongoDB instancee on Atlas that stores data for the entire glossary. CloudWatch function calls an endpoint on the Express Server Bi-weekly that syncs new terms with the existing database, ensuring new terms are added and already existing terms are kept up-to-date. Administrators have a web interface to manually search, create, alter, and delete terms as needed",
+  "tools": ["CSS", "JS", "HTML", "Manifest V3", "MongoDB", "text-search", "NextJS", "ExpressJS"],
+  "github": {
+    "isPublic": true,
+    "urls": [
+      {
+        "url": "https://github.com/ericdequ/GetExtension",
+        "title": "Extension Source"
+      },
+      {
+        "url": "https://github.com/angel1254mc/ET-GET-ADMIN-MOCK",
+        "title": "Admin Portal Source"
+      },
+      {
+        "url": "https://github.com/angel1254mc/express-get-idea",
+        "title": "Express Server Source"
+      }
+    ],
+    "url": "https://github.com/ericdequ/GetExtension"
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez Pol",
+      "github": "angel1254mc",
+      "responsibilities": ["System Design Lead", "Admin Portal", "Frontend Dev Lead", "Backend Dev Lead"]
+    },
+    {
+      "name": "Eric Dequevedo",
+      "github": "ericdequ",
+      "responsibilities": ["Government API Research"]
+    },
+    {
+      "name": "Carlos Rios",
+      "github": "CarlosRios-ET",
+      "responsibilities": ["UI Design"]
+    },
+    {
+      "name": "Garry Bowman",
+      "github": "garrettbowman",
+      "responsibilities": ["Backend Research"]
+    }
+  ],
+  "lessons": [
+    "Divying up tasks effectively makes or breaks your MVP delivery timeline.",
+    "Implementing Auth flows with SSR feels much better than on platforms based on CSR",
+    "Figma and Excalidraw (Shoutout to Theo @ Ping.gg) are Excellent Prototyping Tools",
+    "NextJS dynamically rendered routes + useParams + Paginated Search Functionality = gold"
+  ],
+  "accomplishments": [],
+  "added": 6
+}

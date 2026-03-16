@@ -1,0 +1,26 @@
+{
+  "name": "Portfolio Website (Old)",
+  "slug": "portfolio-old",
+  "date": "February 2022",
+  "desc": "A small, modern portfolio website built with NextJS and TailwindCSS. Deployed on Netlify",
+  "summary": "My previous portfolio website. A set of static pages generated through NextJS. Most of the styling is done using TailwindCSS. I was very proud of my design and cool project card animations at the time of creating this website, but I later started noticing some glaring issues. Image Load times, project data being badly formatted, and glitch mobile views are only a few of the problems I was hoping to remedy in this new website",
+  "tools": ["NextJS", "Vercel"],
+  "github": {
+    "isPublic": true,
+    "urls": [],
+    "url": "https://github.com/angel1254mc/angel1254.github.io"
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez Pol",
+      "github": "angel1254mc",
+      "responsibilities": ["Everything"]
+    }
+  ],
+  "lessons": [
+    "TailwindCSS is good for rapidly prototyping pages, without as crazy of an effect on bundle size as its alternative - CSS-in-JS-based styling",
+    "Prototyping a design before you code it helps a lot (I had no idea about Figma back then)"
+  ],
+  "accomplishments": [],
+  "added": 2
+}

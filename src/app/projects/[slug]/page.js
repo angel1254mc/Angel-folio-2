@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import HeadersCustom from '../../../components/HeadersCustom';
 import { getAllPostsSupa, getProjectFromSlugSupa } from '@/app/api';
 import BlogList from '@/components/Blog/BlogList';
@@ -13,23 +14,7 @@ export const revalidate = 10;
 const ProjectPage = async ({ params }) => {
    const unformattedProj = await getProjectFromSlugSupa(params.slug);
 
-   if (!unformattedProj || unformattedProj.error) {
-      return (
-         <>
-            <HeadersCustom title={`AngelFolio | Project Not Found`} />
-            <main
-               className={
-                  'flex flex-col pt-2 px-6 max-w-[50rem] align-center m-auto min-h-[600px] w-full'
-               }
-            >
-               <Navbar />
-               <Header title={`Projects/${params.slug}`} size={'3rem'} />
-               <p>This project could not be loaded. Please try again later.</p>
-            </main>
-            <Footer></Footer>
-         </>
-      );
-   }
+   if (!unformattedProj) notFound();
 
    let project = JSON.parse(JSON.stringify(unformattedProj));
 

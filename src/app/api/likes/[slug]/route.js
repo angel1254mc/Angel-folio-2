@@ -6,7 +6,7 @@ const supabase = createClient(
    process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const getSessionId = async (req, params) => {
+const getSessionId = (req, params) => {
    const ipAddy = req.headers['x-forwarded-for'] ?? '0.0.0.0';
    const slug = params.slug;
    // use IP Address from header, encrypt using a salt. Don't want to infringe on anyone's privacy or anything
@@ -20,13 +20,9 @@ export const GET = async (req, { params }) => {
    let slug = params.slug;
    try {
       const sessionId = getSessionId(req, params);
-      // In both GET and POST method  situation, we havee to grab the likes on the post as well as the likes already
-      // added by the user
-      // Both technically return an object with a "likes" field, so account for this by retrieving the integer
-      // value stored in that field.
       const {
          data: [postLikesObj],
-      } = await supabase.from('posts').select('likes').eq('slug', slug);
+      } = await supabase.from('post_likes').select('count').eq('slug', slug);
       const {
          data: [userObj],
       } = await supabase
@@ -35,7 +31,7 @@ export const GET = async (req, { params }) => {
          .eq('sessionId', sessionId);
 
       const userLikes = userObj ? userObj.likes : 0;
-      const postLikes = postLikesObj.likes;
+      const postLikes = postLikesObj ? postLikesObj.count : 0;
 
       return Response.json({
          likes: postLikes || 0,
@@ -50,13 +46,9 @@ export const POST = async (req, { params }) => {
    let slug = params.slug;
    try {
       const sessionId = getSessionId(req, params);
-      // In both GET and POST method  situation, we havee to grab the likes on the post as well as the likes already
-      // added by the user
-      // Both technically return an object with a "likes" field, so account for this by retrieving the integer
-      // value stored in that field.
       const {
          data: [postLikesObj],
-      } = await supabase.from('posts').select('likes').eq('slug', slug);
+      } = await supabase.from('post_likes').select('count').eq('slug', slug);
       const {
          data: [userObj],
       } = await supabase
@@ -65,48 +57,39 @@ export const POST = async (req, { params }) => {
          .eq('sessionId', sessionId);
 
       const userLikes = userObj ? userObj.likes : 0;
-      const postLikes = postLikesObj.likes;
+      const postLikes = postLikesObj ? postLikesObj.count : 0;
 
       if (!userObj) {
          await supabase
             .from('userSessions')
             .upsert({ sessionId: sessionId, likes: 1 });
 
+         await supabase.rpc('increment_post_likes', { post_slug: slug });
+
          const {
-            data: [post],
-         } = await supabase.from('posts').select('id').eq('slug', slug);
-         const response = await supabase.rpc('increment_likes', {
-            pid: post.id,
-         });
-         const {
-            data: [postLikeObj],
-         } = await supabase.from('posts').select('likes').eq('slug', slug);
+            data: [updatedLikesObj],
+         } = await supabase.from('post_likes').select('count').eq('slug', slug);
          return Response.json({
-            currentUserlikes: 1,
-            likes: postLikeObj.likes,
+            currentUserLikes: 1,
+            likes: updatedLikesObj ? updatedLikesObj.count : 1,
          });
       } else {
          let currLikes = userObj.likes;
          if (currLikes >= 3)
             return Response.json({
                currentUserLikes: currLikes,
-               likes: postLikesObj.likes,
+               likes: postLikes,
             });
-         const update = await supabase
+         await supabase
             .from('userSessions')
             .update({ likes: currLikes + 1 })
             .eq('sessionId', sessionId);
-         const {
-            data: [post],
-         } = await supabase.from('posts').select('id').eq('slug', slug);
 
-         const response = await supabase.rpc('increment_likes', {
-            pid: post.id,
-         });
+         await supabase.rpc('increment_post_likes', { post_slug: slug });
 
          return Response.json({
             currentUserLikes: currLikes + 1,
-            likes: postLikesObj.likes + 1,
+            likes: postLikes + 1,
          });
       }
    } catch (err) {

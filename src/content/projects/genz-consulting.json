@@ -1,0 +1,37 @@
+{
+  "name": "Gen Z Consulting Site",
+  "slug": "genz-consulting",
+  "date": "3/20/2023 - 4/1/2023",
+  "desc": "A sleek, modern website for a growing consulting firm located in Gainesville. NextJS, Tailwind, and react-spring.",
+  "summary": "A small statically-generated website for a growing consulting firm located in Gainesville. Bootstrapped with NextJS, uses TailwindCSS for styling, Unsplash and Pexel for images, React-Spring for page animations, and SendGrid for email sending.\"",
+  "tools": ["NextJS", "SendGrid", "react-spring", "Vercel", "TailwindCSS"],
+  "github": {
+    "isPublic": true,
+    "urls": [
+      {
+        "url": "https://gen-z-consulting.vercel.app/",
+        "title": "Main Site"
+      }
+    ],
+    "url": "https://github.com/angel1254mc/GenZConsulting"
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez Pol",
+      "github": "angel1254mc",
+      "responsibilities": ["Main Designer", "Site Development"]
+    },
+    {
+      "name": "Carlos Rios",
+      "github": "CarlosRios-ET",
+      "responsibilities": ["Design Review"]
+    }
+  ],
+  "lessons": [
+    "Purple color palettes are awesome",
+    "GPT-4 is an excellent content-writing assistant.",
+    "SendGrid by Twilio has the best dev experience out of all the SMTP/email providers."
+  ],
+  "accomplishments": [],
+  "added": 9
+}

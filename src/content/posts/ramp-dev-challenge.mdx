@@ -1,0 +1,297 @@
+---
+title: "Ramp Software Dev Challenge 2023"
+excerpt: "My thoughts, process, and solutions for the Ramp Software Dev challenge!"
+emoji: "💻🪛"
+imageURI: "https://images.unsplash.com/photo-1580023299533-5ec75664dde6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+tags: ["Internship","Typescript"]
+project: "None"
+date: "2023-01-12"
+---
+
+I finally got my decision back for Ramp and unfortunately my application was rejected 🥲 but that's ok because it means I'm allowed to post my solution process for the internship challenge!
+
+I loved the challenge this year (I did the challenge for last year as well, but didn't submit my application) since it felt like an actual FullStack web development challenge, rather than an arbitrary problem for the sake of testing your knowledge of one particular data structure or algorithm
+
+In this post, I'll be describing my thinking throughout solving the challenge, as well as my solutions!
+
+### What the challenge is about
+
+The starter code emulates the functionality of a transaction approval system built by Ramp. This system has the ability to filter by employees, or simply show transactions for all employees. It is responsive, has pagination functionality (that doesn't work yet), and a "fake backend" that simulates making requests to a backend
+
+However, if you play around with the system for a little bit you'll realize that the pagination is a bit funky, the employee filter system only slightly works, and the dropdown seems to follow you down when you scroll? These are some of the bugs that the challenge has us fix.
+
+### What to do first
+
+Whenever I'm coding in a repo/project that I myself didn't help build, I like to browse the codebase before coding to get a general feel for how the system and its components interact. 
+
+While browsing, I noted that there is a clear separation between UI and HTTP-related things like fetching, SWR, and posting data to the server. This helps us know where to look depending on the nature of the problem. After getting a feel for the codebase, we can jump into solving the first bug.
+
+## Bug 1: Select dropdown doesn't scroll with rest of the page
+
+This issue makes itself apparent on mobile viewports, when the user is able to scroll down on the page. The dropdown element seems to follow the user when you scroll down.
+
+If you’re familiar with CSS, you might already know the cause of this bug. To make sure, let’s look at the Styles on the Chrome Dev Tools to spot whether or not the display of that list component is set to fixed. We can do this by right clicking on the expanded dropdown, and inspecting, then heading to the styles section.
+
+```CSS
+/** In index.css = */
+.RampInputSelect--dropdown-container {
+  display: none;
+  position: fixed; /** Right here! */
+  width: 100%;
+  max-width: 700px;
+  border: 1px solid var(--color-darker-shade);
+  margin-top: 0.5rem;
+  max-height: 16rem;
+  overflow: auto;
+  box-shadow: rgb(0 0 0 / 10%) 0px 0px 1px, rgb(0 0 0 / 13%) 0px 4px 8px;
+}
+
+```
+
+We’ll notice that for some reason, the display property on this div is set to fixed. We can remove this property in the code, test it out, and voila! the dropdown no longer moves with the user. Just to be safe, you might want to test this on different browsers.
+
+## Bug 2: Approve checkbox not working
+
+The next bug we encounter is that the toggle on every list item doesn’t work. Odds are, this has to do with some faulty event listener in the JSX for that list component. Let’s go ahead and give it a look. We’re going to need to take a look at the Transactions and TransactionPane Components under the src/components directory
+
+The transactions component is below
+```jsx
+export const Transactions: TransactionsComponent = ({ transactions }) => {
+  const { fetchWithoutCache, loading } = useCustomFetch()
+
+  const setTransactionApproval = useCallback<SetTransactionApprovalFunction>(
+    async ({ transactionId, newValue }) => {
+      await fetchWithoutCache<void, SetTransactionApprovalParams>("setTransactionApproval", {
+        transactionId,
+        value: newValue,
+      })
+    },
+    [fetchWithoutCache]
+  )
+
+  if (transactions === null) {
+    return <div className="RampLoading--container">Loading...</div>
+  }
+
+  return (
+    <div data-testid="transaction-container">
+      {transactions.map((transaction) => (
+        <TransactionPane
+          key={transaction.id}
+          transaction={transaction}
+          loading={loading}
+          setTransactionApproval={setTransactionApproval}
+        />
+      ))}
+    </div>
+  )
+}
+```
+
+And the TransactionsPane component is below as well
+```jsx
+export const TransactionPane: TransactionPaneComponent = ({
+  transaction,
+  loading,
+  setTransactionApproval: consumerSetTransactionApproval,
+}) => {
+  const [approved, setApproved] = useState(transaction.approved)
+
+  return (
+    <div className="RampPane">
+      <div className="RampPane--content">
+        <p className="RampText">{transaction.merchant} </p>
+        <b>{moneyFormatter.format(transaction.amount)}</b>
+        <p className="RampText--hushed RampText--s">
+          {transaction.employee.firstName} {transaction.employee.lastName} - {transaction.date}
+        </p>
+      </div>
+      <InputCheckbox
+        id={transaction.id}
+        checked={approved}
+        disabled={loading}
+        onChange={async (newValue) => {
+          await consumerSetTransactionApproval({
+            transactionId: transaction.id,
+            newValue,
+          })
+
+          setApproved(newValue)
+        }}
+      />
+    </div>
+  )
+}
+
+```
+
+We spot the InputCheckbox on the TransactionPane component, and another important-looking function that is passed down between components. We also see that this function is a fetch request. Hmmm… seems like this function that our child “consumes” calls an endpoint meant to update the change. This function sends our “new value” over to the server, and we update our local value after that using the setApproved() function. It doesn’t look like there’s anything wrong here. What’s even weirder, if we put a print to the console from within that onChange function, nothing prints out when we click on the input element. Maybe if we look deeper we might be able to find something else
+
+As it turns out, the problem wasn't really in either component! When we look over the InputCheckbox, and inspect the actual input element on the browser, we realize that the input element is set to display: none! I mean, of course we can’t click on it- it literally doesn’t show up on our screen. I don’t want to take off the ‘display none’ property becauses it looks weird, but I also don’t want to totally delete the input element for accessibility purposes. Instead, I’ll port over an onClick event to the label element that is actually shown on screen, that way users can click on it and see their changes. Voila!
+
+## Bug 3: Cannot select *_All Employees_* after selecting an employee
+
+So, we seem to have an error with the filtering component of our app. We can switch over to filtering by person just fine, but when we switch back to “All Employees”, our app crashes. What gives? If we look at the debug console on Chrome Dev Tools, our fake request debugger tells us that we got an error because the Employee ID can’t be empty. From previous inspection, it looks like our Employee SWR functionality happens in `App.tsx`, through the useEmployee hook. Let's try checking over there.
+
+```jsx
+const { data: employees, ...employeeUtils } = useEmployees()
+const { data: paginatedTransactions, ...paginatedTransactionsUtils } = usePaginatedTransactions()
+const { data: transactionsByEmployee, ...transactionsByEmployeeUtils } = useTransactionsByEmployee()
+
+// Both of the functions below may be called as part of the onChange handler for InputSelect!
+//
+//
+ const loadAllTransactions = useCallback(async () => {
+    setIsLoading(true)
+    transactionsByEmployeeUtils.invalidateData()
+
+    await employeeUtils.fetchAll()
+    await paginatedTransactionsUtils.fetchAll()
+
+    setIsLoading(false)
+  }, [employeeUtils, paginatedTransactionsUtils, transactionsByEmployeeUtils])
+
+  const loadTransactionsByEmployee = useCallback(
+    async (employeeId: string) => {
+      paginatedTransactionsUtils.invalidateData()
+      await transactionsByEmployeeUtils.fetchById(employeeId)
+    },
+    [paginatedTransactionsUtils, transactionsByEmployeeUtils]
+  )
+```
+
+If we look at the onChange handler for the InputSelect component, we spot a potential **culprit** It seems that when a “new value” or new filter method is chosen on the dropdown, we get that value’s ID and pass it into `loadTransactionsByEmployee()`. Presumably, we need this .id parameter to return an employee ID all the time. If we look at the function definition, this does indeed seems to be the case. But what about when we want transactions from all employees? We seem to have a function that does this but its never called by the InputSelect component (`loadAllTransactions`).
+
+TypeScript really comes in clutch here, because by hovering over the onChange function for the InputSelect, we see that our input to that function is of type `Employee` , and our list of Employees that we can choose from (`Employee[]` ) is defined at the items prop of InputSelect. Notice, there’s an “EMPTY_EMPLOYEE” constant sticking out like a sore thumb. Odds are, this is our “All Employees Selector”. If we go to Utils, we can confirm this. So because there is no employee ID associated with this option, it’s left empty on purpose to denote that we should actually be looking up transactions for all Employees. Let’s add a conditional that checks for newValue equaling our EMPTY_EMPLOYEE constant. If they do equal each other, load all transactions for all employees. Otherwise, load the values for the given employee.
+
+## Bug 4: Clicking on View More button not showing correct data
+
+When we click the “View More” button, our list of transactions is not appended to. Instead, these new values overwrite the old values. I suspect this is the case due to the code for pagination modifying the transactions state variable incorrectly. This logic isn’t handled on the App.tsx page, rather it is handled under the hood by the usePaginatedTransactions and useTransactionsByEmployee hooks, specifically when either fetchById or fetchAll are called.
+
+```jsx
+  const fetchAll = useCallback(async () => {
+    const response = await fetchWithCache<PaginatedResponse<Transaction[]>, PaginatedRequestParams>(
+      "paginatedTransactions",
+      {
+        page: paginatedTransactions === null ? 0 : paginatedTransactions.nextPage,
+      }
+    )
+
+    setPaginatedTransactions((previousResponse) => {
+      if (response === null || previousResponse === null) {
+        return response
+      }
+
+      return { data: response.data, nextPage: response.nextPage }
+    })
+  }, [fetchWithCache, paginatedTransactions])
+
+  const invalidateData = useCallback(() => {
+    setPaginatedTransactions(null)
+  }, [])
+```
+
+If we look inside the fetchAll function definition, we see this piece of code. First, we have the state variable setter, `setPaginatedTransactions` with a callback function that has the **previous** response object as a parameter. I put a print statement inside this function to get a look at the structure of this object, although I could’ve also just gone to the type definition for `PaginatedResponse<Transaction[]>`. 
+
+I’m pretty sure we should be prepending the old response.data to the new response.data. That way we can actually have both old and new transactions showing up on our page. Let’s try that out using the spread operator.
+
+Our nextPage field should still be response.nextPage, since we should be on the [`previousResponse.page]() + 1` -th page, which corresponds with response.nextPage.
+
+This is what the code looks like now.
+
+```jsx
+setPaginatedTransactions((previousResponse) => {
+      if (response === null || previousResponse === null) {
+        return response
+      }
+      else if (previousResponse && response) {
+        // If there was a previous response, lets prepend it to the new state of our data!
+        return { data: [...previousResponse.data, ...response.data], nextPage: response.nextPage} 
+      }
+
+      return { data: response.data, nextPage: response.nextPage }
+    })
+```
+
+If we try it out now, we’ll see that our view more button works as intended! The red line separates page 1 results and page 2 results.
+
+<div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+    <img src="https://i.imgur.com/ANEYTTq.png" alt="Both Appear Now!" style={{width: '500px', maxWidth: '100%'}}/>
+</div>
+<br/>
+
+Nice! There’s another weird bug going on with View More and filtering by employee, but lets leave that until after wee figure out the main bugs of the challenge.
+
+## **Bug 5: Employees filter not available during loading more data**
+
+The problem is two-fold: 
+
+- When we initially load the page, the employee select stays loading even after the request for employee data is fulfilled. This loading state continues until transactions are loaded.
+- When we hit “View More” the employee select stays loading despite no request being sent for the employees.
+
+Based on what we saw earlier, this might be due to there being just one loading variable that manages all of the loading state for the app. It waits for all requests to finalize before changing its value. One thing we could do is use the `EmployeeUtils.loading`property, that is returned as part of the  useEmployees hook, which itself has its loading state managed by useCustomFetch, which sets loading to false once the fetch is completed. Let’s use that intead!
+```jsx
+<InputSelect<Employee>
+  isLoading={employeeUtils.loading} // <= right here!
+  defaultValue={EMPTY_EMPLOYEE}
+  items={employees === null ? [] : [EMPTY_EMPLOYEE, ...employees]}
+  label="Filter by employee"
+  loadingLabel="Loading employees"
+  parseItem={(item) => ({
+    value: item.id,
+    label: `${item.firstName} ${item.lastName}`,
+  })}
+  // There's some more code for this component below
+```
+And BOOM, we’ve fixed both parts of bug 5!
+
+## **Bug 6: View more button not working as expected**
+
+Like earlier, we have two big issues
+
+- View more button shows up even when filtering by user, when it shouldn’t since user transactions can’t be paginated
+- View more button shows up even when you’ve reached the end of the list when viewing transactions over all users. Clicking it crashes the site.
+
+Just from the problems we solved earlier, we know that it might be useful to take advantage of the nextPage field that comes as part of the `paginatedResponse` type. On App.tsx, the button that we need to set a conditional for can be found under the div with className "RampGrid"
+
+```jsx
+<div className="RampGrid">
+  <Transactions transactions={transactions} />
+  {/* The ternary operation below ensures viewmore button is hidden when we're faced with either of the two edge cases */}
+  {paginatedTransactions !== null && paginatedTransactions.nextPage !== null && (
+    <button
+      className="RampButton"
+      disabled={paginatedTransactionsUtils.loading}
+      onClick={async () => {
+        await loadAllTransactions()
+      }}
+    >
+      View More
+    </button>
+  )}
+</div>
+```
+And there you go! it's all fixed.
+
+## Bug 7: Approving a transaction won't persist the new value
+
+This final problem actually threw me in for a loop for a little bit. The problem here is that toggled values don’t persist between switching filters. At first I thought of fixing this problem by modifying the transactions useMemo or doing away with it all together, since I figured this was due to weird caching shenanigans. However, while browsing through the useCustomFetch, I realized that the real culprit was the actual, simulated cache itself that wraps over the entire app.
+
+When we toggle transactions, these changes get sent to the server through a setTransactionApproval callback. However, we don’t invalidate our cache after this callback, resulting in innacurate data on the client side. By taking the following steps, we can fix this.
+
+- In the Transactions Component on line 8, include the ‘clearCacheByEndpoint’ function in the useCustomHook destructuring
+- Then, within setTransactionApproval, after our changes are sent to the server, invalidate our current cache for our transactions using clearCacheByEndpoint
+<br/>
+```jsx
+  clearCacheByEndpoint(['paginatedTransactions', 'transactionsByEmployee']);
+```
+
+We run it, and it works! One thing we should acknowledge though is that we have to regenerate our cache every time that we make a change to a transaction, even if its just one transaction. On the other hand, the loading times are not too bad and it saves us some unneeded complexity on the client-side.
+
+That's everything! If you see this blog post close to the date it was created, I apologize in advance for any spelling mistakes. It is 2:28 AM at the time of writing this and this first week of school has been absolutely crazy! I'll make sure to rant on the blog soon when the time is right 😈. Also, here's a [Github Link](https://github.com/angel1254mc/ramp-fe-challenge) containing all the code I submitted for the application!
+
+## What I'm BUMPIN Today
+<br/>
+<iframe style={{borderRadius:'12px'}}  src="https://open.spotify.com/embed/track/4RGWHfQeJftd5XrP8JUgFj?utm_source=generator" width="100%" height="152" frameBorder="0" allowFullScreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<br/>
+

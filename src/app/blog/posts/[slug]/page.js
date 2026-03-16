@@ -1,4 +1,5 @@
 import React from 'react';
+import { notFound } from 'next/navigation';
 import { serialize } from 'next-mdx-remote/serialize';
 import rehypePrism from 'rehype-prism-plus';
 import rehypeSlug from 'rehype-slug';
@@ -21,7 +22,9 @@ export const generateStaticParams = async () => {
 export default async function PostPage(props) {
    const { params } = props;
    const { slug } = await params;
-   const { content, meta } = await getPostFromSlugSupa(slug);
+   const post_data = await getPostFromSlugSupa(slug);
+   if (!post_data) notFound();
+   const { content, meta } = post_data;
    // Take the content and convert it into html/css/js
    const mdxSource = await serialize(content, {
       mdxOptions: {

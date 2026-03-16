@@ -1,0 +1,45 @@
+{
+  "name": "Ask Eric",
+  "slug": "ask-eric",
+  "date": "Jan 27, 2023 - Jan 29, 2023",
+  "desc": "Swamphacks 2023 Project! A chatbot that uses natural language processing (NLP) to provide accurate and truthful answers to your healthcare and health-related questions.",
+  "summary": "Ask-Eric was a team project for SwampHacks 2023. This app allows users to chat with a LLM that has been fine-tuned on a set of health-related questions. It has a Django backend, a React frontend, and it uses OpenAI's API to train a text-davinci-003 model on human-gathered health and health insurance-related data.",
+  "tools": ["OpenAI", "Django", "React", "TailwindCSS", "Context-based fine-tuning"],
+  "github": {
+    "isPublic": true,
+    "urls": [
+      {
+        "url": "https://ask-eric.vercel.app/",
+        "title": "Site"
+      }
+    ],
+    "url": "https://github.com/emijane/EquityEric"
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez Pol",
+      "github": "angel1254mc",
+      "responsibilities": ["Frontend Development", "Backend Dev"]
+    },
+    {
+      "name": "Max",
+      "github": "MaksimArtemev",
+      "responsibilities": ["Backend Development", "AI Dev"]
+    },
+    {
+      "name": "Emi",
+      "github": "emijane",
+      "responsibilities": ["Frontend Development", "System Architecture & Design"]
+    },
+    {
+      "name": "Norman",
+      "github": "goodCoderXD",
+      "responsibilities": ["Mentorship and AI Dev"]
+    }
+  ],
+  "lessons": [
+    "I learned a lot from this project, most of it is on my LinkedIn post :)"
+  ],
+  "accomplishments": [],
+  "added": 10
+}
