@@ -12,23 +12,15 @@ const toIntPrecision = (num, n) => {
 const CoffeeComponent = () => {
    const [setIsHover, hoverAnimate] = usePurpleHover();
 
-   const lastDrank = useRef(null);
    const [showCoffee, setShowCoffee] = useState(false);
    const coffeeInterval = useRef(null);
 
-   const getCoffeeInterval = (today, last) => {
-      let diff = today - last;
-      let day = 86400000;
-      let daysSinceCoffee = toIntPrecision(diff / day, 6);
-      lastDrank.current = toIntPrecision(daysSinceCoffee, 6);
-      if (showCoffee)
-         document.getElementById('last-drank').textContent = lastDrank.current;
+   const getCoffeeInterval = (last) => {
+      const day = 86400000;
       coffeeInterval.current = setInterval(() => {
-         lastDrank.current += toIntPrecision(100 / 86400000, 4);
-         if (document.getElementById('last-drank'))
-            console.log(lastDrank.current);
-         document.getElementById('last-drank').textContent =
-            lastDrank.current.toPrecision(4) + ' Days';
+         const daysSince = toIntPrecision((Date.now() - last) / day, 6);
+         const el = document.getElementById('last-drank');
+         if (el) el.textContent = daysSince.toPrecision(4) + ' Days';
       }, 100);
    };
 
@@ -39,9 +31,8 @@ const CoffeeComponent = () => {
          .then((resp) => resp.json())
          .then((json) => {
             setShowCoffee(true);
-            let ts = json.last_drank;
-            ts = new Date(ts);
-            getCoffeeInterval(Date.now(), ts);
+            const ts = new Date(json.last_drank);
+            getCoffeeInterval(ts);
          });
 
       return () => {
