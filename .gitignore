@@ -33,3 +33,6 @@ yarn-error.log*
 .vercel
 .env
 .gstack/
+
+# claude code
+.claude/settings.local.json

@@ -13,6 +13,7 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
    const [searching, setSearching] = useState(false);
    const [loadingMore, setLoadingMore] = useState(false);
    const [saving, setSaving] = useState(false);
+   const [saveError, setSaveError] = useState(null);
    const songDebounceRef = useRef(null);
    const artistDebounceRef = useRef(null);
    const artistInputRef = useRef(null);
@@ -36,7 +37,7 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
             const json = await res.json();
             const incoming = json.results || [];
             setResults((prev) => (append ? [...prev, ...incoming] : incoming));
-            setHasMore(incoming.length === 12);
+            setHasMore(pageOffset + incoming.length < (json.total ?? 0));
          } finally {
             append ? setLoadingMore(false) : setSearching(false);
          }
@@ -114,6 +115,7 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
 
    const handlePick = async (song) => {
       setSaving(true);
+      setSaveError(null);
       try {
          const res = await fetch('/api/admin/music', {
             method: 'POST',
@@ -121,6 +123,10 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
             body: JSON.stringify({ date, ...song }),
          });
          const json = await res.json();
+         if (!res.ok) {
+            setSaveError(json.error || 'Failed to save song.');
+            return;
+         }
          if (json.song) {
             onSave(json.song);
          }
@@ -240,6 +246,11 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
                   autoFocus
                />
             </div>
+
+            {/* Save error */}
+            {saveError && (
+               <p className='text-sm text-red-400 text-center'>{saveError}</p>
+            )}
 
             {/* Results */}
             <div className='overflow-y-auto flex-1 min-h-0'>

@@ -17,11 +17,11 @@ No test suite is configured.
 ## Required Environment Variables
 
 ```
-CLIENT_ID / CLIENT_SECRET / REFRESH_TOKEN   # Spotify API
+CLIENT_ID / CLIENT_SECRET / REFRESH_TOKEN   # Spotify API (homepage currently-playing widget only)
 GITHUB_AUTH                                  # GitHub personal access token
 NEXT_PUBLIC_SUPABASE_URL                     # Supabase project URL
-SUPABASE_SERVICE_ROLE_KEY                    # Supabase service role JWT
-NEXT_PUBLIC_SUPABASE_ANON_KEY               # Supabase anon JWT
+SUPABASE_SERVICE_ROLE_KEY                    # Supabase service role JWT (used by all API routes)
+NEXT_PUBLIC_SUPABASE_ANON_KEY               # Supabase anon JWT (frontend only)
 IP_ADDRESS_SALT                              # Salt for hashing IP addresses (likes system)
 NEXT_PUBLIC_FARO_URL                         # Grafana Faro collector URL
 LOKI_URL / LOKI_INSTANCE_ID / LOKI_AUTH_TOKEN # Grafana Loki logging
@@ -34,8 +34,8 @@ LOG_LEVEL                                    # DEBUG | INFO | WARN | ERROR | FAT
 Personal portfolio and blog (Next.js App Router). The app has three main surfaces:
 
 - **Public** — home, blog, projects, resume
-- **API routes** — third-party integrations (GitHub, Spotify) + a per-post likes system
-- **Admin** (`/admin`) — coffee timer + logout, protected by middleware
+- **API routes** — third-party integrations (GitHub, Spotify currently-playing, Deezer search) + a per-post likes system
+- **Admin** (`/admin`) — coffee timer, song-of-the-day calendar, and logout, protected by middleware
 
 ### Data layer
 
@@ -51,6 +51,7 @@ To add a post or project: create the file and open a PR. There is no admin UI fo
 - `post_likes` — total like count per slug, incremented via `increment_post_likes(post_slug)` RPC
 - `userSessions` — per-IP like tracking (MD5(IP + salt), capped at 3 likes per user per post)
 - `Coffee` — timestamp of last coffee, reset via `/api/admin/coffee`
+- `song_of_the_day` — one row per date (`date`, `title`, `artist`, `album`, `artwork_url`, `track_url`); upserted on conflict by date
 - Supabase Auth — protects `/admin/*` and `/api/admin/*`
 
 ### Authentication
@@ -68,6 +69,8 @@ JSON files in `src/content/projects/` are read with `fs` + `JSON.parse`. Collabo
 ### Admin
 
 `/admin` shows a coffee widget (live elapsed time since last coffee + a reset button) and a logout button. There is no post/project CRUD UI — authoring is file-based.
+
+`/admin/music` shows the song-of-the-day calendar. Each day cell is clickable and opens `MusicSearchModal`, which proxies search queries to Deezer (`/api/admin/music/search`) and POSTs the picked song to `/api/admin/music`. The public homepage widget reads the latest entry via `/api/get-song-of-the-day`.
 
 ### Monitoring
 

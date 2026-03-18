@@ -156,6 +156,17 @@ const MusicCalendar = () => {
                                     'scale-100'
                                  );
                               }}
+                              onError={(e) => {
+                                 e.currentTarget.classList.remove(
+                                    'opacity-0',
+                                    'scale-95'
+                                 );
+                                 e.currentTarget.classList.add(
+                                    'opacity-100',
+                                    'scale-100'
+                                 );
+                                 e.currentTarget.style.display = 'none';
+                              }}
                            />
                            <div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity' />
                         </>

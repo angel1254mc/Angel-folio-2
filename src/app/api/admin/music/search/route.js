@@ -50,9 +50,9 @@ export async function GET(request) {
    const json = await response.json();
    const results = (json.data || []).map((item) => ({
       title: item.title,
-      artist: item.artist.name,
-      album: item.album.title,
-      artwork_url: item.album.cover_big || item.album.cover_medium,
+      artist: item.artist?.name,
+      album: item.album?.title,
+      artwork_url: item.album?.cover_big || item.album?.cover_medium,
       track_url: item.link,
    }));
 
