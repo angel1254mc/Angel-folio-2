@@ -7,7 +7,7 @@ import IntroComponent from '../components/Home/IntroComponent';
 import WorkComponent from '../components/Home/WorkComponent';
 import LastStarredRepo from '../components/Home/LastStarredRepo';
 import CoffeeComponent from '../components/Home/CoffeeComponent';
-import SpotifyComponent from '../components/Home/SpotifyComponent';
+import SongOfTheDayComponent from '../components/Home/SongOfTheDayComponent';
 import BlogPostComponent from '../components/Home/BlogPostComponent';
 import ProjectCardComponent from '../components/Home/ProjectCardComponent';
 import SSDComponent from '../components/Home/SSDComponent';
@@ -93,7 +93,7 @@ export default function Home({ posts, projects }) {
                         style={trails[5]}
                         className='flex w-full h-44 bg-[#101010] rounded-md'
                      >
-                        <SpotifyComponent />
+                        <SongOfTheDayComponent />
                      </animated.div>
                      <animated.h1
                         style={trails[8]}
