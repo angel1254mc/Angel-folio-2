@@ -1,14 +1,9 @@
 'use client';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import MusicSearchModal from './MusicSearchModal';
-
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-const toYYYYMM = (date) =>
-   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-
-const toYYYYMMDD = (year, month, day) =>
-   `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+import CalendarCell from './CalendarCell';
+import SongTooltip from './SongTooltip';
+import { WEEKDAYS, toYYYYMM, toYYYYMMDD } from './calendarUtils';
 
 const MusicCalendar = () => {
    const [currentMonth, setCurrentMonth] = useState(() => {
@@ -18,7 +13,7 @@ const MusicCalendar = () => {
    const [songs, setSongs] = useState({});
    const [selectedDate, setSelectedDate] = useState(null);
    const [loading, setLoading] = useState(false);
-   const [tooltip, setTooltip] = useState(null); // { song, x, y }
+   const [tooltip, setTooltip] = useState(null);
    const fetchIdRef = useRef(0);
 
    const fetchSongs = useCallback(async (monthDate) => {
@@ -28,7 +23,7 @@ const MusicCalendar = () => {
          const month = toYYYYMM(monthDate);
          const res = await fetch(`/api/admin/music?month=${month}`);
          const json = await res.json();
-         if (id !== fetchIdRef.current) return; // stale response
+         if (id !== fetchIdRef.current) return;
          const map = {};
          (json.songs || []).forEach((s) => {
             map[s.date] = s;
@@ -124,73 +119,28 @@ const MusicCalendar = () => {
                   return <div key={`empty-${idx}`} className='aspect-square' />;
                }
                const dateStr = toYYYYMMDD(year, month, day);
-               const song = songs[dateStr];
-               const isToday = dateStr === todayStr;
-
                return (
-                  <button
-                     type='button'
+                  <CalendarCell
                      key={dateStr}
-                     onClick={() => setSelectedDate(dateStr)}
-                     onMouseMove={
-                        song
-                           ? (e) =>
-                                setTooltip({ song, x: e.clientX, y: e.clientY })
-                           : undefined
-                     }
-                     onMouseLeave={song ? () => setTooltip(null) : undefined}
-                     aria-label={`${dateStr}${song ? ` — ${song.title} by ${song.artist}` : ''}`}
-                     className={`aspect-square relative cursor-pointer rounded-md overflow-hidden border transition-all group
-                  ${isToday ? 'border-purple-500' : 'border-[#242424]'}
-                  ${song ? '' : 'bg-[#101010] hover:bg-[#1a1a1a]'}
-                `}
-                  >
-                     {song ? (
-                        <>
-                           <img
-                              src={song.artwork_url}
-                              alt={song.title}
-                              className='w-full h-full object-cover opacity-0 scale-95 transition-[opacity,transform] duration-300 ease-out'
-                              onLoad={(e) => {
-                                 e.currentTarget.classList.remove(
-                                    'opacity-0',
-                                    'scale-95'
-                                 );
-                                 e.currentTarget.classList.add(
-                                    'opacity-100',
-                                    'scale-100'
-                                 );
-                              }}
-                              onError={(e) => {
-                                 e.currentTarget.classList.remove(
-                                    'opacity-0',
-                                    'scale-95'
-                                 );
-                                 e.currentTarget.classList.add(
-                                    'opacity-100',
-                                    'scale-100'
-                                 );
-                                 e.currentTarget.style.display = 'none';
-                              }}
-                           />
-                           <div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity' />
-                        </>
-                     ) : (
-                        <span className='absolute inset-0 flex items-center justify-center text-gray-600 group-hover:text-gray-400 text-sm font-medium transition-colors'>
-                           +
-                        </span>
-                     )}
-                     <span
-                        className={`absolute top-1 left-1 text-xs font-bold leading-none
-                    ${song ? 'text-white drop-shadow' : isToday ? 'text-purple-400' : 'text-gray-500'}
-                  `}
-                     >
-                        {day}
-                     </span>
-                  </button>
+                     dateStr={dateStr}
+                     day={day}
+                     song={songs[dateStr]}
+                     isToday={dateStr === todayStr}
+                     onSelect={setSelectedDate}
+                     onHover={setTooltip}
+                     onHoverEnd={() => setTooltip(null)}
+                  />
                );
             })}
          </div>
+
+         {tooltip && (
+            <SongTooltip
+               song={tooltip.song}
+               x={tooltip.x}
+               y={tooltip.y}
+            />
+         )}
 
          {selectedDate && (
             <MusicSearchModal
@@ -199,32 +149,6 @@ const MusicCalendar = () => {
                onSave={handleSave}
                onClose={() => setSelectedDate(null)}
             />
-         )}
-
-         {tooltip && (
-            <div
-               className='fixed z-50 pointer-events-none'
-               style={{
-                  left: Math.min(tooltip.x + 14, window.innerWidth - 244),
-                  top: Math.min(tooltip.y + 14, window.innerHeight - 90),
-               }}
-            >
-               <div className='flex items-center gap-3 p-3 rounded-lg bg-[#1a1a1a] border border-purple-500/40 shadow-xl w-56'>
-                  <img
-                     src={tooltip.song.artwork_url}
-                     alt={tooltip.song.title}
-                     className='w-12 h-12 rounded object-cover flex-shrink-0'
-                  />
-                  <div className='flex-1 min-w-0'>
-                     <p className='text-sm font-medium truncate'>
-                        {tooltip.song.title}
-                     </p>
-                     <p className='text-xs text-gray-400 truncate'>
-                        {tooltip.song.artist}
-                     </p>
-                  </div>
-               </div>
-            </div>
          )}
       </div>
    );
