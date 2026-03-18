@@ -17,7 +17,6 @@ No test suite is configured.
 ## Required Environment Variables
 
 ```
-CLIENT_ID / CLIENT_SECRET / REFRESH_TOKEN   # Spotify API (homepage currently-playing widget only)
 GITHUB_AUTH                                  # GitHub personal access token
 NEXT_PUBLIC_SUPABASE_URL                     # Supabase project URL
 SUPABASE_SERVICE_ROLE_KEY                    # Supabase service role JWT (used by all API routes)
@@ -34,7 +33,7 @@ LOG_LEVEL                                    # DEBUG | INFO | WARN | ERROR | FAT
 Personal portfolio and blog (Next.js App Router). The app has three main surfaces:
 
 - **Public** — home, blog, projects, resume
-- **API routes** — third-party integrations (GitHub, Spotify currently-playing, Deezer search) + a per-post likes system
+- **API routes** — third-party integrations (GitHub, Deezer search) + a per-post likes system
 - **Admin** (`/admin`) — coffee timer, song-of-the-day calendar, and logout, protected by middleware
 
 ### Data layer

@@ -4,6 +4,17 @@ export const dynamic = 'force-dynamic';
 
 const DEEZER_SEARCH_URL = 'https://api.deezer.com/search';
 const DEEZER_ARTIST_URL = 'https://api.deezer.com/search/artist';
+const DEEZER_TIMEOUT_MS = 6000;
+
+async function fetchDeezer(url, options = {}) {
+   const controller = new AbortController();
+   const timer = setTimeout(() => controller.abort(), DEEZER_TIMEOUT_MS);
+   try {
+      return await fetch(url, { ...options, signal: controller.signal });
+   } finally {
+      clearTimeout(timer);
+   }
+}
 
 export async function GET(request) {
    const { searchParams } = new URL(request.url);
@@ -15,7 +26,12 @@ export async function GET(request) {
    if (mode === 'artists') {
       if (!q) return NextResponse.json({ artists: [] });
       const url = `${DEEZER_ARTIST_URL}?q=${encodeURIComponent(q)}&limit=8`;
-      const response = await fetch(url, { next: { revalidate: 300 } });
+      let response;
+      try {
+         response = await fetchDeezer(url, { next: { revalidate: 300 } });
+      } catch {
+         return NextResponse.json({ error: 'Deezer unavailable' }, { status: 502 });
+      }
       if (!response.ok)
          return NextResponse.json({ error: 'Deezer search failed' }, { status: 502 });
       const json = await response.json();
@@ -30,7 +46,7 @@ export async function GET(request) {
    }
 
    // Build scoped query
-   const offset = parseInt(searchParams.get('offset') || '0', 10);
+   const offset = Math.max(0, parseInt(searchParams.get('offset') || '0', 10) || 0);
    let term;
    if (q && artist) {
       term = `artist:"${artist}" track:"${q}"`;
@@ -41,7 +57,12 @@ export async function GET(request) {
    }
 
    const url = `${DEEZER_SEARCH_URL}?q=${encodeURIComponent(term)}&limit=12&index=${offset}`;
-   const response = await fetch(url, { next: { revalidate: 300 } });
+   let response;
+   try {
+      response = await fetchDeezer(url, { next: { revalidate: 300 } });
+   } catch {
+      return NextResponse.json({ error: 'Deezer unavailable' }, { status: 502 });
+   }
 
    if (!response.ok) {
       return NextResponse.json({ error: 'Deezer search failed' }, { status: 502 });

@@ -18,6 +18,8 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
    const artistDebounceRef = useRef(null);
    const artistInputRef = useRef(null);
    const suggestionsRef = useRef(null);
+   const songReqIdRef = useRef(0);
+   const artistReqIdRef = useRef(0);
 
    // Core fetch — used for both fresh searches and load-more
    const fetchSongs = useCallback(
@@ -27,6 +29,7 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
             setHasMore(false);
             return;
          }
+         const id = ++songReqIdRef.current;
          append ? setLoadingMore(true) : setSearching(true);
          try {
             const params = new URLSearchParams();
@@ -35,11 +38,14 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
             if (pageOffset) params.set('offset', pageOffset);
             const res = await fetch(`/api/admin/music/search?${params}`);
             const json = await res.json();
+            if (id !== songReqIdRef.current) return; // stale response
             const incoming = json.results || [];
             setResults((prev) => (append ? [...prev, ...incoming] : incoming));
             setHasMore(pageOffset + incoming.length < (json.total ?? 0));
          } finally {
-            append ? setLoadingMore(false) : setSearching(false);
+            if (id === songReqIdRef.current) {
+               append ? setLoadingMore(false) : setSearching(false);
+            }
          }
       },
       []
@@ -68,10 +74,12 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
          setArtistSuggestions([]);
          return;
       }
+      const id = ++artistReqIdRef.current;
       const res = await fetch(
          `/api/admin/music/search?mode=artists&q=${encodeURIComponent(q)}`
       );
       const json = await res.json();
+      if (id !== artistReqIdRef.current) return; // stale response
       setArtistSuggestions(json.artists || []);
    }, []);
 
@@ -122,7 +130,7 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ date, ...song }),
          });
-         const json = await res.json();
+         const json = await res.json().catch(() => ({}));
          if (!res.ok) {
             setSaveError(json.error || 'Failed to save song.');
             return;
@@ -130,6 +138,8 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
          if (json.song) {
             onSave(json.song);
          }
+      } catch {
+         setSaveError('Network error while saving song.');
       } finally {
          setSaving(false);
       }

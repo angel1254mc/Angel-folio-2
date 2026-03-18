@@ -12,13 +12,18 @@ const SongOfTheDayComponent = () => {
    const [setIsHover, hoverAnimate] = usePurpleHover();
    const [song, setSong] = useState(null);
 
+   const safeTrackUrl =
+      song?.track_url && /^https?:\/\//i.test(song.track_url)
+         ? song.track_url
+         : '#';
+
    useEffect(() => {
       fetch('/api/get-song-of-the-day', { cache: 'no-store' })
          .then((r) => r.json())
          .then((json) => {
             if (json.date) setSong(json);
          })
-         .catch(() => {});
+         .catch((err) => console.error('SongOfTheDay fetch failed', err));
    }, []);
 
    return (
@@ -47,7 +52,7 @@ const SongOfTheDayComponent = () => {
                className='min-w-[7rem] min-h-[7rem]'
                target='_blank'
                rel='noreferrer'
-               href={song?.track_url ?? '#'}
+               href={safeTrackUrl}
             >
                <Image
                   className='w-28 h-28'
@@ -61,7 +66,7 @@ const SongOfTheDayComponent = () => {
                <a
                   target='_blank'
                   rel='noreferrer'
-                  href={song?.track_url ?? '#'}
+                  href={safeTrackUrl}
                   className='text-base font-semibold'
                >
                   {song?.title

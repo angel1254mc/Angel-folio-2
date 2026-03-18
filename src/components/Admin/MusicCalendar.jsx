@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import MusicSearchModal from './MusicSearchModal';
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -19,20 +19,23 @@ const MusicCalendar = () => {
    const [selectedDate, setSelectedDate] = useState(null);
    const [loading, setLoading] = useState(false);
    const [tooltip, setTooltip] = useState(null); // { song, x, y }
+   const fetchIdRef = useRef(0);
 
    const fetchSongs = useCallback(async (monthDate) => {
+      const id = ++fetchIdRef.current;
       setLoading(true);
       try {
          const month = toYYYYMM(monthDate);
          const res = await fetch(`/api/admin/music?month=${month}`);
          const json = await res.json();
+         if (id !== fetchIdRef.current) return; // stale response
          const map = {};
          (json.songs || []).forEach((s) => {
             map[s.date] = s;
          });
          setSongs(map);
       } finally {
-         setLoading(false);
+         if (id === fetchIdRef.current) setLoading(false);
       }
    }, []);
 
@@ -125,7 +128,8 @@ const MusicCalendar = () => {
                const isToday = dateStr === todayStr;
 
                return (
-                  <div
+                  <button
+                     type='button'
                      key={dateStr}
                      onClick={() => setSelectedDate(dateStr)}
                      onMouseMove={
@@ -135,6 +139,7 @@ const MusicCalendar = () => {
                            : undefined
                      }
                      onMouseLeave={song ? () => setTooltip(null) : undefined}
+                     aria-label={`${dateStr}${song ? ` — ${song.title} by ${song.artist}` : ''}`}
                      className={`aspect-square relative cursor-pointer rounded-md overflow-hidden border transition-all group
                   ${isToday ? 'border-purple-500' : 'border-[#242424]'}
                   ${song ? '' : 'bg-[#101010] hover:bg-[#1a1a1a]'}
@@ -182,7 +187,7 @@ const MusicCalendar = () => {
                      >
                         {day}
                      </span>
-                  </div>
+                  </button>
                );
             })}
          </div>

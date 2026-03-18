@@ -11,7 +11,7 @@ export const GET = async () => {
    // have acceptable staleness, so only this endpoint needs the per-request pattern.
    const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.SUPABASE_SERVICE_ROLE_KEY,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
       {
          global: {
             fetch: (url, options = {}) =>
@@ -22,7 +22,7 @@ export const GET = async () => {
 
    const { data, error } = await supabase
       .from('song_of_the_day')
-      .select('*')
+      .select('date,title,artist,album,artwork_url,track_url')
       .order('date', { ascending: false })
       .limit(1);
 
