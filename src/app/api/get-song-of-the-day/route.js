@@ -1,19 +1,25 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-   process.env.NEXT_PUBLIC_SUPABASE_URL,
-   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-   {
-      global: {
-         fetch: (url, options = {}) =>
-            fetch(url, { ...options, cache: 'no-store' }),
-      },
-   }
-);
-
 export const dynamic = 'force-dynamic';
 
 export const GET = async () => {
+   // Supabase client is intentionally initialized per-request here (not at module level).
+   // This endpoint is the public-facing widget that must always reflect the latest saved song.
+   // A module-level client could hold a stale fetch reference due to Next.js module caching,
+   // causing the cache: 'no-store' override to not take effect on subsequent calls.
+   // All other routes either use force-dynamic with a service-role client (admin) or
+   // have acceptable staleness, so only this endpoint needs the per-request pattern.
+   const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+      {
+         global: {
+            fetch: (url, options = {}) =>
+               fetch(url, { ...options, cache: 'no-store' }),
+         },
+      }
+   );
+
    const { data, error } = await supabase
       .from('song_of_the_day')
       .select('*')

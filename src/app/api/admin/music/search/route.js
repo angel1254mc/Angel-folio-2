@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+const DEEZER_SEARCH_URL = 'https://api.deezer.com/search';
+const DEEZER_ARTIST_URL = 'https://api.deezer.com/search/artist';
+
 export async function GET(request) {
    const { searchParams } = new URL(request.url);
    const q = searchParams.get('q');
@@ -11,18 +14,13 @@ export async function GET(request) {
    // Artist autocomplete mode — returns a list of artist name strings
    if (mode === 'artists') {
       if (!q) return NextResponse.json({ artists: [] });
-      const url = `https://itunes.apple.com/search?term=${encodeURIComponent(q)}&media=music&entity=musicArtist&attribute=artistTerm&limit=8`;
-      const response = await fetch(url, { cache: 'no-store' });
+      const url = `${DEEZER_ARTIST_URL}?q=${encodeURIComponent(q)}&limit=8`;
+      const response = await fetch(url, { next: { revalidate: 300 } });
       if (!response.ok)
-         return NextResponse.json(
-            { error: 'iTunes search failed' },
-            { status: 502 }
-         );
+         return NextResponse.json({ error: 'Deezer search failed' }, { status: 502 });
       const json = await response.json();
       const artists = [
-         ...new Set(
-            (json.results || []).map((r) => r.artistName).filter(Boolean)
-         ),
+         ...new Set((json.data || []).map((r) => r.name).filter(Boolean)),
       ];
       return NextResponse.json({ artists });
    }
@@ -31,28 +29,32 @@ export async function GET(request) {
       return NextResponse.json({ results: [] });
    }
 
-   // Combine artist + song term; fall back to whichever is provided
+   // Build scoped query
    const offset = parseInt(searchParams.get('offset') || '0', 10);
-   const term = [artist, q].filter(Boolean).join(' ');
-   const url = `https://itunes.apple.com/search?term=${encodeURIComponent(term)}&media=music&entity=song&attribute=songTerm&limit=12&offset=${offset}`;
-   const response = await fetch(url, { cache: 'no-store' });
+   let term;
+   if (q && artist) {
+      term = `artist:"${artist}" track:"${q}"`;
+   } else if (q) {
+      term = `track:"${q}"`;
+   } else {
+      term = `artist:"${artist}"`;
+   }
+
+   const url = `${DEEZER_SEARCH_URL}?q=${encodeURIComponent(term)}&limit=12&index=${offset}`;
+   const response = await fetch(url, { next: { revalidate: 300 } });
 
    if (!response.ok) {
-      return NextResponse.json(
-         { error: 'iTunes search failed' },
-         { status: 502 }
-      );
+      return NextResponse.json({ error: 'Deezer search failed' }, { status: 502 });
    }
 
    const json = await response.json();
-
-   const results = (json.results || []).map((item) => ({
-      title: item.trackName,
-      artist: item.artistName,
-      album: item.collectionName,
-      artwork_url: (item.artworkUrl100 || '').replace('100x100bb', '400x400bb'),
-      track_url: item.trackViewUrl,
+   const results = (json.data || []).map((item) => ({
+      title: item.title,
+      artist: item.artist.name,
+      album: item.album.title,
+      artwork_url: item.album.cover_big || item.album.cover_medium,
+      track_url: item.link,
    }));
 
-   return NextResponse.json({ results });
+   return NextResponse.json({ results, total: json.total ?? 0 });
 }

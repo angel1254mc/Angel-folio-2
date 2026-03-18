@@ -35,6 +35,12 @@ const nextConfig = {
          },
          {
             protocol: 'https',
+            hostname: 'cdn-images.dzcdn.net',
+            port: '',
+            pathname: '/**',
+         },
+         {
+            protocol: 'https',
             hostname:
                'https://cdn.discordapp.com/attachments/722671549299294239/1076807623950749736/',
             port: '',
