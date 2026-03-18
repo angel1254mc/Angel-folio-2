@@ -199,7 +199,10 @@ const MusicCalendar = () => {
          {tooltip && (
             <div
                className='fixed z-50 pointer-events-none'
-               style={{ left: tooltip.x + 14, top: tooltip.y + 14 }}
+               style={{
+                  left: Math.min(tooltip.x + 14, window.innerWidth - 244),
+                  top: Math.min(tooltip.y + 14, window.innerHeight - 90),
+               }}
             >
                <div className='flex items-center gap-3 p-3 rounded-lg bg-[#1a1a1a] border border-purple-500/40 shadow-xl w-56'>
                   <img

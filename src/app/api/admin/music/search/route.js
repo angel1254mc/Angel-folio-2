@@ -49,6 +49,7 @@ export async function GET(request) {
 
    const json = await response.json();
    const results = (json.data || []).map((item) => ({
+      id: item.id,
       title: item.title,
       artist: item.artist?.name,
       album: item.album?.title,

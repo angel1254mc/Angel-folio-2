@@ -275,9 +275,9 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
                {!searching && !saving && (
                   <>
                      <div className='grid grid-cols-3 gap-2'>
-                        {results.map((song, idx) => (
+                        {results.map((song) => (
                            <button
-                              key={idx}
+                              key={song.id}
                               onClick={() => handlePick(song)}
                               className='flex flex-col items-center gap-1 p-2 rounded-lg bg-[#1a1a1a] hover:bg-[#242424] transition-colors text-left group'
                            >
