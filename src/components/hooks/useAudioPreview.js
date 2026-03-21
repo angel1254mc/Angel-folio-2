@@ -69,6 +69,23 @@ const useAudioPreview = () => {
       }
    };
 
+   // Stop playback and release all cached Audio elements
+   const clearCache = useCallback(() => {
+      cleanupEnded();
+      clearFade();
+      if (activeRef.current) {
+         activeRef.current.pause();
+         activeRef.current = null;
+      }
+      cacheRef.current.forEach((audio) => {
+         audio.pause();
+         audio.src = '';
+      });
+      cacheRef.current.clear();
+      setPlaying(false);
+      setPlayingUrl(null);
+   }, []);
+
    // Eagerly buffer audio so it's ready on click
    const preload = useCallback((previewUrl) => {
       getOrCreateAudio(previewUrl);
@@ -118,7 +135,7 @@ const useAudioPreview = () => {
       [playing, playingUrl, play, pause]
    );
 
-   return { preload, play, pause, toggle, playing, playingUrl };
+   return { preload, clearCache, play, pause, toggle, playing, playingUrl };
 };
 
 export default useAudioPreview;

@@ -16,10 +16,11 @@ const MusicCalendar = ({ editable = true }) => {
    const [loading, setLoading] = useState(false);
    const [tooltip, setTooltip] = useState(null);
    const fetchIdRef = useRef(0);
-   const { preload, toggle, playing, playingUrl } = useAudioPreview();
+   const { preload, clearCache, toggle, playing, playingUrl } = useAudioPreview();
 
    const fetchSongs = useCallback(async (monthDate) => {
       const id = ++fetchIdRef.current;
+      clearCache();
       setLoading(true);
       try {
          const month = toYYYYMM(monthDate);
