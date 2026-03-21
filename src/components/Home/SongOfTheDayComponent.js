@@ -8,9 +8,21 @@ import usePurpleHover from '../hooks/usePurpleHover';
 import { animated } from '@react-spring/web';
 import { clampWords } from '../typography/utils';
 
+const SongOfTheDaySkeleton = () => (
+   <div className='w-full h-full flex pl-3 pr-2 gap-x-2 items-center animate-pulse'>
+      <div className='min-w-[7rem] min-h-[7rem] w-28 h-28 rounded bg-[#1a1a1a]' />
+      <div className='flex flex-col gap-y-2 pl-1 min-h-[6rem] justify-center'>
+         <div className='h-4 w-32 rounded bg-[#1a1a1a]' />
+         <div className='h-3 w-24 rounded bg-[#1a1a1a]' />
+         <div className='h-3 w-20 rounded bg-[#1a1a1a]' />
+      </div>
+   </div>
+);
+
 const SongOfTheDayComponent = () => {
    const [setIsHover, hoverAnimate] = usePurpleHover();
    const [song, setSong] = useState(null);
+   const [loading, setLoading] = useState(true);
 
    const safeTrackUrl =
       song?.track_url && /^https?:\/\//i.test(song.track_url)
@@ -23,7 +35,8 @@ const SongOfTheDayComponent = () => {
          .then((json) => {
             if (json.date) setSong(json);
          })
-         .catch((err) => console.error('SongOfTheDay fetch failed', err));
+         .catch((err) => console.error('SongOfTheDay fetch failed', err))
+         .finally(() => setLoading(false));
    }, []);
 
    return (
@@ -47,38 +60,42 @@ const SongOfTheDayComponent = () => {
                className='text-3xl text-[#242424]'
             />
          </div>
-         <div className='w-full h-full flex pl-3 pr-2 gap-x-2 items-center'>
-            <a
-               className='min-w-[7rem] min-h-[7rem]'
-               target='_blank'
-               rel='noreferrer'
-               href={safeTrackUrl}
-            >
-               <Image
-                  className='w-28 h-28'
-                  width={200}
-                  height={200}
-                  alt={song?.title ?? 'No song picked yet'}
-                  src={song?.artwork_url ?? defaultCover}
-               />
-            </a>
-            <div className='flex flex-col gap-y-1 pl-1 flex-wrap min-h-[6rem] justify-center'>
+         {loading ? (
+            <SongOfTheDaySkeleton />
+         ) : (
+            <div className='w-full h-full flex pl-3 pr-2 gap-x-2 items-center'>
                <a
+                  className='min-w-[7rem] min-h-[7rem]'
                   target='_blank'
                   rel='noreferrer'
                   href={safeTrackUrl}
-                  className='text-base font-semibold'
                >
-                  {song?.title
-                     ? clampWords(song.title, 8)
-                     : 'No song picked yet'}
+                  <Image
+                     className='w-28 h-28'
+                     width={200}
+                     height={200}
+                     alt={song?.title ?? 'No song picked yet'}
+                     src={song?.artwork_url ?? defaultCover}
+                  />
                </a>
-               <p className='text-sm'>{song?.artist ?? ''}</p>
-               <p className='text-xs font-light'>
-                  {song?.album ? clampWords(song.album, 8) : ''}
-               </p>
+               <div className='flex flex-col gap-y-1 pl-1 flex-wrap min-h-[6rem] justify-center'>
+                  <a
+                     target='_blank'
+                     rel='noreferrer'
+                     href={safeTrackUrl}
+                     className='text-base font-semibold'
+                  >
+                     {song?.title
+                        ? clampWords(song.title, 8)
+                        : 'No song picked yet'}
+                  </a>
+                  <p className='text-sm'>{song?.artist ?? ''}</p>
+                  <p className='text-xs font-light'>
+                     {song?.album ? clampWords(song.album, 8) : ''}
+                  </p>
+               </div>
             </div>
-         </div>
+         )}
       </animated.div>
    );
 };
