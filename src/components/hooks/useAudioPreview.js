@@ -11,6 +11,7 @@ const useAudioPreview = () => {
    const endedHandlerRef = useRef(null);
    const [playing, setPlaying] = useState(false);
    const [playingUrl, setPlayingUrl] = useState(null);
+   const [playingId, setPlayingId] = useState(null);
 
    const clearFade = () => {
       if (fadeRef.current) {
@@ -84,6 +85,7 @@ const useAudioPreview = () => {
       cacheRef.current.clear();
       setPlaying(false);
       setPlayingUrl(null);
+      setPlayingId(null);
    }, []);
 
    // Eagerly buffer audio so it's ready on click
@@ -91,7 +93,7 @@ const useAudioPreview = () => {
       getOrCreateAudio(previewUrl);
    }, []);
 
-   const play = useCallback((previewUrl) => {
+   const play = useCallback((previewUrl, id) => {
       if (!previewUrl) return;
       const audio = getOrCreateAudio(previewUrl);
 
@@ -104,12 +106,14 @@ const useAudioPreview = () => {
       activeRef.current = audio;
       setPlaying(true);
       setPlayingUrl(previewUrl);
+      setPlayingId(id ?? null);
       fadeIn(audio);
 
       cleanupEnded();
       const onEnded = () => {
          setPlaying(false);
          setPlayingUrl(null);
+         setPlayingId(null);
          activeRef.current = null;
       };
       endedHandlerRef.current = onEnded;
@@ -120,22 +124,27 @@ const useAudioPreview = () => {
       if (!activeRef.current) return;
       setPlaying(false);
       setPlayingUrl(null);
+      setPlayingId(null);
       fadeOut(activeRef.current);
       cleanupEnded();
    }, []);
 
    const toggle = useCallback(
-      (previewUrl) => {
-         if (playing && playingUrl === previewUrl) {
+      (previewUrl, id) => {
+         // Match by id when provided, otherwise fall back to URL
+         const isActive = id != null
+            ? playing && playingId === id
+            : playing && playingUrl === previewUrl;
+         if (isActive) {
             pause();
          } else {
-            play(previewUrl);
+            play(previewUrl, id);
          }
       },
-      [playing, playingUrl, play, pause]
+      [playing, playingId, playingUrl, play, pause]
    );
 
-   return { preload, clearCache, play, pause, toggle, playing, playingUrl };
+   return { preload, clearCache, play, pause, toggle, playing, playingUrl, playingId };
 };
 
 export default useAudioPreview;

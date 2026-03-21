@@ -16,7 +16,7 @@ const MusicCalendar = ({ editable = true }) => {
    const [loading, setLoading] = useState(false);
    const [tooltip, setTooltip] = useState(null);
    const fetchIdRef = useRef(0);
-   const { preload, clearCache, toggle, playing, playingUrl } = useAudioPreview();
+   const { preload, clearCache, toggle, playing, playingId } = useAudioPreview();
 
    const fetchSongs = useCallback(async (monthDate) => {
       const id = ++fetchIdRef.current;
@@ -132,9 +132,7 @@ const MusicCalendar = ({ editable = true }) => {
                      song={song}
                      isToday={dateStr === todayStr}
                      editable={editable}
-                     isPlaying={
-                        playing && !!song?.preview_url && playingUrl === song.preview_url
-                     }
+                     isPlaying={playing && playingId === dateStr}
                      onEdit={setSelectedDate}
                      onTogglePlay={toggle}
                      onHover={setTooltip}

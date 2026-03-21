@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import usePurpleHover from '../hooks/usePurpleHover';
 import useAudioPreview from '../hooks/useAudioPreview';
+import { PlayIcon, PauseIcon } from '../icons/AudioIcons';
 import { animated } from '@react-spring/web';
 import { clampWords } from '../typography/utils';
 
@@ -18,26 +19,6 @@ const SongOfTheDaySkeleton = () => (
          <div className='h-3 w-20 rounded bg-[#1a1a1a]' />
       </div>
    </div>
-);
-
-const PlayIcon = () => (
-   <svg
-      className='w-8 h-8 text-white'
-      fill='currentColor'
-      viewBox='0 0 24 24'
-   >
-      <path d='M8 5v14l11-7z' />
-   </svg>
-);
-
-const PauseIcon = () => (
-   <svg
-      className='w-8 h-8 text-white'
-      fill='currentColor'
-      viewBox='0 0 24 24'
-   >
-      <path d='M6 19h4V5H6v14zm8-14v14h4V5h-4z' />
-   </svg>
 );
 
 const SongOfTheDayComponent = () => {
@@ -119,7 +100,11 @@ const SongOfTheDayComponent = () => {
                         }`}
                         aria-label={playing ? 'Pause preview' : 'Play preview'}
                      >
-                        {playing ? <PauseIcon /> : <PlayIcon />}
+                        {playing ? (
+                           <PauseIcon className='w-8 h-8 text-white' />
+                        ) : (
+                           <PlayIcon className='w-8 h-8 text-white' />
+                        )}
                      </button>
                   )}
                </div>

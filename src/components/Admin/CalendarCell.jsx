@@ -1,4 +1,5 @@
 import React from 'react';
+import { PlayIcon, PauseIcon, EditIcon } from '../icons/AudioIcons';
 
 const handleImageLoad = (e) => {
    e.currentTarget.classList.remove('opacity-0', 'scale-95');
@@ -10,34 +11,6 @@ const handleImageError = (e) => {
    e.currentTarget.classList.add('opacity-100', 'scale-100');
    e.currentTarget.style.display = 'none';
 };
-
-const PlayIcon = () => (
-   <svg className='w-4 h-4' fill='currentColor' viewBox='0 0 24 24'>
-      <path d='M8 5v14l11-7z' />
-   </svg>
-);
-
-const PauseIcon = () => (
-   <svg className='w-4 h-4' fill='currentColor' viewBox='0 0 24 24'>
-      <path d='M6 19h4V5H6v14zm8-14v14h4V5h-4z' />
-   </svg>
-);
-
-const EditIcon = () => (
-   <svg
-      className='w-4 h-4'
-      fill='none'
-      viewBox='0 0 24 24'
-      stroke='currentColor'
-      strokeWidth={2}
-   >
-      <path
-         strokeLinecap='round'
-         strokeLinejoin='round'
-         d='m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125'
-      />
-   </svg>
-);
 
 const CalendarCell = ({
    dateStr,
@@ -86,7 +59,7 @@ const CalendarCell = ({
                      type='button'
                      onClick={(e) => {
                         e.stopPropagation();
-                        onTogglePlay(song.preview_url);
+                        onTogglePlay(song.preview_url, dateStr);
                      }}
                      className='w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors'
                      aria-label={isPlaying ? 'Pause preview' : 'Play preview'}
