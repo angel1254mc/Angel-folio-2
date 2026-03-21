@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const FADE_DURATION = 600; // ms
 const FADE_STEPS = 20;
@@ -34,7 +34,7 @@ const useAudioPreview = () => {
    const fadeIn = (audio) => {
       clearFade();
       audio.volume = 0;
-      audio.play().catch(() => {});
+      const playPromise = audio.play();
       const step = TARGET_VOLUME / FADE_STEPS;
       const interval = FADE_DURATION / FADE_STEPS;
       fadeRef.current = setInterval(() => {
@@ -42,6 +42,7 @@ const useAudioPreview = () => {
          audio.volume = next;
          if (next >= TARGET_VOLUME) clearFade();
       }, interval);
+      return playPromise;
    };
 
    const fadeOut = (audio) => {
@@ -88,6 +89,18 @@ const useAudioPreview = () => {
       setPlayingId(null);
    }, []);
 
+   // Stop audio and clear timers on unmount
+   useEffect(() => {
+      return () => {
+         cleanupEnded();
+         clearFade();
+         if (activeRef.current) {
+            activeRef.current.pause();
+            activeRef.current = null;
+         }
+      };
+   }, []);
+
    // Eagerly buffer audio so it's ready on click
    const preload = useCallback((previewUrl) => {
       getOrCreateAudio(previewUrl);
@@ -107,7 +120,14 @@ const useAudioPreview = () => {
       setPlaying(true);
       setPlayingUrl(previewUrl);
       setPlayingId(id ?? null);
-      fadeIn(audio);
+      fadeIn(audio).catch(() => {
+         clearFade();
+         setPlaying(false);
+         setPlayingUrl(null);
+         setPlayingId(null);
+         activeRef.current = null;
+         cleanupEnded();
+      });
 
       cleanupEnded();
       const onEnded = () => {
