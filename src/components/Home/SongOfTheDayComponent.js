@@ -5,6 +5,7 @@ import defaultCover from '../../../public/default-music-cover.png';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import usePurpleHover from '../hooks/usePurpleHover';
+import useAudioPreview from '../hooks/useAudioPreview';
 import { animated } from '@react-spring/web';
 import { clampWords } from '../typography/utils';
 
@@ -19,10 +20,34 @@ const SongOfTheDaySkeleton = () => (
    </div>
 );
 
+const PlayIcon = () => (
+   <svg
+      className='w-8 h-8 text-white'
+      fill='currentColor'
+      viewBox='0 0 24 24'
+   >
+      <path d='M8 5v14l11-7z' />
+   </svg>
+);
+
+const PauseIcon = () => (
+   <svg
+      className='w-8 h-8 text-white'
+      fill='currentColor'
+      viewBox='0 0 24 24'
+   >
+      <path d='M6 19h4V5H6v14zm8-14v14h4V5h-4z' />
+   </svg>
+);
+
 const SongOfTheDayComponent = () => {
    const [setIsHover, hoverAnimate] = usePurpleHover();
+   const { preload, toggle, playing } = useAudioPreview();
    const [song, setSong] = useState(null);
    const [loading, setLoading] = useState(true);
+   const [hovering, setHovering] = useState(false);
+
+   const hasPreview = !!song?.preview_url;
 
    const safeTrackUrl =
       song?.track_url && /^https?:\/\//i.test(song.track_url)
@@ -33,7 +58,10 @@ const SongOfTheDayComponent = () => {
       fetch('/api/get-song-of-the-day', { cache: 'no-store' })
          .then((r) => r.json())
          .then((json) => {
-            if (json.date) setSong(json);
+            if (json.date) {
+               setSong(json);
+               if (json.preview_url) preload(json.preview_url);
+            }
          })
          .catch((err) => console.error('SongOfTheDay fetch failed', err))
          .finally(() => setLoading(false));
@@ -41,8 +69,14 @@ const SongOfTheDayComponent = () => {
 
    return (
       <animated.div
-         onMouseOver={() => setIsHover(true)}
-         onMouseOut={() => setIsHover(false)}
+         onMouseMove={() => {
+            setIsHover(true);
+            setHovering(true);
+         }}
+         onMouseLeave={() => {
+            setIsHover(false);
+            setHovering(false);
+         }}
          style={hoverAnimate}
          className='w-full h-full flex rounded-md bg-[#101010]'
       >
@@ -64,20 +98,31 @@ const SongOfTheDayComponent = () => {
             <SongOfTheDaySkeleton />
          ) : (
             <div className='w-full h-full flex pl-3 pr-2 gap-x-2 items-center'>
-               <a
-                  className='min-w-[7rem] min-h-[7rem]'
-                  target='_blank'
-                  rel='noreferrer'
-                  href={safeTrackUrl}
-               >
-                  <Image
-                     className='w-28 h-28'
-                     width={200}
-                     height={200}
-                     alt={song?.title ?? 'No song picked yet'}
-                     src={song?.artwork_url ?? defaultCover}
-                  />
-               </a>
+               <div className='relative min-w-[7rem] min-h-[7rem]'>
+                  <a target='_blank' rel='noreferrer' href={safeTrackUrl}>
+                     <Image
+                        className='w-28 h-28'
+                        width={200}
+                        height={200}
+                        alt={song?.title ?? 'No song picked yet'}
+                        src={song?.artwork_url ?? defaultCover}
+                     />
+                  </a>
+                  {hasPreview && (
+                     <button
+                        onClick={(e) => {
+                           e.preventDefault();
+                           toggle(song.preview_url);
+                        }}
+                        className={`absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity duration-200 cursor-pointer ${
+                           hovering || playing ? 'opacity-100' : 'opacity-0'
+                        }`}
+                        aria-label={playing ? 'Pause preview' : 'Play preview'}
+                     >
+                        {playing ? <PauseIcon /> : <PlayIcon />}
+                     </button>
+                  )}
+               </div>
                <div className='flex flex-col gap-y-1 pl-1 flex-wrap min-h-[6rem] justify-center'>
                   <a
                      target='_blank'
