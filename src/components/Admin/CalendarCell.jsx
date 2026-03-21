@@ -1,4 +1,5 @@
 import React from 'react';
+import { PlayIcon, PauseIcon, EditIcon } from '../icons/AudioIcons';
 
 const handleImageLoad = (e) => {
    e.currentTarget.classList.remove('opacity-0', 'scale-95');
@@ -11,10 +12,19 @@ const handleImageError = (e) => {
    e.currentTarget.style.display = 'none';
 };
 
-const CalendarCell = ({ dateStr, day, song, isToday, onSelect, onHover, onHoverEnd }) => (
-   <button
-      type='button'
-      onClick={() => onSelect(dateStr)}
+const CalendarCell = ({
+   dateStr,
+   day,
+   song,
+   isToday,
+   editable = true,
+   isPlaying,
+   onEdit,
+   onTogglePlay,
+   onHover,
+   onHoverEnd,
+}) => (
+   <div
       onMouseMove={
          song
             ? (e) => onHover({ song, x: e.clientX, y: e.clientY })
@@ -22,10 +32,11 @@ const CalendarCell = ({ dateStr, day, song, isToday, onSelect, onHover, onHoverE
       }
       onMouseLeave={song ? onHoverEnd : undefined}
       aria-label={`${dateStr}${song ? ` — ${song.title} by ${song.artist}` : ''}`}
-      className={`aspect-square relative cursor-pointer rounded-md overflow-hidden border transition-all group
+      className={`aspect-square relative rounded-md overflow-hidden border transition-all group
          ${isToday ? 'border-purple-500' : 'border-[#242424]'}
-         ${song ? '' : 'bg-[#101010] hover:bg-[#1a1a1a]'}
+         ${song ? '' : 'bg-[#101010] hover:bg-[#1a1a1a] cursor-pointer'}
       `}
+      onClick={!song ? () => onEdit(dateStr) : undefined}
    >
       {song ? (
          <>
@@ -36,7 +47,40 @@ const CalendarCell = ({ dateStr, day, song, isToday, onSelect, onHover, onHoverE
                onLoad={handleImageLoad}
                onError={handleImageError}
             />
-            <div className='absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity' />
+            <div
+               className={`absolute inset-0 bg-black/40 flex items-center justify-center gap-4 transition-opacity ${
+                  isPlaying
+                     ? 'opacity-100'
+                     : 'opacity-0 group-hover:opacity-100'
+               }`}
+            >
+               {song.preview_url && (
+                  <button
+                     type='button'
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        onTogglePlay(song.preview_url, dateStr);
+                     }}
+                     className='w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors'
+                     aria-label={isPlaying ? 'Pause preview' : 'Play preview'}
+                  >
+                     {isPlaying ? <PauseIcon /> : <PlayIcon />}
+                  </button>
+               )}
+               {editable && (
+                  <button
+                     type='button'
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit(dateStr);
+                     }}
+                     className='w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors'
+                     aria-label='Edit song'
+                  >
+                     <EditIcon />
+                  </button>
+               )}
+            </div>
          </>
       ) : (
          <span className='absolute inset-0 flex items-center justify-center text-gray-600 group-hover:text-gray-400 text-sm font-medium transition-colors'>
@@ -50,7 +94,7 @@ const CalendarCell = ({ dateStr, day, song, isToday, onSelect, onHover, onHoverE
       >
          {day}
       </span>
-   </button>
+   </div>
 );
 
 export default CalendarCell;

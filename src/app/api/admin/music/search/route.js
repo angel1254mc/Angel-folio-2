@@ -76,6 +76,7 @@ export async function GET(request) {
       album: item.album?.title,
       artwork_url: item.album?.cover_big || item.album?.cover_medium,
       track_url: item.link,
+      preview_url: item.preview || null,
    }));
 
    return NextResponse.json({ results, total: json.total ?? 0 });

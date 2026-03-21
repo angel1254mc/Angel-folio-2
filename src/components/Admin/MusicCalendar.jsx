@@ -4,8 +4,9 @@ import MusicSearchModal from './MusicSearchModal';
 import CalendarCell from './CalendarCell';
 import SongTooltip from './SongTooltip';
 import { WEEKDAYS, toYYYYMM, toYYYYMMDD } from './calendarUtils';
+import useAudioPreview from '../hooks/useAudioPreview';
 
-const MusicCalendar = () => {
+const MusicCalendar = ({ editable = true }) => {
    const [currentMonth, setCurrentMonth] = useState(() => {
       const now = new Date();
       return new Date(now.getFullYear(), now.getMonth(), 1);
@@ -15,9 +16,11 @@ const MusicCalendar = () => {
    const [loading, setLoading] = useState(false);
    const [tooltip, setTooltip] = useState(null);
    const fetchIdRef = useRef(0);
+   const { preload, clearCache, toggle, playing, playingId } = useAudioPreview();
 
    const fetchSongs = useCallback(async (monthDate) => {
       const id = ++fetchIdRef.current;
+      clearCache();
       setLoading(true);
       try {
          const month = toYYYYMM(monthDate);
@@ -27,6 +30,7 @@ const MusicCalendar = () => {
          const map = {};
          (json.songs || []).forEach((s) => {
             map[s.date] = s;
+            if (s.preview_url) preload(s.preview_url);
          });
          setSongs(map);
       } finally {
@@ -119,14 +123,18 @@ const MusicCalendar = () => {
                   return <div key={`empty-${idx}`} className='aspect-square' />;
                }
                const dateStr = toYYYYMMDD(year, month, day);
+               const song = songs[dateStr];
                return (
                   <CalendarCell
                      key={dateStr}
                      dateStr={dateStr}
                      day={day}
-                     song={songs[dateStr]}
+                     song={song}
                      isToday={dateStr === todayStr}
-                     onSelect={setSelectedDate}
+                     editable={editable}
+                     isPlaying={playing && playingId === dateStr}
+                     onEdit={setSelectedDate}
+                     onTogglePlay={toggle}
                      onHover={setTooltip}
                      onHoverEnd={() => setTooltip(null)}
                   />
