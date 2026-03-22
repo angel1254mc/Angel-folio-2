@@ -23,7 +23,7 @@ const LastStarredRepo = () => {
       return str.split(' ', 14).join(' ') + '...';
    };
    useEffect(() => {
-      fetch('/api/get-last-starred-repo', { next: 'no-store' })
+      fetch('/api/get-last-starred-repo', { cache: 'no-store' })
          .then((response) => {
             return response.json();
          })
