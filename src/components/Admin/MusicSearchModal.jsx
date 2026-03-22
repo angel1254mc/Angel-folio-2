@@ -151,7 +151,7 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
          onClick={onClose}
       >
          <div
-            className='bg-[#151515] rounded-xl w-full max-w-lg mx-4 p-5 flex flex-col gap-4 max-h-[80vh]'
+            className='bg-[#151515] rounded-xl w-full max-w-lg mx-4 p-5 flex flex-col gap-4 h-[80vh]'
             onClick={(e) => e.stopPropagation()}
          >
             {/* Header */}
@@ -264,55 +264,67 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
 
             {/* Results */}
             <div className='overflow-y-auto flex-1 min-h-0'>
-               {searching && (
-                  <p className='text-center text-gray-500 text-sm py-4'>
-                     Searching...
-                  </p>
-               )}
-               {saving && (
-                  <p className='text-center text-gray-500 text-sm py-4'>
-                     Saving...
-                  </p>
-               )}
-               {!searching &&
-                  !saving &&
-                  results.length === 0 &&
-                  (songQuery.trim() || selectedArtist) && (
-                     <p className='text-center text-gray-500 text-sm py-4'>
-                        No results found.
-                     </p>
-                  )}
-               {!searching && !saving && (
+               {!songQuery.trim() && !selectedArtist && results.length === 0 && !searching && !saving ? (
+                  <div className='h-full flex flex-col items-center justify-center gap-3 text-gray-500'>
+                     <svg className='w-12 h-12 opacity-40' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={1.5}>
+                        <path strokeLinecap='round' strokeLinejoin='round' d='m9 9 10.5-3m0 6.553v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 1 1-.99-3.467l2.31-.66a2.25 2.25 0 0 0 1.632-2.163Zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 0 1-1.632 2.163l-1.32.377a1.803 1.803 0 0 1-.99-3.467l2.31-.66A2.25 2.25 0 0 0 9 15.553Z' />
+                     </svg>
+                     <p className='text-sm'>Search for a song or filter by artist</p>
+                     <p className='text-xs text-gray-600'>Results will appear here</p>
+                  </div>
+               ) : (
                   <>
-                     <div className='grid grid-cols-3 gap-2'>
-                        {results.map((song) => (
-                           <button
-                              key={song.id}
-                              onClick={() => handlePick(song)}
-                              className='flex flex-col items-center gap-1 p-2 rounded-lg bg-[#1a1a1a] hover:bg-[#242424] transition-colors text-left group'
-                           >
-                              <img
-                                 src={song.artwork_url}
-                                 alt={song.title}
-                                 className='w-full aspect-square object-cover rounded'
-                              />
-                              <p className='text-xs font-medium w-full truncate group-hover:text-purple-300 transition-colors'>
-                                 {song.title}
-                              </p>
-                              <p className='text-xs text-gray-500 w-full truncate'>
-                                 {song.artist}
-                              </p>
-                           </button>
-                        ))}
-                     </div>
-                     {hasMore && (
-                        <button
-                           onClick={loadMore}
-                           disabled={loadingMore}
-                           className='w-full mt-3 py-2 rounded-lg bg-[#1a1a1a] border border-[#303030] text-sm text-gray-400 hover:text-white hover:border-purple-500/40 transition-colors disabled:opacity-50'
-                        >
-                           {loadingMore ? 'Loading...' : 'Load more'}
-                        </button>
+                     {searching && (
+                        <p className='text-center text-gray-500 text-sm py-4'>
+                           Searching...
+                        </p>
+                     )}
+                     {saving && (
+                        <p className='text-center text-gray-500 text-sm py-4'>
+                           Saving...
+                        </p>
+                     )}
+                     {!searching &&
+                        !saving &&
+                        results.length === 0 &&
+                        (songQuery.trim() || selectedArtist) && (
+                           <p className='text-center text-gray-500 text-sm py-4'>
+                              No results found.
+                           </p>
+                        )}
+                     {!searching && !saving && (
+                        <>
+                           <div className='grid grid-cols-3 gap-2'>
+                              {results.map((song) => (
+                                 <button
+                                    key={song.id}
+                                    onClick={() => handlePick(song)}
+                                    className='flex flex-col items-center gap-1 p-2 rounded-lg bg-[#1a1a1a] hover:bg-[#242424] transition-colors text-left group'
+                                 >
+                                    <img
+                                       src={song.artwork_url}
+                                       alt={song.title}
+                                       className='w-full aspect-square object-cover rounded'
+                                    />
+                                    <p className='text-xs font-medium w-full truncate group-hover:text-purple-300 transition-colors'>
+                                       {song.title}
+                                    </p>
+                                    <p className='text-xs text-gray-500 w-full truncate'>
+                                       {song.artist}
+                                    </p>
+                                 </button>
+                              ))}
+                           </div>
+                           {hasMore && (
+                              <button
+                                 onClick={loadMore}
+                                 disabled={loadingMore}
+                                 className='w-full mt-3 py-2 rounded-lg bg-[#1a1a1a] border border-[#303030] text-sm text-gray-400 hover:text-white hover:border-purple-500/40 transition-colors disabled:opacity-50'
+                              >
+                                 {loadingMore ? 'Loading...' : 'Load more'}
+                              </button>
+                           )}
+                        </>
                      )}
                   </>
                )}
