@@ -66,7 +66,10 @@ const useAudioPreview = () => {
 
    const cleanupEnded = () => {
       if (endedHandlerRef.current && activeRef.current) {
-         activeRef.current.removeEventListener('ended', endedHandlerRef.current);
+         activeRef.current.removeEventListener(
+            'ended',
+            endedHandlerRef.current
+         );
          endedHandlerRef.current = null;
       }
    };
@@ -152,9 +155,10 @@ const useAudioPreview = () => {
    const toggle = useCallback(
       (previewUrl, id) => {
          // Match by id when provided, otherwise fall back to URL
-         const isActive = id != null
-            ? playing && playingId === id
-            : playing && playingUrl === previewUrl;
+         const isActive =
+            id != null
+               ? playing && playingId === id
+               : playing && playingUrl === previewUrl;
          if (isActive) {
             pause();
          } else {
@@ -164,7 +168,16 @@ const useAudioPreview = () => {
       [playing, playingId, playingUrl, play, pause]
    );
 
-   return { preload, clearCache, play, pause, toggle, playing, playingUrl, playingId };
+   return {
+      preload,
+      clearCache,
+      play,
+      pause,
+      toggle,
+      playing,
+      playingUrl,
+      playingId,
+   };
 };
 
 export default useAudioPreview;
