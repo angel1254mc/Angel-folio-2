@@ -38,10 +38,25 @@ const SongOfTheDayComponent = () => {
    useEffect(() => {
       fetch('/api/get-song-of-the-day', { cache: 'no-store' })
          .then((r) => r.json())
-         .then((json) => {
-            if (json.date) {
-               setSong(json);
-               if (json.preview_url) preload(json.preview_url);
+         .then(async (json) => {
+            if (!json.date) return;
+            setSong(json);
+            // Resolve preview URL dynamically if deezer_id is present
+            if (json.deezer_id) {
+               try {
+                  const res = await fetch(`/api/music/preview?ids=${json.deezer_id}`);
+                  const data = await res.json();
+                  const url = data.previews?.[json.deezer_id];
+                  if (url) {
+                     setSong((prev) => ({ ...prev, preview_url: url }));
+                     preload(url);
+                  }
+               } catch {
+                  // silent — play button won't appear
+               }
+            } else if (json.preview_url) {
+               // Legacy fallback for songs without deezer_id
+               preload(json.preview_url);
             }
          })
          .catch((err) => console.error('SongOfTheDay fetch failed', err))

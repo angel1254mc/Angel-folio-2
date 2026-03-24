@@ -48,7 +48,7 @@ export async function GET(request) {
 
 export async function POST(request) {
    const body = await request.json();
-   const { date, title, artist, album, artwork_url, track_url, preview_url } = body;
+   const { date, title, artist, album, artwork_url, track_url, preview_url, id } = body;
 
    if (!date || !title || !artist) {
       return NextResponse.json(
@@ -81,7 +81,7 @@ export async function POST(request) {
    const { data, error } = await supabase
       .from('song_of_the_day')
       .upsert(
-         { date, title, artist, album, artwork_url, track_url, preview_url },
+         { date, title, artist, album, artwork_url, track_url, preview_url, deezer_id: id || null },
          { onConflict: 'date' }
       )
       .select()
