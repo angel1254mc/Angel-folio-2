@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlayIcon, PauseIcon, EditIcon } from '../icons/AudioIcons';
+import { PlayIcon, PauseIcon, EditIcon, LinkIcon } from '../icons/AudioIcons';
 
 const handleImageLoad = (e) => {
    e.currentTarget.classList.remove('opacity-0', 'scale-95');
@@ -34,9 +34,9 @@ const CalendarCell = ({
       aria-label={`${dateStr}${song ? ` — ${song.title} by ${song.artist}` : ''}`}
       className={`aspect-square relative rounded-md overflow-hidden border transition-all group
          ${isToday ? 'border-purple-500' : 'border-[#242424]'}
-         ${song ? '' : 'bg-[#101010] hover:bg-[#1a1a1a] cursor-pointer'}
+         ${song ? '' : `bg-[#101010] ${editable ? 'hover:bg-[#1a1a1a] cursor-pointer' : ''}`}
       `}
-      onClick={!song ? () => onEdit(dateStr) : undefined}
+      onClick={!song && editable ? () => onEdit(dateStr) : undefined}
    >
       {song ? (
          <>
@@ -80,13 +80,25 @@ const CalendarCell = ({
                      <EditIcon />
                   </button>
                )}
+               {!editable && song.track_url && (
+                  <a
+                     href={song.track_url}
+                     target='_blank'
+                     rel='noreferrer'
+                     onClick={(e) => e.stopPropagation()}
+                     className='w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors'
+                     aria-label='Open on Deezer'
+                  >
+                     <LinkIcon />
+                  </a>
+               )}
             </div>
          </>
-      ) : (
+      ) : editable ? (
          <span className='absolute inset-0 flex items-center justify-center text-gray-600 group-hover:text-gray-400 text-sm font-medium transition-colors'>
             +
          </span>
-      )}
+      ) : null}
       <span
          className={`absolute top-1 left-1 text-xs font-bold leading-none
             ${song ? 'text-white drop-shadow' : isToday ? 'text-purple-400' : 'text-gray-500'}

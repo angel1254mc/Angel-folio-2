@@ -16,7 +16,7 @@ const random = (min, max) => {
  * @param {*} param0
  * @returns
  */
-function Header({ title, size = null, animateStyle = {}, interval = 3000 }) {
+function Header({ title, subtitle, size = null, animateStyle = {}, interval = 3000 }) {
    if (title.length > 25) size = '3rem';
    const ref = useRef();
    useEffect(() => {
@@ -31,9 +31,14 @@ function Header({ title, size = null, animateStyle = {}, interval = 3000 }) {
    }, []);
 
    return (
-      <animated.div ref={ref} style={animateStyle} className={styles.gradient}>
-         {title}
-      </animated.div>
+      <div>
+         <animated.div ref={ref} style={{ ...animateStyle, ...(subtitle ? { marginBottom: 0 } : {}) }} className={styles.gradient}>
+            {title}
+         </animated.div>
+         {subtitle && (
+            <p className='text-sm text-gray-400 mt-3 mb-5 font-light'>{subtitle}</p>
+         )}
+      </div>
    );
 }
 
