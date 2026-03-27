@@ -123,7 +123,8 @@ const useAudioPreview = () => {
       setPlaying(true);
       setPlayingUrl(previewUrl);
       setPlayingId(id ?? null);
-      fadeIn(audio).catch(() => {
+      fadeIn(audio).catch((err) => {
+         console.warn('[useAudioPreview] Playback failed:', err, 'URL:', previewUrl);
          clearFade();
          setPlaying(false);
          setPlayingUrl(null);
