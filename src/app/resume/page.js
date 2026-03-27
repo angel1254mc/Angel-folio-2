@@ -62,7 +62,7 @@ const index = ({}) => {
                               Herbert Wertheim College of Engineering
                            </p>
                            <p className='font-light text-sm sm:text-base'>
-                              <b className='text-bold'>GPA:</b> 3.82
+                              <b className='text-bold'>GPA:</b> 3.8/4.0
                            </p>
                         </div>
                      </div>
@@ -100,19 +100,10 @@ const index = ({}) => {
 
                            <ul className='ml-8 list-disc font-extralight sm:text-base text-sm mt-2'>
                               <li>
-                                 Led frontend development of ALTR&apos;s Unified
-                                 Policy project, extending Snowflake Masking
-                                 support to Databricks in close collaboration
-                                 with backend and platform teams.
-                              </li>
-                              <li>
-                                 Developed a novel web-signup flow utilizing AWS
-                                 WAF Captcha challenges. Collaborated with
-                                 members of the product team to track the signup
-                                 journey via Mixpanel events. Standardized
-                                 ALTR&apos;s Figma design system as an
-                                 extensible MaterialUI-based component library
-                                 for use across our various web components
+                                 Owned frontend development of ALTR&apos;s
+                                 Unified Policy project, extending Snowflake
+                                 Masking support to Databricks in close
+                                 collaboration with backend and platform teams.
                               </li>
                               <li>
                                  Standardized ALTR&apos;s Figma design system as
@@ -122,7 +113,7 @@ const index = ({}) => {
                               </li>
                               <li>
                                  Built performant infinite-scroll data tables
-                                 supporting 100k+ columns using memoization and
+                                 supporting 100k+ rows using memoization and
                                  table virtualization for fast filtering. This
                                  enabled frontend functionality to support
                                  ALTR&apos;s Databricks and Snowflake
@@ -134,6 +125,12 @@ const index = ({}) => {
                                  enrich Mixpanel events, giving the Product team
                                  insight into lambda latency patterns and
                                  informing product roadmap decisions.
+                              </li>
+                              <li>
+                                 Developed a novel web-signup flow utilizing AWS
+                                 WAF Captcha challenges. Collaborated with
+                                 members of the product team to track the signup
+                                 journey via Mixpanel events.
                               </li>
                            </ul>
                         </div>
@@ -154,51 +151,52 @@ const index = ({}) => {
                         </div>
                         <div className='flex flex-col gap-x-1'>
                            <h3 className='sm:text-lg text-base font-semibold'>
-                              Software Engineer Intern - Grafana Labs Inc
+                              Software Engineering Intern | Grafana Labs
                            </h3>
                            <p className='block md:hidden sm:text-base text-sm'>
-                              June 2023 - Aug. 2023
+                              June 2023 - August 2023
                            </p>
                            <p className='sm:text-base text-sm font-extralight italic'>
-                              Helped push the new Metrics Endpoint Integration,
-                              from scratch to production.
+                              Pushed the new Metrics Endpoint Integration, from
+                              scratch to production.
                            </p>
 
                            <ul className='ml-8 list-disc font-extralight sm:text-base text-sm mt-2'>
                               <li>
-                                 Helped bring to fruition a SaaS integration
-                                 that began as a Hackathon project.{' '}
+                                 Developed a high-demand SaaS integration that
+                                 started as a hackathon project. Wrote the
+                                 backend in Go, and a custom frontend using
+                                 React.
                               </li>
                               <li>
                                  Leveraged Jsonnet, Tanka, and K8s for
                                  configuring HPAs, DNS rules, and resource
-                                 limits to support the integration across 17
-                                 regions worldwide.
+                                 limits to support the SaaS integration across
+                                 17 regions worldwide.
                               </li>
                               <li>
                                  Independently implemented user-desired
                                  accessibility improvements across the
-                                 connections-console frontend.
+                                 cloud-onboarding frontend.
                               </li>
                               <li>
-                                 Asynchronously collaborated with colleagues
-                                 across multiple teams and timezones, making
-                                 contributions in all layers of development
-                                 (frontend, backend, and platform)
+                                 Collaborated with colleagues across multiple
+                                 teams and made contributions in all layers of
+                                 application development (backend, frontend, and
+                                 platform).
                               </li>
                               <li>
                                  Participated in a company-wide hackathon,
                                  developed a new cloud integration for importing
                                  NextJS Traces, Spans, and Metrics to Grafana
-                                 Cloud. Now owned by the OTEL team who is
-                                 pushing it to production.
+                                 Cloud.
                               </li>
                            </ul>
                         </div>
                      </div>
                      <div className='flex flex-col text-base font-semibold mt-4'>
                         <p className='text-right md:block hidden'>
-                           June 2023 - Aug. 2023
+                           June 2023 - August 2023
                         </p>
                      </div>
                   </div>
@@ -212,49 +210,47 @@ const index = ({}) => {
                         </div>
                         <div className='flex flex-col gap-x-1'>
                            <h3 className='sm:text-lg text-base font-semibold'>
-                              Associate Software Engineer - Emerging Tech LLC
+                              Fullstack Engineering Intern | Emerging Tech LLC
                            </h3>
                            <p className='block md:hidden sm:text-base text-sm'>
-                              May 2022 - May 2023
+                              May 2022 - June 2023, Sept 2023 - May 2024
                            </p>
                            <p className='sm:text-base text-sm font-extralight italic'>
-                              Provided Web Development expertise and led
-                              development of internal CRM systems.
+                              Provided Web Dev support and led development of
+                              internal CRM systems.
                            </p>
 
                            <ul className='ml-8 list-disc font-extralight text-sm sm:text-base mt-2'>
                               <li>
-                                 Leading development of an internal Gov.
-                                 Contracting Management System for real-time
-                                 proposal discovery, procurement, and
-                                 management.
+                                 Led architecture and development of internal
+                                 Gov Contracting System with Next.js, Flask, and
+                                 Firebase.
                               </li>
                               <li>
-                                 Created a scalable contract search microservice
-                                 that autonomously discovers over 100 actionable
-                                 government contracts every day and persists
-                                 concurrent information on over 11,000
-                                 government opportunities across several NAICS
-                                 codes.
+                                 Built microservice that discovers 100+ new
+                                 government contracts daily and indexes 11,000+
+                                 opportunities by NAICS code.
                               </li>
                               <li>
                                  Refactored and redesigned WordPress company
-                                 website. Increased Google Lighthouse Score to
-                                 90 across all key measurements.
+                                 website. Implemented optimized caching
+                                 strategies to reduce load times and increase
+                                 Google Lighthouse Score to 90 across all key
+                                 measurements.
                               </li>
                               <li>
                                  Worked as a consultant developing a website for
                                  another company, Gen Z Consulting LLC.
-                                 Delivered according to stakeholder’s needs and
-                                 requirements and achieved &gt;= 85 Google
-                                 Lighthouse score across all key measurements
+                                 Delivered according to stakeholder&apos;s needs
+                                 and requirements and achieved 100 Google
+                                 Lighthouse scores across all key measurements.
                               </li>
                            </ul>
                         </div>
                      </div>
                      <div className='flex flex-col text-base font-semibold mt-4'>
                         <p className='text-right md:block hidden'>
-                           May 2022 - May 2023
+                           May 2022 - June 2023, Sept 2023 - May 2024
                         </p>
                      </div>
                   </div>

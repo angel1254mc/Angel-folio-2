@@ -17,6 +17,9 @@ const SongTooltip = ({ song, x, y }) => (
          <div className='flex-1 min-w-0'>
             <p className='text-sm font-medium truncate'>{song.title}</p>
             <p className='text-xs text-gray-400 truncate'>{song.artist}</p>
+            {song.album && (
+               <p className='text-xs text-gray-500 truncate'>{song.album}</p>
+            )}
          </div>
       </div>
    </div>

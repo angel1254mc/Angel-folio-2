@@ -12,6 +12,7 @@ async function fetchPreviewUrl(id) {
    try {
       const res = await fetch(`${DEEZER_TRACK_URL}/${id}`, {
          signal: controller.signal,
+         next: { revalidate: 300 },
       });
       if (!res.ok) return null;
       const json = await res.json();

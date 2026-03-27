@@ -24,7 +24,7 @@ const IntroComponent = () => {
       config: { mass: 5, tension: 500, friction: 80 },
    });
 
-   const firstParagraph = `I'm Angel, a <Sheen>Junior Frontend Engineer</Sheen> at <Sheen>ALTR</Sheen> who recently graduated from <Sheen>UF</Sheen> this past May! I'm a passionate, results-driven software and web developer. My past work experience mainly consists of <Sheen>Web Dev</Sheen>, <Sheen>Systems Engineering</Sheen>, and <Sheen>UI Design.</Sheen>`;
+   const firstParagraph = `I'm Angel, a <Sheen>Frontend Engineer II</Sheen> at <Sheen>ALTR</Sheen> and a <Sheen>UF</Sheen> grad (Class of 2024). I'm a passionate, results-driven software and web developer. My past work experience mainly consists of <Sheen>Web Dev</Sheen>, <Sheen>Systems Engineering</Sheen>, and <Sheen>UI Design.</Sheen>`;
    const secondParagraph = `I love browsing <Sheen>GitHub</Sheen> in search of new <Sheen>open-source technologies</Sheen> to try out and learn. Lately I've been learning a lot about the AWS suite of tools and IaC tech like Terraform.`;
    const thirdParagraph = `I like to post about pretty much anything on my <Sheen>Blog</Sheen> every-so-often. In my free time I like to watch <Sheen>YouTube</Sheen>, play <Sheen>Video Games</Sheen>, and play <Sheen> Racquetball</Sheen>.`;
 

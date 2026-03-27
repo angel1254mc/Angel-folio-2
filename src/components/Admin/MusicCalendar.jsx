@@ -48,7 +48,8 @@ const MusicCalendar = ({ editable = true }) => {
       setLoading(true);
       try {
          const month = toYYYYMM(monthDate);
-         const res = await fetch(`/api/admin/music?month=${month}`);
+         const apiBase = editable ? '/api/admin/music' : '/api/music';
+         const res = await fetch(`${apiBase}?month=${month}`);
          const json = await res.json();
          if (id !== fetchIdRef.current) return;
          const map = {};
@@ -63,7 +64,7 @@ const MusicCalendar = ({ editable = true }) => {
       } finally {
          if (id === fetchIdRef.current) setLoading(false);
       }
-   }, [resolvePreviewUrls, clearCache, preload]);
+   }, [editable, resolvePreviewUrls, clearCache, preload]);
 
    useEffect(() => {
       fetchSongs(currentMonth);
@@ -194,7 +195,7 @@ const MusicCalendar = ({ editable = true }) => {
             />
          )}
 
-         {selectedDate && (
+         {editable && selectedDate && (
             <MusicSearchModal
                date={selectedDate}
                existingSong={songs[selectedDate] || null}

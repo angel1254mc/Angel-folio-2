@@ -50,13 +50,17 @@ const SongOfTheDayComponent = () => {
                   if (url) {
                      setSong((prev) => ({ ...prev, preview_url: url }));
                      preload(url);
+                  } else {
+                     console.warn('[SongOfTheDay] No preview URL returned from Deezer for id:', json.deezer_id, data);
                   }
-               } catch {
-                  // silent — play button won't appear
+               } catch (err) {
+                  console.warn('[SongOfTheDay] Preview resolution failed:', err);
                }
             } else if (json.preview_url) {
                // Legacy fallback for songs without deezer_id
                preload(json.preview_url);
+            } else {
+               console.warn('[SongOfTheDay] No deezer_id or preview_url — play unavailable');
             }
          })
          .catch((err) => console.error('SongOfTheDay fetch failed', err))
