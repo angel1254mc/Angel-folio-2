@@ -1,14 +1,21 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
-const supabase = createClient(
-   process.env.NEXT_PUBLIC_SUPABASE_URL,
-   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
 export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
+   // Client initialized per-request with cache: 'no-store' to prevent Next.js
+   // module-level caching from serving stale Supabase responses.
+   const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      {
+         global: {
+            fetch: (url, options = {}) =>
+               fetch(url, { ...options, cache: 'no-store' }),
+         },
+      }
+   );
    const { searchParams } = new URL(request.url);
    const month = searchParams.get('month'); // YYYY-MM
 
