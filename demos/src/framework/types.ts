@@ -43,8 +43,11 @@ export interface CalloutSpec {
 
 export interface AudioSpec {
    src: string;
-   startAt?: number;
+   at?: number;             // scene-relative frame when this clip begins
+   startAt?: number;        // offset into the media file to begin playback
+   durationInFrames?: number;
    volume?: number;
+   fadeInFrames?: number;
    fadeOutFrames?: number;
 }
 
@@ -53,6 +56,22 @@ export interface OutroSpec {
    fadeInFrames: number;
    holdFrames: number;
    fadeOutFrames: number;
+}
+
+export interface KeycapSpec {
+   at: number;
+   text: string;           // e.g. 'playmusic'
+   perKeyFrames: number;   // 7 at 60fps for 120ms per-key
+   position?: 'top-center' | 'bottom-center';
+}
+
+export interface BrandOutroSpec {
+   at: number;              // frame (scene-relative) when slide starts
+   slideFrames: number;     // 42 for ~700ms at 60fps
+   holdFrames: number;      // 180 for 3s tagline hold
+   fadeOutFrames: number;   // 36 for 600ms audio fade
+   brand: string;           // 'AngelFolio'
+   url: string;             // 'angellopez.dev'
 }
 
 export interface Scene {
@@ -64,7 +83,10 @@ export interface Scene {
    clicks?: ClickSpec[];
    callouts?: CalloutSpec[];
    audio?: AudioSpec;
+   audios?: AudioSpec[];    // multiple concurrent/sequential audio clips
    outro?: OutroSpec;
+   keycap?: KeycapSpec;
+   brandOutro?: BrandOutroSpec;
 }
 
 export interface DemoScript {
