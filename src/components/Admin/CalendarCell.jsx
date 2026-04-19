@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlayIcon, PauseIcon, EditIcon, LinkIcon } from '../icons/AudioIcons';
+import { PlayIcon, PauseIcon, EditIcon, LinkIcon, SpinnerIcon } from '../icons/AudioIcons';
 
 const handleImageLoad = (e) => {
    e.currentTarget.classList.remove('opacity-0', 'scale-95');
@@ -19,6 +19,8 @@ const CalendarCell = ({
    isToday,
    editable = true,
    isPlaying,
+   fullPlayMode = false,
+   loadingTrack = false,
    onEdit,
    onTogglePlay,
    onHover,
@@ -32,6 +34,7 @@ const CalendarCell = ({
       }
       onMouseLeave={song ? onHoverEnd : undefined}
       aria-label={`${dateStr}${song ? ` — ${song.title} by ${song.artist}` : ''}`}
+      data-demo-target={`day-${dateStr}`}
       className={`aspect-square relative rounded-md overflow-hidden border transition-all group
          ${isToday ? 'border-purple-500' : 'border-[#242424]'}
          ${song ? '' : `bg-[#101010] ${editable ? 'hover:bg-[#1a1a1a] cursor-pointer' : ''}`}
@@ -54,7 +57,7 @@ const CalendarCell = ({
                      : 'opacity-0 group-hover:opacity-100'
                }`}
             >
-               {song.preview_url && (
+               {song.preview_url && !fullPlayMode && (
                   <button
                      type='button'
                      onClick={(e) => {
@@ -80,7 +83,21 @@ const CalendarCell = ({
                      <EditIcon />
                   </button>
                )}
-               {!editable && song.track_url && (
+               {!editable && fullPlayMode && song.deezer_id && (
+                  <button
+                     type='button'
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        if (!loadingTrack) onTogglePlay(song, dateStr);
+                     }}
+                     className='w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors'
+                     aria-label={loadingTrack ? 'Loading...' : isPlaying ? 'Pause' : 'Play full track'}
+                     disabled={loadingTrack}
+                  >
+                     {loadingTrack ? <SpinnerIcon /> : isPlaying ? <PauseIcon /> : <PlayIcon />}
+                  </button>
+               )}
+               {!editable && !fullPlayMode && song.track_url && (
                   <a
                      href={song.track_url}
                      target='_blank'
