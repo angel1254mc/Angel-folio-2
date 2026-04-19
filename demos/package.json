@@ -1,0 +1,26 @@
+{
+  "name": "angel-folio-demos",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "record": "node scripts/record.mjs",
+    "render": "node scripts/render.mjs",
+    "build": "node scripts/build.mjs",
+    "studio": "remotion studio src/index.ts"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.220",
+    "@remotion/media-utils": "4.0.220",
+    "remotion": "4.0.220",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "playwright": "1.48.2",
+    "ffmpeg-static": "5.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/node": "20.11.0",
+    "typescript": "5.4.5"
+  }
+}

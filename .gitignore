@@ -36,3 +36,9 @@ yarn-error.log*
 
 # claude code
 .claude/settings.local.json
+
+# demo video framework build artifacts
+demos/node_modules/
+demos/recordings/
+demos/out/
+demos/public/recordings/
