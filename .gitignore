@@ -42,3 +42,6 @@ demos/node_modules/
 demos/recordings/
 demos/out/
 demos/public/recordings/
+
+# Superpowers brainstorm sessions
+.superpowers/
