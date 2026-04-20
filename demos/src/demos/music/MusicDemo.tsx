@@ -8,8 +8,10 @@ import { Cursor } from '../../framework/Cursor';
 import { ClickRipple } from '../../framework/ClickRipple';
 import { Callout } from '../../framework/Callout';
 import { Outro } from '../../framework/Outro';
+import { KeycapStack } from '../../framework/KeycapStack';
+import { BrandOutro } from '../../framework/BrandOutro';
 import { resolveCameraAt } from '../../framework/targets';
-import type { Scene } from '../../framework/types';
+import type { Scene, AudioSpec } from '../../framework/types';
 
 const FOOTAGE_X = 80;
 const FOOTAGE_Y = 56;
@@ -38,8 +40,10 @@ export const MusicDemo: React.FC = () => {
       ? resolveCameraAt(frame - scene.from, scene.camera, musicMeta)
       : { scale: 1, originX: 0.5, originY: 0.5 };
 
-   return (
-      <AbsoluteFill style={{ background: '#0a0a0c' }}>
+   const outroScene = script.scenes.find((s) => s.brandOutro);
+
+   const siteLayer = (
+      <>
          <BrowserChrome
             url={script.chrome.url}
             x={FOOTAGE_X}
@@ -56,15 +60,45 @@ export const MusicDemo: React.FC = () => {
             />
          </BrowserChrome>
 
-         {script.scenes.map((s) => (
+         {script.scenes
+            .filter((s) => !s.brandOutro)
+            .map((s) => (
+               <Sequence
+                  key={s.id}
+                  from={s.from}
+                  durationInFrames={s.duration}
+               >
+                  <SceneOverlays scene={s} camera={camera} />
+               </Sequence>
+            ))}
+      </>
+   );
+
+   return (
+      <AbsoluteFill style={{ background: '#0a0a0c' }}>
+         {outroScene?.brandOutro ? (
             <Sequence
-               key={s.id}
-               from={s.from}
-               durationInFrames={s.duration}
+               from={outroScene.from}
+               durationInFrames={outroScene.duration}
             >
-               <SceneOverlays scene={s} camera={camera} />
+               <BrandOutro
+                  at={outroScene.brandOutro.at}
+                  slideFrames={outroScene.brandOutro.slideFrames}
+                  holdFrames={outroScene.brandOutro.holdFrames}
+                  brand={outroScene.brandOutro.brand}
+                  url={outroScene.brandOutro.url}
+                  sceneFrom={outroScene.from}
+                  siteLayer={siteLayer}
+               />
             </Sequence>
-         ))}
+         ) : null}
+         {outroScene ? (
+            <Sequence from={0} durationInFrames={outroScene.from}>
+               {siteLayer}
+            </Sequence>
+         ) : (
+            siteLayer
+         )}
       </AbsoluteFill>
    );
 };
@@ -110,13 +144,50 @@ const SceneOverlays: React.FC<{
                sceneFrom={scene.from}
             />
          ))}
-         {scene.audio && (
-            <Audio
-               src={staticFile(scene.audio.src.replace(/^\//, ''))}
-               volume={scene.audio.volume ?? 1}
+         {scene.audio && <ScheduledAudio spec={scene.audio} sceneFrom={scene.from} />}
+         {scene.audios?.map((a, i) => (
+            <ScheduledAudio key={`${scene.id}-audio-${i}`} spec={a} sceneFrom={scene.from} />
+         ))}
+         {scene.keycap && (
+            <KeycapStack
+               at={scene.keycap.at}
+               text={scene.keycap.text}
+               perKeyFrames={scene.keycap.perKeyFrames}
+               position={scene.keycap.position}
+               sceneFrom={scene.from}
             />
          )}
          {scene.outro && <Outro {...scene.outro} sceneFrom={scene.from} />}
       </>
+   );
+};
+
+const ScheduledAudio: React.FC<{ spec: AudioSpec; sceneFrom: number }> = ({
+   spec,
+   sceneFrom,
+}) => {
+   const at = spec.at ?? 0;
+   const dur = spec.durationInFrames;
+   const frame = useCurrentFrame() - sceneFrom;
+   const inWindow = frame >= at && (dur == null || frame < at + dur);
+
+   const relative = frame - at;
+   const fadeIn = spec.fadeInFrames ?? 0;
+   const fadeOut = spec.fadeOutFrames ?? 0;
+   const base = spec.volume ?? 1;
+
+   let vol = base;
+   if (fadeIn > 0 && relative < fadeIn) {
+      vol = base * (relative / fadeIn);
+   }
+   if (dur != null && fadeOut > 0 && relative > dur - fadeOut) {
+      vol = base * Math.max(0, (dur - relative) / fadeOut);
+   }
+
+   if (!inWindow) return null;
+   return (
+      <Sequence from={at} durationInFrames={dur ?? 999999}>
+         <Audio src={staticFile(spec.src.replace(/^\//, ''))} volume={vol} />
+      </Sequence>
    );
 };
