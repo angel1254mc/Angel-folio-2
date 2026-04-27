@@ -6,69 +6,99 @@ import SongTooltip from './SongTooltip';
 import { WEEKDAYS, toYYYYMM, toYYYYMMDD } from './calendarUtils';
 import useAudioPreview from '../hooks/useAudioPreview';
 
-const MusicCalendar = ({ editable = true }) => {
-   const [currentMonth, setCurrentMonth] = useState(() => {
+const MusicCalendar = ({
+   editable = true,
+   fullPlayMode = false,
+   songsExternal,
+   currentMonthExternal,
+   setCurrentMonthExternal,
+   loadingExternal,
+   playingDateStr: playingDateStrProp,
+   isPlayingExternal,
+   loadingDateStr: loadingDateStrProp,
+   onCellPlay,
+}) => {
+   const useExternal = !editable && songsExternal !== undefined;
+
+   const [internalMonth, setInternalMonth] = useState(() => {
       const now = new Date();
       return new Date(now.getFullYear(), now.getMonth(), 1);
    });
-   const [songs, setSongs] = useState({});
+   const [internalSongs, setInternalSongs] = useState({});
    const [selectedDate, setSelectedDate] = useState(null);
-   const [loading, setLoading] = useState(false);
+   const [internalLoading, setInternalLoading] = useState(false);
    const [tooltip, setTooltip] = useState(null);
    const fetchIdRef = useRef(0);
-   const { preload, clearCache, toggle, playing, playingId } = useAudioPreview();
+   const { preload, clearCache, toggle, playing, playingId } =
+      useAudioPreview();
 
-   const resolvePreviewUrls = useCallback(async (songMap, id) => {
-      const toResolve = Object.values(songMap).filter((s) => s.deezer_id);
-      if (toResolve.length === 0) return;
-      try {
-         const ids = toResolve.map((s) => s.deezer_id).join(',');
-         const res = await fetch(`/api/music/preview?ids=${ids}`);
-         const json = await res.json();
-         if (id !== fetchIdRef.current) return;
-         setSongs((prev) => {
-            const next = { ...prev };
-            for (const s of toResolve) {
-               const url = json.previews?.[s.deezer_id];
-               if (url && next[s.date]) {
-                  next[s.date] = { ...next[s.date], preview_url: url };
-                  preload(url);
+   const songs = useExternal ? songsExternal : internalSongs;
+   const setSongs = useExternal ? undefined : setInternalSongs;
+   const currentMonth = useExternal ? currentMonthExternal : internalMonth;
+   const setCurrentMonth = useExternal
+      ? setCurrentMonthExternal
+      : setInternalMonth;
+   const loading = useExternal ? loadingExternal : internalLoading;
+
+   const resolvePreviewUrls = useCallback(
+      async (songMap, id) => {
+         if (useExternal) return;
+         const toResolve = Object.values(songMap).filter((s) => s.deezer_id);
+         if (toResolve.length === 0) return;
+         try {
+            const ids = toResolve.map((s) => s.deezer_id).join(',');
+            const res = await fetch(`/api/music/preview?ids=${ids}`);
+            const json = await res.json();
+            if (id !== fetchIdRef.current) return;
+            setInternalSongs((prev) => {
+               const next = { ...prev };
+               for (const s of toResolve) {
+                  const url = json.previews?.[s.deezer_id];
+                  if (url && next[s.date]) {
+                     next[s.date] = { ...next[s.date], preview_url: url };
+                     preload(url);
+                  }
                }
-            }
-            return next;
-         });
-      } catch {
-         // silent — play buttons just won't appear for unresolved songs
-      }
-   }, [preload]);
+               return next;
+            });
+         } catch {
+            // silent
+         }
+      },
+      [useExternal, preload]
+   );
 
-   const fetchSongs = useCallback(async (monthDate) => {
-      const id = ++fetchIdRef.current;
-      clearCache();
-      setLoading(true);
-      try {
-         const month = toYYYYMM(monthDate);
-         const apiBase = editable ? '/api/admin/music' : '/api/music';
-         const res = await fetch(`${apiBase}?month=${month}`);
-         const json = await res.json();
-         if (id !== fetchIdRef.current) return;
-         const map = {};
-         (json.songs || []).forEach((s) => {
-            map[s.date] = s;
-            // Legacy fallback: preload stored preview_url if no deezer_id
-            if (!s.deezer_id && s.preview_url) preload(s.preview_url);
-         });
-         setSongs(map);
-         // Resolve fresh preview URLs for songs with deezer_id
-         resolvePreviewUrls(map, id);
-      } finally {
-         if (id === fetchIdRef.current) setLoading(false);
-      }
-   }, [editable, resolvePreviewUrls, clearCache, preload]);
+   const fetchSongs = useCallback(
+      async (monthDate) => {
+         if (useExternal) return;
+         const id = ++fetchIdRef.current;
+         clearCache();
+         setInternalLoading(true);
+         try {
+            const month = toYYYYMM(monthDate);
+            const apiBase = editable ? '/api/admin/music' : '/api/music';
+            const res = await fetch(`${apiBase}?month=${month}`);
+            const json = await res.json();
+            if (id !== fetchIdRef.current) return;
+            const map = {};
+            (json.songs || []).forEach((s) => {
+               map[s.date] = s;
+               if (!s.deezer_id && s.preview_url) preload(s.preview_url);
+            });
+            setInternalSongs(map);
+            resolvePreviewUrls(map, id);
+         } finally {
+            if (id === fetchIdRef.current) setInternalLoading(false);
+         }
+      },
+      [useExternal, editable, resolvePreviewUrls, clearCache, preload]
+   );
 
    useEffect(() => {
-      fetchSongs(currentMonth);
-   }, [currentMonth, fetchSongs]);
+      if (!useExternal) {
+         fetchSongs(currentMonth);
+      }
+   }, [currentMonth, fetchSongs, useExternal]);
 
    const prevMonth = () => {
       setCurrentMonth((m) => new Date(m.getFullYear(), m.getMonth() - 1, 1));
@@ -100,18 +130,23 @@ const MusicCalendar = ({ editable = true }) => {
    for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
    const handleSave = async (savedSong) => {
+      if (!setSongs) return;
       setSongs((prev) => ({ ...prev, [savedSong.date]: savedSong }));
       setSelectedDate(null);
-      // Resolve preview URL for the newly saved song
       if (savedSong.deezer_id) {
          try {
-            const res = await fetch(`/api/music/preview?ids=${savedSong.deezer_id}`);
+            const res = await fetch(
+               `/api/music/preview?ids=${savedSong.deezer_id}`
+            );
             const json = await res.json();
             const url = json.previews?.[savedSong.deezer_id];
             if (url) {
                setSongs((prev) => ({
                   ...prev,
-                  [savedSong.date]: { ...prev[savedSong.date], preview_url: url },
+                  [savedSong.date]: {
+                     ...prev[savedSong.date],
+                     preview_url: url,
+                  },
                }));
                preload(url);
             }
@@ -121,6 +156,31 @@ const MusicCalendar = ({ editable = true }) => {
       }
    };
 
+   const getCellPlayState = (dateStr) => {
+      if (useExternal && fullPlayMode) {
+         return {
+            isPlaying: isPlayingExternal && playingDateStrProp === dateStr,
+            loadingTrack: loadingDateStrProp === dateStr,
+         };
+      }
+      return {
+         isPlaying: playing && playingId === dateStr,
+         loadingTrack: false,
+      };
+   };
+
+   const handleTogglePlay = useCallback(
+      (songOrUrl, dateStr) => {
+         if (useExternal && fullPlayMode && onCellPlay) {
+            const song = typeof songOrUrl === 'string' ? songs[dateStr] : songOrUrl;
+            onCellPlay(song, dateStr);
+         } else {
+            toggle(songOrUrl, dateStr);
+         }
+      },
+      [useExternal, fullPlayMode, onCellPlay, songs, toggle]
+   );
+
    return (
       <div className='w-full max-w-[50rem] 2xl:max-w-[64rem] px-6 pb-8'>
          {/* Month navigation */}
@@ -129,7 +189,7 @@ const MusicCalendar = ({ editable = true }) => {
                onClick={prevMonth}
                className='px-3 py-1 rounded bg-[#1a1a1a] text-white hover:bg-[#242424] transition-colors'
             >
-               ←
+               &larr;
             </button>
             <h2 className='text-xl font-semibold'>
                {monthLabel}
@@ -143,7 +203,7 @@ const MusicCalendar = ({ editable = true }) => {
                onClick={nextMonth}
                className='px-3 py-1 rounded bg-[#1a1a1a] text-white hover:bg-[#242424] transition-colors'
             >
-               →
+               &rarr;
             </button>
          </div>
 
@@ -169,6 +229,8 @@ const MusicCalendar = ({ editable = true }) => {
                }
                const dateStr = toYYYYMMDD(year, month, day);
                const song = songs[dateStr];
+               const { isPlaying: cellPlaying, loadingTrack } =
+                  getCellPlayState(dateStr);
                return (
                   <CalendarCell
                      key={dateStr}
@@ -177,9 +239,11 @@ const MusicCalendar = ({ editable = true }) => {
                      song={song}
                      isToday={dateStr === todayStr}
                      editable={editable}
-                     isPlaying={playing && playingId === dateStr}
+                     isPlaying={cellPlaying}
+                     fullPlayMode={fullPlayMode}
+                     loadingTrack={loadingTrack}
                      onEdit={setSelectedDate}
-                     onTogglePlay={toggle}
+                     onTogglePlay={handleTogglePlay}
                      onHover={setTooltip}
                      onHoverEnd={() => setTooltip(null)}
                   />
@@ -188,11 +252,7 @@ const MusicCalendar = ({ editable = true }) => {
          </div>
 
          {tooltip && (
-            <SongTooltip
-               song={tooltip.song}
-               x={tooltip.x}
-               y={tooltip.y}
-            />
+            <SongTooltip song={tooltip.song} x={tooltip.x} y={tooltip.y} />
          )}
 
          {editable && selectedDate && (

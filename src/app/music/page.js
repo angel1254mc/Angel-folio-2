@@ -3,7 +3,7 @@ import React from 'react';
 import Footer from '@/components/Footer/Footer.js';
 import Header from '@/components/Header/Header.js';
 import Navbar from '@/components/NavBar/Navbar';
-import MusicCalendar from '@/components/Admin/MusicCalendar';
+import MusicPageClient from '@/components/MusicPageClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,7 +36,7 @@ const MusicPage = () => {
                <Navbar />
                <Header title={'Music'} subtitle="I don't make music, this is just what I've been listening to recently." />
             </div>
-            <MusicCalendar editable={false} />
+            <MusicPageClient />
             <Footer />
          </main>
       </>
