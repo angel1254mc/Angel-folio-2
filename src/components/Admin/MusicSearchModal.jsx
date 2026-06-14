@@ -174,12 +174,14 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose, onDelete }) => 
    return (
       <div
          className='fixed inset-0 z-50 flex items-center justify-center bg-black/70'
-         onClick={onClose}
+         onMouseDown={(e) => {
+            // Close only on a deliberate press that starts on the backdrop —
+            // not when a drag (e.g. scrubbing the waveform) is released outside
+            // the modal, which would otherwise fire a click on this backdrop.
+            if (e.target === e.currentTarget) onClose();
+         }}
       >
-         <div
-            className='bg-[#151515] rounded-xl w-full max-w-lg mx-4 p-5 flex flex-col gap-4 h-[80vh]'
-            onClick={(e) => e.stopPropagation()}
-         >
+         <div className='bg-[#151515] rounded-xl w-full max-w-lg mx-4 p-5 flex flex-col gap-4 h-[80vh]'>
             {/* Header */}
             <div className='flex items-center justify-between'>
                <h3 className='text-lg font-semibold'>
