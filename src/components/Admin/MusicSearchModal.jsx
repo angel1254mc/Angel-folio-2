@@ -2,9 +2,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import YouTubeFlow from './YouTubeFlow';
 
-const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
+const MusicSearchModal = ({ date, existingSong, onSave, onClose, onDelete }) => {
    const [songQuery, setSongQuery] = useState('');
    const [source, setSource] = useState('deezer'); // 'deezer' | 'youtube'
+   const [confirmingDelete, setConfirmingDelete] = useState(false);
+   const [deleting, setDeleting] = useState(false);
+   const [deleteError, setDeleteError] = useState(null);
    const [artistQuery, setArtistQuery] = useState('');
    const [artistSuggestions, setArtistSuggestions] = useState([]);
    const [selectedArtist, setSelectedArtist] = useState('');
@@ -147,6 +150,27 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
       }
    };
 
+   const handleRemove = async () => {
+      setDeleting(true);
+      setDeleteError(null);
+      try {
+         const res = await fetch(
+            `/api/admin/music?date=${encodeURIComponent(date)}`,
+            { method: 'DELETE' }
+         );
+         const json = await res.json().catch(() => ({}));
+         if (!res.ok) {
+            setDeleteError(json.error || 'Failed to remove song.');
+            return;
+         }
+         onDelete(date);
+      } catch {
+         setDeleteError('Network error while removing song.');
+      } finally {
+         setDeleting(false);
+      }
+   };
+
    return (
       <div
          className='fixed inset-0 z-50 flex items-center justify-center bg-black/70'
@@ -202,23 +226,79 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose }) => {
 
             {/* Existing pick */}
             {existingSong && (
-               <div className='flex items-center gap-3 p-3 rounded-lg bg-[#1a1a1a] border border-purple-500/40'>
-                  <img
-                     src={existingSong.artwork_url}
-                     alt={existingSong.title}
-                     className='w-12 h-12 rounded object-cover flex-shrink-0'
-                  />
-                  <div className='flex-1 min-w-0'>
-                     <p className='text-sm font-medium truncate'>
-                        {existingSong.title}
-                     </p>
-                     <p className='text-xs text-gray-400 truncate'>
-                        {existingSong.artist}
-                     </p>
+               <div className='flex flex-col gap-2 p-3 rounded-lg bg-[#1a1a1a] border border-purple-500/40'>
+                  <div className='flex items-center gap-3'>
+                     <img
+                        src={existingSong.artwork_url}
+                        alt={existingSong.title}
+                        className='w-12 h-12 rounded object-cover flex-shrink-0'
+                     />
+                     <div className='flex-1 min-w-0'>
+                        <p className='text-sm font-medium truncate'>
+                           {existingSong.title}
+                        </p>
+                        <p className='text-xs text-gray-400 truncate'>
+                           {existingSong.artist}
+                        </p>
+                     </div>
+                     {!confirmingDelete && (
+                        <button
+                           type='button'
+                           onClick={() => {
+                              setDeleteError(null);
+                              setConfirmingDelete(true);
+                           }}
+                           className='flex-shrink-0 p-1 text-gray-400 hover:text-red-400 transition-colors'
+                           aria-label='Remove song'
+                           title='Remove song'
+                        >
+                           <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              className='w-4 h-4'
+                              fill='none'
+                              viewBox='0 0 24 24'
+                              stroke='currentColor'
+                              strokeWidth={2}
+                           >
+                              <path
+                                 strokeLinecap='round'
+                                 strokeLinejoin='round'
+                                 d='M6 7h12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-7 0v12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V7'
+                              />
+                           </svg>
+                        </button>
+                     )}
                   </div>
-                  <span className='text-xs text-purple-400 flex-shrink-0'>
-                     Current pick
-                  </span>
+
+                  {confirmingDelete && (
+                     <div className='flex items-center justify-between gap-2 pt-1'>
+                        <span className='text-xs text-gray-300'>
+                           Remove this song? This deletes the saved snippet.
+                        </span>
+                        <div className='flex gap-2 flex-shrink-0'>
+                           <button
+                              type='button'
+                              onClick={() => setConfirmingDelete(false)}
+                              disabled={deleting}
+                              className='text-xs px-2 py-1 rounded bg-[#242424] text-gray-300 hover:text-white disabled:opacity-50'
+                           >
+                              Cancel
+                           </button>
+                           <button
+                              type='button'
+                              onClick={handleRemove}
+                              disabled={deleting}
+                              className='text-xs px-2 py-1 rounded bg-red-600 hover:bg-red-500 text-white disabled:opacity-50'
+                           >
+                              {deleting ? 'Removing…' : 'Remove'}
+                           </button>
+                        </div>
+                     </div>
+                  )}
+
+                  {deleteError && (
+                     <p className='text-xs text-red-400'>{deleteError}</p>
+                  )}
                </div>
             )}
 
