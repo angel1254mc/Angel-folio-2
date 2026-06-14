@@ -45,10 +45,15 @@ export async function GET(request) {
       return NextResponse.json({ results: [] });
    }
 
-   // Build scoped query
+   // Build query. `scope=all` runs a free-form, unscoped search (used by the
+   // YouTube enrichment picker, where the query mixes artist + title);
+   // otherwise scope to the artist/track fields.
    const offset = Math.max(0, parseInt(searchParams.get('offset') || '0', 10) || 0);
+   const scope = searchParams.get('scope');
    let term;
-   if (q && artist) {
+   if (q && scope === 'all') {
+      term = q;
+   } else if (q && artist) {
       term = `artist:"${artist}" track:"${q}"`;
    } else if (q) {
       term = `track:"${q}"`;

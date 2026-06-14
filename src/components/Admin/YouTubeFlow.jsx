@@ -1,7 +1,9 @@
 'use client';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import SnippetPicker from './SnippetPicker';
-import { parseYouTubeTitle, enrichFromDeezer } from './ytMetadata';
+import SearchStage from './youtube/SearchStage';
+import MetadataStage from './youtube/MetadataStage';
+import { parseYouTubeTitle } from './ytMetadata';
 
 const YouTubeFlow = ({ date, onSave }) => {
    // stage: 'search' | 'preparing' | 'picking' | 'metadata'
@@ -22,7 +24,6 @@ const YouTubeFlow = ({ date, onSave }) => {
       album: '',
       artwork_url: '',
    });
-   const [enriching, setEnriching] = useState(false);
    const [saving, setSaving] = useState(false);
 
    const debounceRef = useRef(null);
@@ -37,9 +38,8 @@ const YouTubeFlow = ({ date, onSave }) => {
       setSearching(true);
       setError(null);
       try {
-         const res = await fetch(
-            `/api/admin/music/yt/search?q=${encodeURIComponent(q)}`
-         );
+         const params = new URLSearchParams({ q });
+         const res = await fetch(`/api/admin/music/yt/search?${params}`);
          const json = await res.json().catch(() => ({}));
          if (id !== reqIdRef.current) return;
          if (!res.ok) {
@@ -127,29 +127,6 @@ const YouTubeFlow = ({ date, onSave }) => {
       }
    };
 
-   const enrich = async () => {
-      setEnriching(true);
-      setError(null);
-      try {
-         const found = await enrichFromDeezer({
-            title: meta.title,
-            artist: meta.artist,
-         });
-         if (found) {
-            setMeta((m) => ({
-               title: found.title || m.title,
-               artist: found.artist || m.artist,
-               album: found.album || m.album,
-               artwork_url: found.artwork_url || m.artwork_url,
-            }));
-         } else {
-            setError('No Deezer match found — keeping current details.');
-         }
-      } finally {
-         setEnriching(false);
-      }
-   };
-
    const save = async () => {
       if (!snippet) return;
       setSaving(true);
@@ -186,63 +163,34 @@ const YouTubeFlow = ({ date, onSave }) => {
       }
    };
 
-   const setMetaField = (field) => (e) =>
-      setMeta((m) => ({ ...m, [field]: e.target.value }));
+   const applyMatch = (match) =>
+      setMeta((m) => ({
+         title: match.title || m.title,
+         artist: match.artist || m.artist,
+         album: match.album || m.album,
+         artwork_url: match.artwork_url || m.artwork_url,
+      }));
 
    return (
       <div className='flex flex-col gap-3 flex-1 min-h-0'>
          {error && <p className='text-sm text-red-400 text-center'>{error}</p>}
 
          {stage === 'search' && (
-            <>
-               <input
-                  type='text'
-                  placeholder='Search YouTube…'
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  className='w-full bg-[#1a1a1a] border border-[#303030] rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-purple-500 transition-colors'
-                  autoFocus
-               />
-               <div className='overflow-y-auto flex-1 min-h-0 flex flex-col gap-2'>
-                  {searching && (
-                     <p className='text-center text-gray-500 text-sm py-4'>
-                        Searching…
-                     </p>
-                  )}
-                  {!searching && results.length === 0 && query.trim() && (
-                     <p className='text-center text-gray-500 text-sm py-4'>
-                        No results found.
-                     </p>
-                  )}
-                  {results.map((r) => (
-                     <button
-                        key={r.videoId}
-                        onClick={() => pick(r)}
-                        className='flex items-center gap-3 p-2 rounded-lg bg-[#1a1a1a] hover:bg-[#242424] transition-colors text-left'
-                     >
-                        <img
-                           src={r.thumbnail}
-                           alt={r.title}
-                           className='w-16 h-12 rounded object-cover flex-shrink-0'
-                        />
-                        <div className='flex-1 min-w-0'>
-                           <p className='text-sm font-medium truncate'>
-                              {r.title}
-                           </p>
-                           <p className='text-xs text-gray-500 truncate'>
-                              {r.channel}
-                           </p>
-                        </div>
-                     </button>
-                  ))}
-               </div>
-            </>
+            <SearchStage
+               query={query}
+               onQueryChange={setQuery}
+               searching={searching}
+               results={results}
+               onPick={pick}
+            />
          )}
 
          {stage === 'preparing' && (
             <div className='flex-1 flex flex-col items-center justify-center gap-3 text-gray-400'>
                <div className='w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin' />
-               <p className='text-sm'>Downloading audio… (waking up service if asleep)</p>
+               <p className='text-sm'>
+                  Downloading audio… (waking up service if asleep)
+               </p>
             </div>
          )}
 
@@ -260,76 +208,16 @@ const YouTubeFlow = ({ date, onSave }) => {
          )}
 
          {stage === 'metadata' && (
-            <div className='flex flex-col gap-3 overflow-y-auto flex-1 min-h-0'>
-               <div className='flex items-center gap-3'>
-                  {meta.artwork_url && (
-                     <img
-                        src={meta.artwork_url}
-                        alt={meta.title}
-                        className='w-14 h-14 rounded object-cover flex-shrink-0'
-                     />
-                  )}
-                  <p className='text-xs text-purple-400'>
-                     15s snippet ready · confirm the details
-                  </p>
-               </div>
-
-               <label className='text-xs text-gray-400'>
-                  Title
-                  <input
-                     type='text'
-                     value={meta.title}
-                     onChange={setMetaField('title')}
-                     className='mt-1 w-full bg-[#1a1a1a] border border-[#303030] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500'
-                  />
-               </label>
-               <label className='text-xs text-gray-400'>
-                  Artist
-                  <input
-                     type='text'
-                     value={meta.artist}
-                     onChange={setMetaField('artist')}
-                     className='mt-1 w-full bg-[#1a1a1a] border border-[#303030] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500'
-                  />
-               </label>
-               <label className='text-xs text-gray-400'>
-                  Album (optional)
-                  <input
-                     type='text'
-                     value={meta.album}
-                     onChange={setMetaField('album')}
-                     className='mt-1 w-full bg-[#1a1a1a] border border-[#303030] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500'
-                  />
-               </label>
-               <label className='text-xs text-gray-400'>
-                  Artwork URL
-                  <input
-                     type='text'
-                     value={meta.artwork_url}
-                     onChange={setMetaField('artwork_url')}
-                     className='mt-1 w-full bg-[#1a1a1a] border border-[#303030] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500'
-                  />
-               </label>
-
-               <div className='flex gap-2 pt-1'>
-                  <button
-                     type='button'
-                     onClick={enrich}
-                     disabled={enriching}
-                     className='px-4 py-2 rounded-lg bg-[#1a1a1a] border border-[#303030] text-sm text-gray-300 hover:text-white disabled:opacity-50'
-                  >
-                     {enriching ? 'Enriching…' : 'Enrich via Deezer'}
-                  </button>
-                  <button
-                     type='button'
-                     onClick={save}
-                     disabled={saving || !meta.title || !meta.artist}
-                     className='flex-1 py-2 rounded-lg bg-purple-500 hover:bg-purple-400 disabled:opacity-50 text-white font-semibold text-sm'
-                  >
-                     {saving ? 'Saving…' : 'Save song of the day'}
-                  </button>
-               </div>
-            </div>
+            <MetadataStage
+               meta={meta}
+               onChangeField={(field, value) =>
+                  setMeta((m) => ({ ...m, [field]: value }))
+               }
+               onApplyMatch={applyMatch}
+               defaultQuery={`${meta.artist} ${meta.title}`.trim()}
+               saving={saving}
+               onSave={save}
+            />
          )}
       </div>
    );

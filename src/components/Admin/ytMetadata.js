@@ -23,21 +23,14 @@ export function parseYouTubeTitle(rawTitle, channel = '') {
    return { artist, title: t };
 }
 
-// Look up clean metadata via the existing Deezer search proxy.
-// Returns the top match or null.
-export async function enrichFromDeezer({ title, artist }) {
-   const params = new URLSearchParams();
-   if (title) params.set('q', title);
-   if (artist) params.set('artist', artist);
+// Free-form Deezer search for the enrichment picker. Returns the results list
+// ([{ id, title, artist, album, artwork_url, ... }]) so the user can pick a match.
+export async function searchDeezer(query) {
+   const q = (query || '').trim();
+   if (!q) return [];
+   const params = new URLSearchParams({ q, scope: 'all' });
    const res = await fetch(`/api/admin/music/search?${params}`);
-   if (!res.ok) return null;
+   if (!res.ok) return [];
    const json = await res.json().catch(() => ({}));
-   const top = (json.results || [])[0];
-   if (!top) return null;
-   return {
-      title: top.title,
-      artist: top.artist,
-      album: top.album,
-      artwork_url: top.artwork_url,
-   };
+   return json.results || [];
 }
