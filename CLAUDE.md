@@ -26,7 +26,7 @@ NEXT_PUBLIC_FARO_URL                         # Grafana Faro collector URL
 LOKI_URL / LOKI_INSTANCE_ID / LOKI_AUTH_TOKEN # Grafana Loki logging
 ANGEL_ADMIN_EMAIL                            # Admin login email
 LOG_LEVEL                                    # DEBUG | INFO | WARN | ERROR | FATAL
-MUSIC_DL_URL                                 # Base URL of the music-download-service
+MUSIC_DL_SERVICE_URL                         # Base URL of the music-download-service
 MUSIC_DL_API_KEY                             # Bearer token for the music-download-service (matches its CONVERT_API_KEY)
 ```
 
