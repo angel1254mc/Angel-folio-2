@@ -87,7 +87,7 @@ const CalendarCell = ({
                      rel='noreferrer'
                      onClick={(e) => e.stopPropagation()}
                      className='w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors'
-                     aria-label='Open on Deezer'
+                     aria-label='Open original'
                   >
                      <LinkIcon />
                   </a>

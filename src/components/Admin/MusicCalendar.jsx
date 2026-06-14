@@ -19,7 +19,9 @@ const MusicCalendar = ({ editable = true }) => {
    const { preload, clearCache, toggle, playing, playingId } = useAudioPreview();
 
    const resolvePreviewUrls = useCallback(async (songMap, id) => {
-      const toResolve = Object.values(songMap).filter((s) => s.deezer_id);
+      const toResolve = Object.values(songMap).filter(
+         (s) => s.deezer_id && !s.snippet_url
+      );
       if (toResolve.length === 0) return;
       try {
          const ids = toResolve.map((s) => s.deezer_id).join(',');
@@ -54,9 +56,15 @@ const MusicCalendar = ({ editable = true }) => {
          if (id !== fetchIdRef.current) return;
          const map = {};
          (json.songs || []).forEach((s) => {
-            map[s.date] = s;
-            // Legacy fallback: preload stored preview_url if no deezer_id
-            if (!s.deezer_id && s.preview_url) preload(s.preview_url);
+            if (s.snippet_url) {
+               // YouTube snippet: play the stored clip directly.
+               map[s.date] = { ...s, preview_url: s.snippet_url };
+               preload(s.snippet_url);
+            } else {
+               map[s.date] = s;
+               // Legacy fallback: preload stored preview_url if no deezer_id
+               if (!s.deezer_id && s.preview_url) preload(s.preview_url);
+            }
          });
          setSongs(map);
          // Resolve fresh preview URLs for songs with deezer_id
@@ -100,18 +108,35 @@ const MusicCalendar = ({ editable = true }) => {
    for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
    const handleSave = async (savedSong) => {
-      setSongs((prev) => ({ ...prev, [savedSong.date]: savedSong }));
       setSelectedDate(null);
-      // Resolve preview URL for the newly saved song
+      if (savedSong.snippet_url) {
+         // YouTube snippet: play the stored clip directly.
+         setSongs((prev) => ({
+            ...prev,
+            [savedSong.date]: {
+               ...savedSong,
+               preview_url: savedSong.snippet_url,
+            },
+         }));
+         preload(savedSong.snippet_url);
+         return;
+      }
+      setSongs((prev) => ({ ...prev, [savedSong.date]: savedSong }));
+      // Resolve preview URL for the newly saved Deezer song
       if (savedSong.deezer_id) {
          try {
-            const res = await fetch(`/api/music/preview?ids=${savedSong.deezer_id}`);
+            const res = await fetch(
+               `/api/music/preview?ids=${savedSong.deezer_id}`
+            );
             const json = await res.json();
             const url = json.previews?.[savedSong.deezer_id];
             if (url) {
                setSongs((prev) => ({
                   ...prev,
-                  [savedSong.date]: { ...prev[savedSong.date], preview_url: url },
+                  [savedSong.date]: {
+                     ...prev[savedSong.date],
+                     preview_url: url,
+                  },
                }));
                preload(url);
             }
