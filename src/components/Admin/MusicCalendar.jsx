@@ -146,6 +146,15 @@ const MusicCalendar = ({ editable = true }) => {
       }
    };
 
+   const handleDelete = (date) => {
+      setSongs((prev) => {
+         const next = { ...prev };
+         delete next[date];
+         return next;
+      });
+      setSelectedDate(null);
+   };
+
    return (
       <div className='w-full max-w-[50rem] 2xl:max-w-[64rem] px-6 pb-8'>
          {/* Month navigation */}
@@ -226,6 +235,7 @@ const MusicCalendar = ({ editable = true }) => {
                existingSong={songs[selectedDate] || null}
                onSave={handleSave}
                onClose={() => setSelectedDate(null)}
+               onDelete={handleDelete}
             />
          )}
       </div>
