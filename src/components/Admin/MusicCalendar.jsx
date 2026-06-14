@@ -62,7 +62,7 @@ const MusicCalendar = ({ editable = true }) => {
                preload(s.snippet_url);
             } else {
                map[s.date] = s;
-               // Legacy fallback: preload stored preview_url if no deezer_id
+               // Non-Deezer song with a stored preview_url — preload it directly
                if (!s.deezer_id && s.preview_url) preload(s.preview_url);
             }
          });

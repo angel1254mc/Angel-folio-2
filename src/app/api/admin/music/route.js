@@ -155,7 +155,11 @@ export async function DELETE(request) {
       .maybeSingle();
 
    if (fetchErr) {
-      return NextResponse.json({ error: fetchErr.message }, { status: 500 });
+      console.error('[admin/music DELETE] row lookup failed:', fetchErr);
+      return NextResponse.json(
+         { error: 'Internal server error' },
+         { status: 500 }
+      );
    }
 
    // Nothing to clear — idempotent success.
@@ -187,7 +191,11 @@ export async function DELETE(request) {
       .eq('date', date);
 
    if (delErr) {
-      return NextResponse.json({ error: delErr.message }, { status: 500 });
+      console.error('[admin/music DELETE] row delete failed:', delErr);
+      return NextResponse.json(
+         { error: 'Internal server error' },
+         { status: 500 }
+      );
    }
 
    return NextResponse.json(warning ? { ok: true, warning } : { ok: true });

@@ -8,7 +8,7 @@ const BARS_PER_SEC = 6;
 
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-function fmt(s) {
+function fmtTime(s) {
    s = Math.max(0, Math.round(s || 0));
    const m = Math.floor(s / 60);
    const r = s % 60;
@@ -25,8 +25,8 @@ const SnippetPicker = ({
    onConfirm,
    onBack,
 }) => {
-   // Resolution for the zoomed waveform — finer than the old 64 bars.
-   // Derived from the prepared durationSec so it's known before decode.
+   // Number of waveform bars, scaled to track length (from the prepared
+   // durationSec so it's known before the audio decodes).
    const barCount = useMemo(
       () => clamp(Math.round((durationSec || 60) * BARS_PER_SEC), 64, 2000),
       [durationSec]
@@ -245,7 +245,7 @@ const SnippetPicker = ({
          {/* Readout */}
          <div className='text-center text-xs text-gray-300'>
             <span className='tabular-nums'>
-               {fmt(start)} → {fmt(start + clipLen)}
+               {fmtTime(start)} → {fmtTime(start + clipLen)}
             </span>{' '}
             · {Math.round(clipLen)}s
          </div>
