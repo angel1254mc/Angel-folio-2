@@ -24,14 +24,24 @@ export async function POST(request) {
          body: JSON.stringify({ videoId }),
       });
    } catch (err) {
-      return NextResponse.json({ error: err.message }, { status: 500 });
+      console.error(
+         '[yt/prepare] upstream fetch threw:',
+         err?.message,
+         err?.cause?.code || err?.cause || ''
+      );
+      return NextResponse.json(
+         { error: 'Failed to prepare audio' },
+         { status: 500 }
+      );
    }
 
    const json = await res.json().catch(() => ({}));
    if (!res.ok) {
+      // Non-OK from our own service → surface 500, not the upstream status.
+      console.error('[yt/prepare] upstream non-OK', res.status, json);
       return NextResponse.json(
-         { error: json.error || 'Failed to prepare audio' },
-         { status: res.status }
+         { error: 'Failed to prepare audio' },
+         { status: 500 }
       );
    }
    return NextResponse.json(json);

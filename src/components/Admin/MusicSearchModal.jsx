@@ -80,9 +80,8 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose, onDelete }) => 
          return;
       }
       const id = ++artistReqIdRef.current;
-      const res = await fetch(
-         `/api/admin/music/search?mode=artists&q=${encodeURIComponent(q)}`
-      );
+      const params = new URLSearchParams({ mode: 'artists', q });
+      const res = await fetch(`/api/admin/music/search?${params}`);
       const json = await res.json();
       if (id !== artistReqIdRef.current) return; // stale response
       setArtistSuggestions(json.artists || []);

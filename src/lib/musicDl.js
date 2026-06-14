@@ -11,13 +11,27 @@ function musicDlConfig() {
    return { baseUrl: baseUrl.replace(/\/$/, ''), apiKey };
 }
 
+// `init.params` (a plain object) is serialized + URL-encoded onto the query
+// string here, so callers never hand-concatenate/encode query params.
 export async function musicDlFetch(path, init = {}) {
    const { baseUrl, apiKey } = musicDlConfig();
-   return fetch(`${baseUrl}${path}`, {
-      ...init,
+   const { params, headers, ...rest } = init;
+
+   let url = `${baseUrl}${path}`;
+   if (params && typeof params === 'object') {
+      const qs = new URLSearchParams();
+      for (const [key, value] of Object.entries(params)) {
+         if (value !== undefined && value !== null) qs.set(key, String(value));
+      }
+      const query = qs.toString();
+      if (query) url += (url.includes('?') ? '&' : '?') + query;
+   }
+
+   return fetch(url, {
+      ...rest,
       headers: {
          Authorization: `Bearer ${apiKey}`,
-         ...(init.headers || {}),
+         ...(headers || {}),
       },
       cache: 'no-store',
    });
