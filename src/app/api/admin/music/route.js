@@ -48,7 +48,20 @@ export async function GET(request) {
 
 export async function POST(request) {
    const body = await request.json();
-   const { date, title, artist, album, artwork_url, track_url, preview_url, id } = body;
+   const {
+      date,
+      title,
+      artist,
+      album,
+      artwork_url,
+      track_url,
+      preview_url,
+      id,
+      source,
+      snippet_url,
+      youtube_id,
+      snippet_start_sec,
+   } = body;
 
    if (!date || !title || !artist) {
       return NextResponse.json(
@@ -81,7 +94,21 @@ export async function POST(request) {
    const { data, error } = await supabase
       .from('song_of_the_day')
       .upsert(
-         { date, title, artist, album, artwork_url, track_url, preview_url, deezer_id: id || null },
+         {
+            date,
+            title,
+            artist,
+            album,
+            artwork_url,
+            track_url,
+            preview_url,
+            deezer_id: id || null,
+            source: source || 'deezer',
+            snippet_url: snippet_url || null,
+            youtube_id: youtube_id || null,
+            snippet_start_sec:
+               typeof snippet_start_sec === 'number' ? snippet_start_sec : null,
+         },
          { onConflict: 'date' }
       )
       .select()
