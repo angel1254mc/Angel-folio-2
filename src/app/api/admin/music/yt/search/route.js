@@ -18,11 +18,17 @@ export async function GET(request) {
          `/yt/search?q=${encodeURIComponent(q)}&limit=${encodeURIComponent(limit)}`
       );
    } catch (err) {
+      console.error(
+         '[yt/search] upstream fetch threw:',
+         err?.message,
+         err?.cause?.code || err?.cause || ''
+      );
       return NextResponse.json({ error: err.message }, { status: 500 });
    }
 
    const json = await res.json().catch(() => ({}));
    if (!res.ok) {
+      console.error('[yt/search] upstream non-OK', res.status, json);
       return NextResponse.json(
          { error: json.error || 'YouTube search failed' },
          { status: res.status }
