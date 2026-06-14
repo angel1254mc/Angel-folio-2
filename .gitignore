@@ -41,3 +41,8 @@ yarn-error.log*
 .superpowers/
 .claude/skills/impeccable/*
 /claude/.worktrees
+
+# Internal superpowers process docs — kept local, never pushed
+docs/superpowers/plans/
+docs/superpowers/specs/
+docs/superpowers/handoffs/
