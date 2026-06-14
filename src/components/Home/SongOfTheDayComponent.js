@@ -101,10 +101,15 @@ const SongOfTheDayComponent = () => {
             <SongOfTheDaySkeleton />
          ) : (
             <div className='w-full h-full flex pl-3 pr-2 gap-x-2 items-center'>
-               <div className='relative min-w-[7rem] min-h-[7rem]'>
-                  <a target='_blank' rel='noreferrer' href={safeTrackUrl}>
+               <div className='relative w-28 h-28 flex-shrink-0 rounded-md overflow-hidden'>
+                  <a
+                     target='_blank'
+                     rel='noreferrer'
+                     href={safeTrackUrl}
+                     className='block w-full h-full'
+                  >
                      <Image
-                        className='w-28 h-28'
+                        className='w-full h-full object-cover'
                         width={200}
                         height={200}
                         alt={song?.title ?? 'No song picked yet'}
