@@ -41,8 +41,11 @@ const SongOfTheDayComponent = () => {
          .then(async (json) => {
             if (!json.date) return;
             setSong(json);
-            // Resolve preview URL dynamically if deezer_id is present
-            if (json.deezer_id) {
+            if (json.snippet_url) {
+               // YouTube snippet: play the stored clip directly.
+               setSong((prev) => ({ ...prev, preview_url: json.snippet_url }));
+               preload(json.snippet_url);
+            } else if (json.deezer_id) {
                try {
                   const res = await fetch(`/api/music/preview?ids=${json.deezer_id}`);
                   const data = await res.json();
@@ -60,7 +63,7 @@ const SongOfTheDayComponent = () => {
                // Legacy fallback for songs without deezer_id
                preload(json.preview_url);
             } else {
-               console.warn('[SongOfTheDay] No deezer_id or preview_url — play unavailable');
+               console.warn('[SongOfTheDay] No snippet_url, deezer_id, or preview_url — play unavailable');
             }
          })
          .catch((err) => console.error('SongOfTheDay fetch failed', err))
@@ -98,10 +101,15 @@ const SongOfTheDayComponent = () => {
             <SongOfTheDaySkeleton />
          ) : (
             <div className='w-full h-full flex pl-3 pr-2 gap-x-2 items-center'>
-               <div className='relative min-w-[7rem] min-h-[7rem]'>
-                  <a target='_blank' rel='noreferrer' href={safeTrackUrl}>
+               <div className='relative w-28 h-28 flex-shrink-0 rounded-md overflow-hidden'>
+                  <a
+                     target='_blank'
+                     rel='noreferrer'
+                     href={safeTrackUrl}
+                     className='block w-full h-full'
+                  >
                      <Image
-                        className='w-28 h-28'
+                        className='w-full h-full object-cover'
                         width={200}
                         height={200}
                         alt={song?.title ?? 'No song picked yet'}

@@ -6,6 +6,12 @@ export async function middleware(req) {
    const supabase = createMiddlewareClient({ req, res });
    const session = await supabase.auth.getSession();
    if (!session?.data?.session) {
+      // API routes (every matched API path is /api/admin/*) return a real 401
+      // so fetch clients get a clean error instead of transparently following a
+      // redirect to the login HTML. Page routes keep redirecting to /login.
+      if (req.nextUrl.pathname.startsWith('/api/')) {
+         return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+      }
       const loginURL = new URL('/login', req.url);
       loginURL.searchParams.set('redirectedFrom', req.nextUrl.pathname);
       loginURL.searchParams.set(

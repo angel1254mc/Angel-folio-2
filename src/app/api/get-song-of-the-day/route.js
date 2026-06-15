@@ -22,7 +22,7 @@ export const GET = async () => {
 
    const { data, error } = await supabase
       .from('song_of_the_day')
-      .select('date,title,artist,album,artwork_url,track_url,preview_url,deezer_id')
+      .select('date,title,artist,album,artwork_url,track_url,preview_url,deezer_id,snippet_url,source')
       .order('date', { ascending: false })
       .limit(1);
 
@@ -44,5 +44,7 @@ export const GET = async () => {
       track_url: song.track_url,
       preview_url: song.preview_url || null,
       deezer_id: song.deezer_id || null,
+      snippet_url: song.snippet_url || null,
+      source: song.source || 'deezer',
    });
 };

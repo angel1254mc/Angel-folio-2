@@ -36,3 +36,13 @@ yarn-error.log*
 
 # claude code
 .claude/settings.local.json
+
+# Superpowers brainstorming companion
+.superpowers/
+.claude/skills/impeccable/*
+/claude/.worktrees
+
+# Internal superpowers process docs — kept local, never pushed
+docs/superpowers/plans/
+docs/superpowers/specs/
+docs/superpowers/handoffs/
