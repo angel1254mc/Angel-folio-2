@@ -5,6 +5,13 @@ import YouTubeFlow from './YouTubeFlow';
 const MusicSearchModal = ({ date, existingSong, onSave, onClose, onDelete }) => {
    const [songQuery, setSongQuery] = useState('');
    const [source, setSource] = useState('deezer'); // 'deezer' | 'youtube'
+   // YouTube authoring needs the local music-dl-service, so the tab is only
+   // available when the site runs on localhost — never in production.
+   const [isLocalhost, setIsLocalhost] = useState(false);
+   useEffect(() => {
+      const h = window.location.hostname;
+      setIsLocalhost(h === 'localhost' || h === '127.0.0.1' || h === '::1');
+   }, []);
    const [confirmingDelete, setConfirmingDelete] = useState(false);
    const [deleting, setDeleting] = useState(false);
    const [deleteError, setDeleteError] = useState(null);
@@ -195,33 +202,35 @@ const MusicSearchModal = ({ date, existingSong, onSave, onClose, onDelete }) => 
                </button>
             </div>
 
-            {/* Source toggle */}
-            <div className='flex gap-1 bg-[#0f0f0f] border border-[#262626] rounded-lg p-1'>
-               <button
-                  type='button'
-                  onClick={() => setSource('deezer')}
-                  className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${
-                     source === 'deezer'
-                        ? 'bg-purple-500 text-white'
-                        : 'text-gray-400 hover:text-white'
-                  }`}
-               >
-                  Deezer
-               </button>
-               <button
-                  type='button'
-                  onClick={() => setSource('youtube')}
-                  className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${
-                     source === 'youtube'
-                        ? 'bg-purple-500 text-white'
-                        : 'text-gray-400 hover:text-white'
-                  }`}
-               >
-                  YouTube
-               </button>
-            </div>
+            {/* Source toggle — YouTube tab only on localhost (needs the local service) */}
+            {isLocalhost && (
+               <div className='flex gap-1 bg-[#0f0f0f] border border-[#262626] rounded-lg p-1'>
+                  <button
+                     type='button'
+                     onClick={() => setSource('deezer')}
+                     className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${
+                        source === 'deezer'
+                           ? 'bg-purple-500 text-white'
+                           : 'text-gray-400 hover:text-white'
+                     }`}
+                  >
+                     Deezer
+                  </button>
+                  <button
+                     type='button'
+                     onClick={() => setSource('youtube')}
+                     className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${
+                        source === 'youtube'
+                           ? 'bg-purple-500 text-white'
+                           : 'text-gray-400 hover:text-white'
+                     }`}
+                  >
+                     YouTube
+                  </button>
+               </div>
+            )}
 
-            {source === 'youtube' && (
+            {isLocalhost && source === 'youtube' && (
                <YouTubeFlow date={date} onSave={onSave} />
             )}
 
