@@ -40,7 +40,7 @@ yarn-error.log*
 # Superpowers brainstorming companion
 .superpowers/
 .claude/skills/impeccable/*
-.claude/.worktrees/*
+.claude/worktrees/
 
 # Internal superpowers process docs — kept local, never pushed
 docs/superpowers/plans/
