@@ -12,18 +12,18 @@ const ProjectSummaryComponent = ({ project }) => {
             <div className={projectStyles.body}>{project.summary}</div>
          </div>
          <div className={projectStyles.project_githubs}>
-            <div className={projectStyles.header}>Github(s)</div>
+            <div className={projectStyles.header}>Links</div>
             <div className={projectStyles.githubs_body}>
                {project.github.isPublic ? (
                   <Link
+                     rel='noreferrer'
+                     target='_blank'
                      href={project.github.url}
                      className={projectStyles.github_link}
                      key={'main-site-key'}
                   >
                      <FontAwesomeIcon icon={faLink} />
-                     <div className={projectStyles.link_title}>
-                        GitHub Repo
-                     </div>
+                     <div className={projectStyles.link_title}>GitHub Repo</div>
                   </Link>
                ) : (
                   <div>Main Repo not public for this project</div>
@@ -31,6 +31,8 @@ const ProjectSummaryComponent = ({ project }) => {
                {project.github.urls.map((urlObj) => {
                   return (
                      <Link
+                        rel='noreferrer'
+                        target='_blank'
                         href={urlObj.url}
                         className={projectStyles.github_link}
                         key={urlObj.title}

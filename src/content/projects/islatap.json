@@ -1,0 +1,32 @@
+{
+  "name": "IslaTap",
+  "slug": "islatap",
+  "date": "07/31/2026 - Present",
+  "desc": "MapTap inspired geography guessing game. Users can guess the location of barrios, municipalities, and landmarks all over Puerto Rico. Uses ARCGIS Online for satellite imagery.",
+  "summary": "MapTap-inspired geography guessing game. Users can guess the location of barrios, municipalities, and landmarks all over Puerto Rico. Uses ARCGIS Online for satellite imagery.",
+  "tools": ["vite",  "react-leaflet"],
+  "github": {
+    "isPublic": true,
+    "urls": [
+      {
+        "url": "https://islatap.angel1254.com/",
+        "title": "Main Site"
+      }
+    ],
+    "url": "https://github.com/angel1254mc/islatap"
+  },
+  "authors": [
+    {
+      "name": "Angel Lopez Pol",
+      "github": "angel1254mc",
+      "responsibilities": ["Everything"]
+    }
+  ],
+  "lessons": [
+    "ARCGIS is great for satellite images.",
+    "Consult government datasets for free geopolitical boundaries and shapefiles.",
+    "I've failed my 6th grade social studies teacher."
+  ],
+  "accomplishments": [],
+  "added": 13
+}
